@@ -2,7 +2,7 @@ import { useState } from "react";
 import defaultProfile from "../Assets/default_profile.jpg";
 import Account_Purchase_History from "./Account_Purchase_History";
 import Store_Creation from "../Store/Store_Creation";
-import "../Style.css";
+import "../style.css";
 
 function Account_View() {
   const [activeTab, setActiveTab] = useState("active");
@@ -28,7 +28,7 @@ function Account_View() {
           {/* Cart */}
           <button type="button" className="btn btn-success">
             <i class="bi bi-cart3 pe-2"></i>
-            Cart
+            Orders
           </button>
 
           {/* Create Store */}
@@ -61,7 +61,7 @@ function Account_View() {
               className={`nav-link ${activeTab === "link1" ? "active" : ""}`}
               onClick={() => setActiveTab("link1")}
             >
-              Purchase History
+              Past Orders
             </button>
           </li>
           <li className="nav-item">
