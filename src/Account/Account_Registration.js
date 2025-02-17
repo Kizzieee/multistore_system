@@ -1,72 +1,95 @@
-function Account_Registration() {
+import { useState } from "react";
+import "../style.css";
+import React from "react";
+
+function Account_Login() {
+  const [isSignUp, setIsSignUp] = useState(false); // Track whether Sign Up is active
+
   return (
-    <div>
-      <div className="container mt-5">
-        <h1>Register</h1>
-        <form className="row needs-validation">
-          <fieldset className="row mb-3">
-            <legend>Account Information</legend>
-            <div className="mb-2 col-4">
-              <label for="inputfirstname">First Name</label>
-              <input
-                type="text"
-                id="inputfirstname"
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="mb-2 col-4">
-              <label for="inputlastname">Last Name</label>
-              <input
-                type="text"
-                id="inputlastname"
-                className="form-control"
-                required
-              />
-            </div>
-            <div class="mb-2 col-md-4">
-              <label for="validationCustomUsername" class="form-label m-0">
-                Username
-              </label>
-              <div class="input-group has-validation">
-                <span class="input-group-text" id="inputGroupPrepend">
-                  @
-                </span>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="validationCustomUsername"
-                  aria-describedby="inputGroupPrepend"
-                  required
-                />
-                <div class="invalid-feedback">Please choose a username.</div>
-              </div>
-            </div>
-            <div className="mb-2 col-4">
-              <label for="inputdateofbirth">Date of Birth</label>
-              <input
-                type="date"
-                id="inputdateofbirth"
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="mb-2 col-8">
-              <label for="inputladdress">Address</label>
-              <input
-                type="text"
-                id="inputladdress"
-                className="form-control"
-                required
-              />
-            </div>
-          </fieldset>
+    <div className="container">
+      <div className="row mb-4">
+        <p className="fw-bold h5 p-0">Local Flavors, Unlimited Choices!</p>
+        <p className="p-0">
+          {isSignUp
+            ? "Sign up to create an account"
+            : "Log in or Sign Up to continue"}
+        </p>
+      </div>
 
-          <fieldset className="row mb-3">
-            <legend>Account Secuirty</legend>
-
-            <div className="mb-2 col-4">
-              <label for="inputemailaddress">Email Address</label>
+      <form className="row d-flex flex-column justify-content-center align-items-center needs-validation">
+        {/* Toggle Between Login & Sign Up */}
+        {isSignUp ? (
+          <>
+            <div className="mb-2 p-0">
+              <label htmlFor="firstname">First Name</label>
+              <input
+                type="text"
+                id="firstname"
+                className="form-control"
+                placeholder="John"
+                required
+              />
+            </div>
+            <div className="mb-2 p-0">
+              <label htmlFor="lastname">Last Name</label>
+              <input
+                type="text"
+                id="lastname"
+                className="form-control"
+                placeholder="Doe"
+                required
+              />
+            </div>
+            <div className="mb-2 p-0">
+              <label htmlFor="dob">Date of Birth</label>
+              <input type="date" id="dob" className="form-control" required />
+            </div>
+            <div className="mb-2 p-0">
+              <label htmlFor="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                className="form-control"
+                placeholder="123 Street, City"
+                required
+              />
+            </div>
+            <div className="mb-2 p-0">
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                placeholder="example@mail.com"
+                required
+              />
+            </div>
+            <div className="mb-2 p-0">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="mb-2 p-0">
+              <label htmlFor="confirm-password">Confirm Password</label>
+              <input
+                type="password"
+                id="confirm-password"
+                className="form-control"
+                required
+              />
+            </div>
+            <button type="submit" className="main-btn-primary">
+              Sign Up
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="mb-2 p-0">
+              <label htmlFor="inputemailaddress">Email Address</label>
               <input
                 type="email"
                 id="inputemailaddress"
@@ -75,9 +98,8 @@ function Account_Registration() {
                 required
               />
             </div>
-
-            <div className="mb-2 col-4">
-              <label for="inputpassword">Password</label>
+            <div className="mb-2 p-0">
+              <label htmlFor="inputpassword">Password</label>
               <input
                 type="password"
                 id="inputpassword"
@@ -85,27 +107,26 @@ function Account_Registration() {
                 required
               />
             </div>
-
-            <div className="mb-2 col-4">
-              <label for="inputconfirmpassowrd">Confirm Password</label>
-              <input
-                type="password"
-                id="inputconfirmpassowrd"
-                className="form-control"
-                required
-              />
-            </div>
-          </fieldset>
-
-          <div className="row">
-            <button type="submit" class="btn btn-dark">
-              Create Account
+            <button type="submit" className="main-btn-primary">
+              Log In
             </button>
-          </div>
-        </form>
-      </div>
+          </>
+        )}
+
+        {/* Toggle Button */}
+        <div className="text-center my-3">
+          <p className="p-0 m-0">or</p>
+        </div>
+        <button
+          type="button"
+          className="main-btn-outline-primary"
+          onClick={() => setIsSignUp(!isSignUp)}
+        >
+          {isSignUp ? "Go to Login" : "Sign Up"}
+        </button>
+      </form>
     </div>
   );
 }
 
-export default Account_Registration;
+export default Account_Login;

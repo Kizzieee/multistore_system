@@ -1,6 +1,14 @@
-import "../Style.css";
+import { useNavigate } from "react-router-dom";
+import OwnResto from "./OwnResto";
+import "../style.css";
 
 function Store_Creation() {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate("/own-resto");
+  };
+
   return (
     <div
       className="modal fade"
@@ -72,8 +80,6 @@ function Store_Creation() {
             </div>
 
             <div className="row">
-
-
               <div class="col-4 mb-3">
                 <label for="exampleFormControlInput1" className="form-label">
                   Operating Hours
@@ -95,8 +101,6 @@ function Store_Creation() {
                 />
               </div>
             </div>
-
-           
           </div>
           <div className="modal-footer">
             <button
@@ -106,8 +110,12 @@ function Store_Creation() {
             >
               Cancel
             </button>
-            <button type="button" className="btn btn-primary">
-              Create Store
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleButtonClick}
+            >
+              Create
             </button>
           </div>
         </div>
