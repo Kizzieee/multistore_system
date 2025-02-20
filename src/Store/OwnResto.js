@@ -1,3 +1,4 @@
+import StoreInfo from "./StoreInfo";
 import React, { useState, useEffect } from "react";
 
 const OwnResto = () => {
@@ -62,6 +63,26 @@ const OwnResto = () => {
     setEditingProduct(prod.id);
   };
 
+  //Store Info Modal
+  const [showModal, setShowModal] = useState(false); // Correct state variable
+
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+
+  const storeData = {
+    name: "Sample Store",
+    email: "store@example.com",
+    mobile: "1234567890",
+    location: "123 Main Street",
+    operatingHours: "9 AM - 9 PM",
+    description: "A great store for your needs.",
+  };
+
+  const handleSave = (updatedData) => {
+    console.log("Updated Store Data:", updatedData);
+    setShowModal(false); // Close modal after saving
+  };
+
   // Sort top 4 popular products
   useEffect(() => {
     setPopularProducts(
@@ -70,7 +91,30 @@ const OwnResto = () => {
   }, [products]);
 
   return (
-    <div className="container">
+    <div className="container mt-5">
+      <div className="row">
+        <div className="col-md-12 resto-name-banner bg-light">
+          <div className="resto-name-banner-gradient"></div>
+          <div className="resto-banner-details d-flex justify-content-between align-items-end">
+            <h1>I Love Burger - Aurora Boulevard Cubao</h1>
+            <div className="d-flex flex-column justify-content-between align-items-end gap-2">
+              <button className="main-btn-primary ">
+                <i class="bi bi-border-width"></i> Orders
+              </button>
+              <button className="white-btn-primary" onClick={handleShow}>
+                <i class="bi bi-info-circle"></i> Store Info
+              </button>
+              <StoreInfo
+                show={showModal}
+                handleClose={handleClose}
+                storeData={storeData}
+                handleSave={handleSave}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="row my-4">
         <div className="col-md-6">
           <h4>Manage Categories</h4>
