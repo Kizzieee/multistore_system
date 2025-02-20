@@ -1,13 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import OwnResto from "./OwnResto";
 import "../style.css";
 
 function Store_Creation() {
-  const navigate = useNavigate();
-
-  const handleButtonClick = () => {
-    navigate("/own-resto");
-  };
 
   return (
     <div
@@ -80,6 +74,21 @@ function Store_Creation() {
             </div>
 
             <div className="row">
+              <div class="col-12 mb-3">
+                <label for="exampleFormControlInput1" className="form-label">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput1"
+                />
+              </div>
+
+            
+            </div>
+
+            <div className="row">
               <div class="col-4 mb-3">
                 <label for="exampleFormControlInput1" className="form-label">
                   Operating Hours
@@ -113,7 +122,6 @@ function Store_Creation() {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={handleButtonClick}
             >
               Create
             </button>
