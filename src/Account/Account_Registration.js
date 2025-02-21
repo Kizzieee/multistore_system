@@ -1,6 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "../style.css";
-import React from "react";
 
 function Account_Login() {
   const [isSignUp, setIsSignUp] = useState(false); // Track whether Sign Up is active
@@ -60,7 +59,7 @@ function Account_Login() {
                 type="email"
                 id="email"
                 className="form-control"
-                placeholder="example@mail.com"
+                placeholder="example@domain.com"
                 required
               />
             </div>
@@ -94,7 +93,7 @@ function Account_Login() {
                 type="email"
                 id="inputemailaddress"
                 className="form-control"
-                placeholder="example@mail.com"
+                placeholder="example@domain.com"
                 required
               />
             </div>
