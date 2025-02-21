@@ -93,7 +93,7 @@ const OwnResto = () => {
   return (
     <div className="container mt-5">
       <div className="row">
-        <div className="col-md-12 resto-name-banner bg-light">
+        <div className="col-md-12 resto-name-banner p-0">
           <div className="resto-name-banner-gradient"></div>
           <div className="resto-banner-details d-flex justify-content-between align-items-end">
             <h1>I Love Burger - Aurora Boulevard Cubao</h1>
