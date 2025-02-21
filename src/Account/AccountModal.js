@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Account_Login from "./Account_Login";
 import "../style.css";
 
-function Account_Modal({ show, onClose }) {
+function AccountModal({ show, onClose }) {
   useEffect(() => {
     if (show) {
       document.body.classList.add("modal-open"); // Prevent scrolling when modal is open
@@ -23,7 +23,10 @@ function Account_Modal({ show, onClose }) {
       <div className="modal-backdrop fade show"></div>
 
       {/* Modal */}
-      <div className={`modal fade show d-block d-flex justify-content-center`} tabIndex="-1">
+      <div
+        className={`modal fade show d-block d-flex justify-content-center`}
+        tabIndex="-1"
+      >
         <div className={`modal-dialog account-modal`}>
           <div className="modal-content">
             <div className="modal-header border-0">
@@ -45,4 +48,4 @@ function Account_Modal({ show, onClose }) {
   );
 }
 
-export default Account_Modal;
+export default AccountModal;

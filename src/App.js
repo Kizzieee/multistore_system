@@ -6,8 +6,8 @@ import Restaurant from "./Main/Restaurant";
 import Checkout from "./Main/Checkout";
 import OwnResto from "./Store/OwnResto";
 import Store_Creation from "./Store/Store_Creation";
-import Nagivation from "./Main/Navigation";
 import Orders from "./Store/Orders";
+import Nagivation from "./Navigation";
 import "./style.css";
 
 function App() {
@@ -18,8 +18,9 @@ function App() {
       {/* <Account_View /> */}
       {/* <Home /> */}
       {/* <Restaurant /> */}
+      <Nagivation />
       {/* <Checkout /> */}
-      <OwnResto />
+      {/* <OwnResto /> */}
       {/* <Orders /> */}
     </div>
   );

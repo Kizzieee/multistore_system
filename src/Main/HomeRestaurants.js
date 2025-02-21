@@ -5,7 +5,7 @@ import "../style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 
-function Home_Restaurants() {
+function HomeRestaurants() {
   return (
     <div>
       <div className="container-fluid ">
@@ -125,6 +125,94 @@ function Home_Restaurants() {
                   </div>
                 </div>
               </div>
+
+              <div className="card">
+                <div className="card-resto-img">
+                  <img src={milkshake} className="card-img-top" alt="..." />
+                </div>
+                <div className="card-body">
+                  <div className="d-flex flex-row justify-content-between">
+                    <h5 className="card-title">The Secret Cafe</h5>
+                    <span>
+                      <i class="bi bi-star-fill text-color-main"></i> 4.9 (100+){" "}
+                    </span>
+                  </div>
+                  <div className="d-flex flex-row justify-content-between">
+                    <small>
+                      <i class="bi bi-stopwatch"></i> 40-60 mins
+                    </small>
+                    <small>
+                      <FontAwesomeIcon icon={faMotorcycle} /> : &#8369;60
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card">
+                <div className="card-resto-img">
+                  <img src={sizzling} className="card-img-top" alt="..." />
+                </div>
+                <div className="card-body">
+                  <div className="d-flex flex-row justify-content-between">
+                    <h5 className="card-title">Hungry Hurry</h5>
+                    <span>
+                      <i class="bi bi-star-fill text-color-main"></i> 4.9 (100+){" "}
+                    </span>
+                  </div>
+                  <div className="d-flex flex-row justify-content-between">
+                    <small>
+                      <i class="bi bi-stopwatch"></i> 40-60 mins
+                    </small>
+                    <small>
+                      <FontAwesomeIcon icon={faMotorcycle} /> : &#8369;60
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card">
+                <div className="card-resto-img">
+                  <img src={sizzling} className="card-img-top" alt="..." />
+                </div>
+                <div className="card-body">
+                  <div className="d-flex flex-row justify-content-between">
+                    <h5 className="card-title">Hungry Hurry</h5>
+                    <span>
+                      <i class="bi bi-star-fill text-color-main"></i> 4.9 (100+){" "}
+                    </span>
+                  </div>
+                  <div className="d-flex flex-row justify-content-between">
+                    <small>
+                      <i class="bi bi-stopwatch"></i> 40-60 mins
+                    </small>
+                    <small>
+                      <FontAwesomeIcon icon={faMotorcycle} /> : &#8369;60
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card">
+                <div className="card-resto-img">
+                  <img src={sizzling} className="card-img-top" alt="..." />
+                </div>
+                <div className="card-body">
+                  <div className="d-flex flex-row justify-content-between">
+                    <h5 className="card-title">Hungry Hurry</h5>
+                    <span>
+                      <i class="bi bi-star-fill text-color-main"></i> 4.9 (100+){" "}
+                    </span>
+                  </div>
+                  <div className="d-flex flex-row justify-content-between">
+                    <small>
+                      <i class="bi bi-stopwatch"></i> 40-60 mins
+                    </small>
+                    <small>
+                      <FontAwesomeIcon icon={faMotorcycle} /> : &#8369;60
+                    </small>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -133,4 +221,4 @@ function Home_Restaurants() {
   );
 }
 
-export default Home_Restaurants;
+export default HomeRestaurants;
