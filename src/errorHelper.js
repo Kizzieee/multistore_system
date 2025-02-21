@@ -4,12 +4,27 @@ export default function renderErrorMessages(error) {
   if (!error) return null;
 
   return (
-    <div className="alert alert-danger" role="alert">
-      {Object.keys(error).map((fieldKey) =>
-        error[fieldKey].map((message, index) => (
-          <p key={`${fieldKey}-${index}`}>{message}</p>
-        ))
-      )}
-    </div>
+    <>
+      <br />
+      <div className="alert alert-danger" role="alert">
+        {Object.keys(error).map((fieldKey) => {
+          const messages = error[fieldKey];
+
+          if (typeof messages === "string") {
+            return <p key={fieldKey}>{messages}</p>;
+          }
+
+          if (Array.isArray(messages)) {
+            return messages.map((message, index) => (
+              <p key={`${fieldKey}-${index}`}>
+                {fieldKey} : {message}
+              </p>
+            ));
+          }
+
+          return null;
+        })}
+      </div>
+    </>
   );
 }
