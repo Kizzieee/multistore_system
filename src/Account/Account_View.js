@@ -1,14 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import defaultProfile from "../Assets/default_profile.jpg";
-import Account_Purchase_History from "./Account_Purchase_History";
+import { me } from "../services/userService";
 import Store_Creation from "../Store/Store_Creation";
 import "../style.css";
+import Account_Purchase_History from "./Account_Purchase_History";
 
 function Account_View() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
+  const [user, setUser] = useState({
+    email: "",
+    first_name: "",
+    last_name: "",
+    birth_date: "",
+    address: "",
+  });
 
+  useEffect(() => {
+    async function fetchUserInfo() {
+      try {
+        const userData = await me();
+        setUser(userData);
+      } catch (error) {
+        navigate("/login");
+      }
+    }
 
-  
+    fetchUserInfo();
+  }, []);
+
+  if (!user.email) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mt-5">
@@ -21,7 +45,7 @@ function Account_View() {
               alt="User's profile"
             />
           </div>
-          <h3>@Kizsea</h3>
+          <h3>{user.email}</h3>
         </div>
 
         <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
@@ -77,8 +101,13 @@ function Account_View() {
         <div className="tab-content mt-3 col-10 border-start">
           {activeTab === "active" && (
             <div className="tab-pane fade show active">
-              <h3>Active Tab Content</h3>
-              <p>This is the content for the Active tab.</p>
+              <h3>Account Information</h3>
+              <p>
+                <strong>First Name:</strong> {user.first_name} <br />
+                <strong>Last Name:</strong> {user.last_name} <br />
+                <strong>Birth Date:</strong> {user.birth_date} <br />
+                <strong>Address:</strong> {user.address} <br />
+              </p>
             </div>
           )}
           {activeTab === "link1" && (
