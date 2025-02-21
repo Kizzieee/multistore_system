@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import api from "../api";
+import { useNavigate } from "react-router-dom";
 import renderErrorMessages from "../errorHelper";
+import { login, register } from "../services/authService";
 import "../style.css";
 
 function Account_Login() {
+  const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false); // Track whether Sign Up is active
   const [error, setError] = useState(null);
   const [registrationForm, setRegistrationForm] = useState({
@@ -15,8 +17,41 @@ function Account_Login() {
     password: "",
     confirm_password: "",
   });
+  const [loginForm, setLoginForm] = useState({
+    login_email: "",
+    login_password: "",
+  });
 
-  const handleChange = async (e) => {
+  const handleToggle = () => {
+    setIsSignUp(!isSignUp);
+    setError(null);
+
+    // Reset Registration Form
+    setRegistrationForm({
+      first_name: "",
+      last_name: "",
+      birth_date: "",
+      address: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+    });
+
+    // Reset Login Form
+    setLoginForm({
+      login_email: "",
+      login_password: "",
+    });
+  };
+
+  const handleLoginFormChange = async (e) => {
+    setLoginForm({
+      ...loginForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleRegistrationFormChange = async (e) => {
     setRegistrationForm({
       ...registrationForm,
       [e.target.name]: e.target.value,
@@ -25,19 +60,28 @@ function Account_Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (registrationForm.password !== registrationForm.confirm_password) {
-      setError("Passwords do not match");
-      return;
-    } else {
-      const { confirm_password, ...submitData } = registrationForm;
+    if (isSignUp) {
+      if (registrationForm.password !== registrationForm.confirm_password) {
+        setError("Passwords do not match");
+        return;
+      } else {
+        const { confirm_password, ...submitData } = registrationForm;
 
+        try {
+          await register(submitData);
+          setError(null);
+          setIsSignUp(!isSignUp);
+        } catch (error) {
+          setError(error);
+        }
+      }
+    } else {
       try {
-        const response = await api.post("/auth/users/", submitData);
-        console.log("Server response:", response.data);
+        await login(loginForm.login_email, loginForm.login_password);
         setError(null);
+        navigate("/home");
       } catch (error) {
-        console.error("Failed to register", error);
-        setError(error.response.data);
+        setError(error);
       }
     }
   };
@@ -67,7 +111,7 @@ function Account_Login() {
                 id="first_name"
                 name="first_name"
                 value={registrationForm.first_name}
-                onChange={handleChange}
+                onChange={handleRegistrationFormChange}
                 required
                 placeholder="John"
                 className="form-control"
@@ -80,7 +124,7 @@ function Account_Login() {
                 id="last_name"
                 name="last_name"
                 value={registrationForm.last_name}
-                onChange={handleChange}
+                onChange={handleRegistrationFormChange}
                 required
                 placeholder="Doe"
                 className="form-control"
@@ -93,7 +137,7 @@ function Account_Login() {
                 id="birth_date"
                 name="birth_date"
                 value={registrationForm.birth_date}
-                onChange={handleChange}
+                onChange={handleRegistrationFormChange}
                 required
                 className="form-control"
               />
@@ -105,7 +149,7 @@ function Account_Login() {
                 id="address"
                 name="address"
                 value={registrationForm.address}
-                onChange={handleChange}
+                onChange={handleRegistrationFormChange}
                 placeholder="123 Street, City"
                 required
                 className="form-control"
@@ -118,8 +162,8 @@ function Account_Login() {
                 id="email"
                 name="email"
                 value={registrationForm.email}
-                onChange={handleChange}
-                placeholder="example@mail.com"
+                onChange={handleRegistrationFormChange}
+                placeholder="example@domain.com"
                 required
                 className="form-control"
               />
@@ -131,7 +175,7 @@ function Account_Login() {
                 id="password"
                 name="password"
                 value={registrationForm.password}
-                onChange={handleChange}
+                onChange={handleRegistrationFormChange}
                 required
                 className="form-control"
               />
@@ -143,36 +187,40 @@ function Account_Login() {
                 id="confirm_password"
                 name="confirm_password"
                 value={registrationForm.confirm_password}
-                onChange={handleChange}
+                onChange={handleRegistrationFormChange}
                 required
                 className="form-control"
               />
             </div>
-            {error && renderErrorMessages(error)}
             <button type="submit" className="main-btn-primary">
               Sign Up
             </button>
           </>
         ) : (
           <>
-            {/* Log In Fields are Uncontrolled (no value prop) */}
             <div className="mb-2 p-0">
-              <label htmlFor="inputemailaddress">Email Address</label>
+              <label htmlFor="login_email">Email Address</label>
               <input
                 type="email"
-                id="inputemailaddress"
-                className="form-control"
-                placeholder="example@mail.com"
+                id="login_email"
+                name="login_email"
+                value={loginForm.login_email}
+                onChange={handleLoginFormChange}
+                placeholder="example@domain.com"
                 required
+                className="form-control"
               />
             </div>
             <div className="mb-2 p-0">
-              <label htmlFor="inputpassword">Password</label>
+              <label htmlFor="login_password">Password</label>
               <input
                 type="password"
-                id="inputpassword"
-                className="form-control"
+                id="login_password"
+                name="login_password"
+                value={loginForm.login_password}
+                onChange={handleLoginFormChange}
                 required
+                className="form-control"
               />
             </div>
             <button type="submit" className="main-btn-primary">
@@ -180,6 +228,7 @@ function Account_Login() {
             </button>
           </>
         )}
+        {error && renderErrorMessages(error)}
 
         {/* Toggle Button */}
         <div className="text-center my-3">
@@ -188,7 +237,7 @@ function Account_Login() {
         <button
           type="button"
           className="main-btn-outline-primary"
-          onClick={() => setIsSignUp(!isSignUp)}
+          onClick={handleToggle}
         >
           {isSignUp
             ? "Already have an account? Log in"
