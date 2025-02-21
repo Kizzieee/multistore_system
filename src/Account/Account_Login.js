@@ -1,9 +1,46 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import api from "../api";
+import renderErrorMessages from "../errorHelper";
 import "../style.css";
-import React from "react";
 
 function Account_Login() {
   const [isSignUp, setIsSignUp] = useState(false); // Track whether Sign Up is active
+  const [error, setError] = useState(null);
+  const [registrationForm, setRegistrationForm] = useState({
+    first_name: "",
+    last_name: "",
+    birth_date: "",
+    address: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+  });
+
+  const handleChange = async (e) => {
+    setRegistrationForm({
+      ...registrationForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (registrationForm.password !== registrationForm.confirm_password) {
+      setError("Passwords do not match");
+      return;
+    } else {
+      const { confirm_password, ...submitData } = registrationForm;
+
+      try {
+        const response = await api.post("/auth/users/", submitData);
+        console.log("Server response:", response.data);
+        setError(null);
+      } catch (error) {
+        console.error("Failed to register", error);
+        setError(error.response.data);
+      }
+    }
+  };
 
   return (
     <div className="container">
@@ -16,42 +53,62 @@ function Account_Login() {
         </p>
       </div>
 
-      <form className="row d-flex flex-column justify-content-center align-items-center needs-validation">
+      <form
+        className="row d-flex flex-column justify-content-center align-items-center needs-validation"
+        onSubmit={handleSubmit}
+      >
         {/* Toggle Between Login & Sign Up */}
         {isSignUp ? (
           <>
             <div className="mb-2 p-0">
-              <label htmlFor="firstname">First Name</label>
+              <label htmlFor="first_name">First Name</label>
               <input
                 type="text"
-                id="firstname"
-                className="form-control"
+                id="first_name"
+                name="first_name"
+                value={registrationForm.first_name}
+                onChange={handleChange}
+                required
                 placeholder="John"
-                required
+                className="form-control"
               />
             </div>
             <div className="mb-2 p-0">
-              <label htmlFor="lastname">Last Name</label>
+              <label htmlFor="last_name">Last Name</label>
               <input
                 type="text"
-                id="lastname"
-                className="form-control"
-                placeholder="Doe"
+                id="last_name"
+                name="last_name"
+                value={registrationForm.last_name}
+                onChange={handleChange}
                 required
+                placeholder="Doe"
+                className="form-control"
               />
             </div>
             <div className="mb-2 p-0">
-              <label htmlFor="dob">Date of Birth</label>
-              <input type="date" id="dob" className="form-control" required />
+              <label htmlFor="birth_date">Date of Birth</label>
+              <input
+                type="date"
+                id="birth_date"
+                name="birth_date"
+                value={registrationForm.birth_date}
+                onChange={handleChange}
+                required
+                className="form-control"
+              />
             </div>
             <div className="mb-2 p-0">
               <label htmlFor="address">Address</label>
               <input
                 type="text"
                 id="address"
-                className="form-control"
+                name="address"
+                value={registrationForm.address}
+                onChange={handleChange}
                 placeholder="123 Street, City"
                 required
+                className="form-control"
               />
             </div>
             <div className="mb-2 p-0">
@@ -59,9 +116,12 @@ function Account_Login() {
               <input
                 type="email"
                 id="email"
-                className="form-control"
+                name="email"
+                value={registrationForm.email}
+                onChange={handleChange}
                 placeholder="example@mail.com"
                 required
+                className="form-control"
               />
             </div>
             <div className="mb-2 p-0">
@@ -69,25 +129,33 @@ function Account_Login() {
               <input
                 type="password"
                 id="password"
-                className="form-control"
+                name="password"
+                value={registrationForm.password}
+                onChange={handleChange}
                 required
+                className="form-control"
               />
             </div>
             <div className="mb-2 p-0">
-              <label htmlFor="confirm-password">Confirm Password</label>
+              <label htmlFor="confirm_password">Confirm Password</label>
               <input
                 type="password"
-                id="confirm-password"
-                className="form-control"
+                id="confirm_password"
+                name="confirm_password"
+                value={registrationForm.confirm_password}
+                onChange={handleChange}
                 required
+                className="form-control"
               />
             </div>
+            {error && renderErrorMessages(error)}
             <button type="submit" className="main-btn-primary">
               Sign Up
             </button>
           </>
         ) : (
           <>
+            {/* Log In Fields are Uncontrolled (no value prop) */}
             <div className="mb-2 p-0">
               <label htmlFor="inputemailaddress">Email Address</label>
               <input
@@ -122,7 +190,9 @@ function Account_Login() {
           className="main-btn-outline-primary"
           onClick={() => setIsSignUp(!isSignUp)}
         >
-          {isSignUp ? "Already have an acount? Log in" : "Don't have an account? Sign up"}
+          {isSignUp
+            ? "Already have an account? Log in"
+            : "Don't have an account? Sign up"}
         </button>
       </form>
     </div>
