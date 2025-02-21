@@ -247,3 +247,12 @@ background: linear-gradient(80deg, rgba(12,52,44,1) 0%, rgba(7,102,83,1) 34%, rg
   border-radius: .5rem;
 }
 
+
+/* Navigation */
+
+.navigation {
+  width: 100%;
+  height: 5rem;
+  z-index: 999;
+  background-color: #fff;
+}
