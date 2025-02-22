@@ -1,34 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import defaultProfile from "../Assets/default_profile.jpg";
-import { me } from "../services/userService";
 import Store_Creation from "../Store/Store_Creation";
 import "../style.css";
 import Account_Purchase_History from "./Account_Purchase_History";
 
-function Account_View() {
-  const navigate = useNavigate();
+function Account_View({ user }) {
   const [activeTab, setActiveTab] = useState("active");
-  const [user, setUser] = useState({
-    email: "",
-    first_name: "",
-    last_name: "",
-    birth_date: "",
-    address: "",
-  });
-
-  useEffect(() => {
-    async function fetchUserInfo() {
-      try {
-        const userData = await me();
-        setUser(userData);
-      } catch (error) {
-        navigate("/login");
-      }
-    }
-
-    fetchUserInfo();
-  }, []);
 
   if (!user.email) {
     return <div>Loading...</div>;
@@ -45,7 +22,7 @@ function Account_View() {
               alt="User's profile"
             />
           </div>
-          <h3>{user.email}</h3>
+          <h3>{user.first_name}</h3>
         </div>
 
         <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">

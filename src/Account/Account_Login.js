@@ -4,7 +4,7 @@ import renderErrorMessages from "../errorHelper";
 import { login, register } from "../services/authService";
 import "../style.css";
 
-function Account_Login() {
+function Account_Login({ isModalOpen, setIsModalOpen }) {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false); // Track whether Sign Up is active
   const [error, setError] = useState(null);
@@ -78,7 +78,8 @@ function Account_Login() {
         setLoginForm(
           Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
         );
-        navigate("/home");
+        navigate("/");
+        setIsModalOpen(!isModalOpen);
       } catch (error) {
         setError(error);
       }

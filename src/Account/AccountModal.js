@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import Account_Login from "./Account_Login";
 import "../style.css";
+import Account_Login from "./Account_Login";
 
-function AccountModal({ show, onClose }) {
+function AccountModal({ show, onClose, isModalOpen, setIsModalOpen }) {
   useEffect(() => {
     if (show) {
       document.body.classList.add("modal-open"); // Prevent scrolling when modal is open
@@ -39,7 +39,10 @@ function AccountModal({ show, onClose }) {
               ></button>
             </div>
             <div className="modal-body">
-              <Account_Login />
+              <Account_Login
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+              />
             </div>
           </div>
         </div>

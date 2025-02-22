@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "../style.css";
 
-function AccountActivation() {
+function AccountActivation({ isModalOpen, setIsModalOpen }) {
   const navigate = useNavigate();
   return (
     <div className="full">
@@ -12,7 +12,13 @@ function AccountActivation() {
           <p className="card-text">
             You can now log in and start your food journey with us.
           </p>
-          <button className="main-btn-primary" onClick={() => navigate("/")}>
+          <button
+            className="main-btn-primary"
+            onClick={() => {
+              navigate("/");
+              setIsModalOpen(!isModalOpen);
+            }}
+          >
             Start your food journey!
           </button>
         </div>

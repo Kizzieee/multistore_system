@@ -1,14 +1,46 @@
+import { useEffect, useState } from "react";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import Account_View from "./Account/Account_View";
+import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
 import Home from "./Main/Home";
 import Restaurant from "./Main/Restaurant";
+import { me } from "./services/userService";
 import Checkout from "./Store/Checkout";
-import { useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
 import "./style.css";
-import AccountActivation from "./Account/AccountActivation";
 
 function Nagivation() {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({
+    email: "",
+    first_name: "",
+    last_name: "",
+    birth_date: "",
+    address: "",
+  });
+
+  useEffect(() => {
+    async function fetchUserInfo() {
+      try {
+        const userData = await me();
+        setUser(userData);
+        setIsLoggedIn(!isLoggedIn);
+      } catch (error) {}
+    }
+
+    fetchUserInfo();
+  }, []);
+
+  const handleClickModal = () => {
+    if (!isLoggedIn) {
+      setIsModalOpen(!isModalOpen);
+    } else {
+      navigate("/account");
+    }
+  };
+
   return (
     <div className="row m-0">
       <div className="navbar d-flex justify-content-center position-fixed navigation">
@@ -17,13 +49,20 @@ function Nagivation() {
             <h4 id="homepage">FoodVille</h4>
           </Link>
           <div className="d-flex gap-3 justify-content-end align-items-center">
-            <button
-              type="button"
-              className="main-btn-primary"
-              onClick={() => setIsModalOpen(true)}
-            >
-              Log in / Sign up
-            </button>
+            <div onClick={handleClickModal}>
+              {isLoggedIn ? (
+                <div className="user-info" style={{ cursor: "pointer" }}>
+                  <span className="user-icon">👤</span>{" "}
+                  <span className="user-name">
+                    {user.first_name} {user.last_name}
+                  </span>
+                </div>
+              ) : (
+                <button type="button" className="main-btn-primary">
+                  Log in / Sign up
+                </button>
+              )}
+            </div>
 
             <Link to="/restaurant" className="nav-item">
               <i className="bi bi-basket3"></i>
@@ -32,14 +71,25 @@ function Nagivation() {
           <AccountModal
             show={isModalOpen}
             onClose={() => setIsModalOpen(false)}
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
           />
         </div>
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/account" element={<Account_View user={user} />} />
         <Route path="/restaurant" element={<Restaurant />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/activate" element={<AccountActivation />} />
+        <Route
+          path="/activate"
+          element={
+            <AccountActivation
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+            />
+          }
+        />
       </Routes>
     </div>
   );
