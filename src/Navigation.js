@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import Account_View from "./Account/Account_View";
+import {
+  default as Account_View,
+  default as Account_View,
+} from "./Account/Account_View";
 import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
 import Home from "./Main/Home";
@@ -8,6 +11,9 @@ import Restaurant from "./Main/Restaurant";
 import { getAccessToken, getRefreshToken } from "./services/tokenService";
 import { me } from "./services/userService";
 import Checkout from "./Store/Checkout";
+import DeliveryStatus from "./Store/DeliveryStatus";
+import Orders from "./Store/Orders";
+import OwnResto from "./Store/OwnResto";
 import "./style.css";
 
 function Nagivation() {
@@ -55,9 +61,9 @@ function Nagivation() {
   };
 
   return (
-    <div className="row m-0">
+    <div className="row">
       <div className="navbar d-flex justify-content-center position-fixed navigation">
-        <div className="container m-0">
+        <div className="container">
           <Link to="/" className="nav-item">
             <h4 id="homepage">FoodVille</h4>
           </Link>
@@ -78,7 +84,7 @@ function Nagivation() {
             </div>
 
             <Link to="/restaurant" className="nav-item">
-              <i className="bi bi-basket3"></i>
+              <i className="bi bi-basket3 "></i>
             </Link>
           </div>
           <AccountModal
@@ -90,16 +96,20 @@ function Nagivation() {
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
+        {/* <Route path="/delivery-status" element={ <DeliveryStatus />} /> */}
         <Route
           path="/account"
           element={<Account_View user={user} setIsLoggedIn={setIsLoggedIn} />}
         />
         <Route path="/restaurant" element={<Restaurant />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/delivery-status" element={<DeliveryStatus />} />
         <Route
           path="/activate"
           element={<AccountActivation setIsModalOpen={setIsModalOpen} />}
         />
+        <Route path="/own-resto" element={<OwnResto />} />
+        <Route path="/orders" element={<Orders />} />
       </Routes>
     </div>
   );

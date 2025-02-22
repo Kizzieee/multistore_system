@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import "../style.css";
+import OwnResto from "./OwnResto";
 
 function Store_Creation() {
+  const navigate = useNavigate();
+
   return (
     <div
       className="modal fade"
@@ -133,7 +137,11 @@ function Store_Creation() {
             >
               Cancel
             </button>
-            <button type="button" className="btn btn-primary">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => navigate("/own-resto")}
+            >
               Create
             </button>
           </div>

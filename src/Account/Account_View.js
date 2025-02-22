@@ -22,96 +22,92 @@ function Account_View(props) {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row mb-3 d-flex justify-content-between">
-        <div className="col-2 d-flex flex-column align-items-center">
-          <div className="profile_picture">
-            <img
-              src={defaultProfile}
-              className="profile_picture_img"
-              alt="User's profile"
-            />
+    <div className="row mt-5">
+      <div className="container mt-5">
+        <div className=" mb-3 d-flex justify-content-between">
+          <div className="col-2 d-flex flex-column align-items-center">
+            <div className="profile_picture">
+              <img
+                src={defaultProfile}
+                className="profile_picture_img"
+                alt="User's profile"
+              />
+            </div>
+            <h3>{user.first_name}</h3>
           </div>
-          <h3>{user.first_name}</h3>
+
+          <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
+            {/* Create Store */}
+            <button
+              type="button"
+              className="btn border border-success"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              <i className="bi bi-shop pe-2"></i>
+              Create Store
+            </button>
+
+            {/* Modal of the Create Store */}
+            <Store_Creation />
+          </div>
         </div>
+        <div className="row d-flex">
+          <ul className="nav nav-pills flex-column col-2">
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "active" ? "active" : ""}`}
+                onClick={() => setActiveTab("active")}
+              >
+                Account Setting
+              </button>
+            </li>
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "link1" ? "active" : ""}`}
+                onClick={() => setActiveTab("link1")}
+              >
+                Past Orders
+              </button>
+            </li>
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "link2" ? "active" : ""}`}
+                onClick={() => setActiveTab("link2")}
+              >
+                Notifications
+              </button>
+            </li>
+          </ul>
 
-        <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
-          {/* Cart */}
-          <button type="button" className="btn btn-success">
-            <i className="bi bi-cart3 pe-2"></i>
-            Orders
-          </button>
-
-          {/* Create Store */}
-          <button
-            type="button"
-            className="btn border border-success"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-          >
-            <i className="bi bi-shop pe-2"></i>
-            Create Store
-          </button>
-
-          {/* Modal of the Create Store */}
-          <Store_Creation />
-        </div>
-      </div>
-      <div className="row d-flex">
-        <ul className="nav nav-pills flex-column col-2">
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === "active" ? "active" : ""}`}
-              onClick={() => setActiveTab("active")}
-            >
-              Account Setting
-            </button>
-          </li>
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === "link1" ? "active" : ""}`}
-              onClick={() => setActiveTab("link1")}
-            >
-              Past Orders
-            </button>
-          </li>
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === "link2" ? "active" : ""}`}
-              onClick={() => setActiveTab("link2")}
-            >
-              Notifications
-            </button>
-          </li>
-        </ul>
-
-        <div className="tab-content mt-3 col-10 border-start">
-          {activeTab === "active" && (
-            <>
+          <div className="tab-content mt-3 col-10 border-start">
+            {activeTab === "active" && (
+              <>
+                <div className="tab-pane fade show active">
+                  <h3>Account Information</h3>
+                  <p>
+                    <strong>First Name:</strong> {user.first_name} <br />
+                    <strong>Last Name:</strong> {user.last_name} <br />
+                    <strong>Birth Date:</strong> {user.birth_date} <br />
+                    <strong>Address:</strong> {user.address} <br />
+                  </p>
+                </div>
+                <button onClick={handleLogout}>Log Out</button>
+              </>
+            )}
+            {activeTab === "link1" && (
               <div className="tab-pane fade show active">
-                <h3>Account Information</h3>
-                <p>
-                  <strong>First Name:</strong> {user.first_name} <br />
-                  <strong>Last Name:</strong> {user.last_name} <br />
-                  <strong>Birth Date:</strong> {user.birth_date} <br />
-                  <strong>Address:</strong> {user.address} <br />
-                </p>
+                {/* Purchase History */}
+                <Account_Purchase_History />
               </div>
-              <button onClick={handleLogout}>Log Out</button>
-            </>
-          )}
-          {activeTab === "link1" && (
-            <div className="tab-pane fade show active">
-              {/* Purchase History */}
-              <Account_Purchase_History />
-            </div>
-          )}
-          {activeTab === "link2" && (
-            <div className="tab-pane fade show active">
-              <h3>Link 2 Content</h3>
-              <p>This is the content for Link 2.</p>
-            </div>
-          )}
+            )}
+            {activeTab === "link2" && (
+              <div className="tab-pane fade show active">
+                <h3>Link 2 Content</h3>
+                <p>This is the content for Link 2.</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

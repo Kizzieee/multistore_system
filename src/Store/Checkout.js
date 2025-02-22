@@ -1,9 +1,11 @@
-import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const accountOwner = {
-    name: "Kizzelyn M. Floralde",
+    name: "John Doe",
     contact: "09123456789",
     address: "123 Main St, Victoria",
   };
@@ -15,7 +17,7 @@ const Checkout = () => {
   const [items, setItems] = useState([
     { name: "Item 1", quantity: 1, price: 100 },
   ]);
-  const deliveryFee = deliveryOption === "Delivery" ? 50 : 0;
+  const deliveryFee = deliveryOption === "Delivery" ? 60 : 0;
   const totalSum =
     items.reduce((sum, item) => sum + item.price * item.quantity, 0) +
     deliveryFee;
@@ -42,27 +44,33 @@ const Checkout = () => {
   return (
     <div className="container my-5">
       <div className="col-6 m-auto">
-        <h2>Checkout</h2>
-        <form>
+        <form className="mt-5">
+          <div className="order-from p-2">
+            <p className="m-0 p-0">Your order from</p>
+            <h3 className="m-0 p-0">Hungry Hurry - Allen</h3>
+          </div>
           {/* Customer Information */}
-          <div className="mb-3">
-            <label className="form-label">Name:</label>
-            <input
-              type="text"
-              className="form-control"
-              value={accountOwner.name}
-              disabled
-            />
+          <div className="mb-3 d-flex gap-3">
+            <div className="col-6">
+              <label className="form-label">Name:</label>
+              <input
+                type="text"
+                className="form-control"
+                value={accountOwner.name}
+                disabled
+              />
+            </div>
+            <div className="col-5">
+              <label className="form-label">Contact Number:</label>
+              <input
+                type="text"
+                className="form-control "
+                value={accountOwner.contact}
+                disabled
+              />
+            </div>
           </div>
-          <div className="mb-3">
-            <label className="form-label">Contact Number:</label>
-            <input
-              type="text"
-              className="form-control"
-              value={accountOwner.contact}
-              disabled
-            />
-          </div>
+
           <div className="mb-3">
             <label className="form-label">Address:</label>
             <input
@@ -153,7 +161,11 @@ const Checkout = () => {
           </div>
 
           {/* Checkout Button */}
-          <button type="button" className="btn btn-primary mt-3 w-100">
+          <button
+            type="button"
+            className="main-btn-primary mt-3 w-100"
+            onClick={() => navigate("/delivery-status")}
+          >
             Checkout
           </button>
         </form>

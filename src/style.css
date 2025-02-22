@@ -158,7 +158,7 @@ body {
 
 .card-menu-item {
   width: calc(100% / 2.1);
-  height: 100%;
+  height: auto;
   object-fit: cover;
   border-radius: 0.5rem;
   position: relative;
@@ -252,6 +252,20 @@ body {
   border-radius: 0.5rem;
 }
 
+.order-from {
+  width: 100%;
+  height: 100%;
+  background: rgb(12, 52, 44);
+  background: linear-gradient(
+    80deg,
+    rgba(12, 52, 44, 1) 0%,
+    rgba(7, 102, 83, 1) 34%
+  );
+  color: #fff;
+  border-radius: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+
 /* Navigation */
 
 .navigation {
@@ -280,6 +294,4 @@ body {
   width: 100%;
   height: 100vh;
   display: flex;
-  background-color: var(--color-primary);
-  z-index: 1000;
 }

@@ -193,7 +193,7 @@ function Orders() {
     const { orderNumber, status } = order;
 
     return (
-      <div className="col mb-4" key={orderNumber}>
+      <div className="col mb-4 " key={orderNumber}>
         <div className="card shadow-sm w-100">
           <div className="card-header d-flex justify-content-between align-items-center">
             <strong>Order #{orderNumber}</strong>
@@ -283,14 +283,14 @@ function Orders() {
 
   // --- JSX Rendering ---
   return (
-    <div className="container py-4">
+    <div className="container py-4 mt-5">
       <h2 className="mb-4">Orders</h2>
 
       {/* NAV PILLS */}
       <ul className="nav nav-pills mb-3">
-        <li className="nav-item">
+        <li className="nav-item ">
           <button
-            className={`nav-link ${activeTab === "all" ? "active" : ""}`}
+            className={`nav-link  ${activeTab === "all" ? "active" : ""}`}
             onClick={() => handleTabClick("all")}
           >
             All Orders
