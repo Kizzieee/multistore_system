@@ -2,7 +2,22 @@ import { useEffect } from "react";
 import "../style.css";
 import Account_Login from "./Account_Login";
 
-function AccountModal({ show, onClose, isModalOpen, setIsModalOpen, justLoggedIn, setJustLoggedIn }) {
+function AccountModal(props) {
+  const {
+    show,
+    onClose,
+    isModalOpen,
+    setIsModalOpen,
+    justLoggedIn,
+    setJustLoggedIn,
+  } = props;
+
+  const accountLoginProps = {
+    isModalOpen,
+    setIsModalOpen,
+    justLoggedIn,
+    setJustLoggedIn,
+  };
   useEffect(() => {
     if (show) {
       document.body.classList.add("modal-open"); // Prevent scrolling when modal is open
@@ -39,12 +54,7 @@ function AccountModal({ show, onClose, isModalOpen, setIsModalOpen, justLoggedIn
               ></button>
             </div>
             <div className="modal-body">
-              <Account_Login
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-                justLoggedIn={justLoggedIn}
-                setJustLoggedIn={setJustLoggedIn}
-              />
+              <Account_Login {...accountLoginProps} />
             </div>
           </div>
         </div>
