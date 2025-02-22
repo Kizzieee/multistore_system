@@ -1,15 +1,25 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import defaultProfile from "../Assets/default_profile.jpg";
+import { logout } from "../services/authService";
 import Store_Creation from "../Store/Store_Creation";
 import "../style.css";
 import Account_Purchase_History from "./Account_Purchase_History";
 
-function Account_View({ user }) {
+function Account_View(props) {
+  const { user, setIsLoggedIn } = props;
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
 
   if (!user.email) {
     return <div>Loading...</div>;
   }
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    setIsLoggedIn(false);
+  };
 
   return (
     <div className="container mt-5">
@@ -77,15 +87,18 @@ function Account_View({ user }) {
 
         <div className="tab-content mt-3 col-10 border-start">
           {activeTab === "active" && (
-            <div className="tab-pane fade show active">
-              <h3>Account Information</h3>
-              <p>
-                <strong>First Name:</strong> {user.first_name} <br />
-                <strong>Last Name:</strong> {user.last_name} <br />
-                <strong>Birth Date:</strong> {user.birth_date} <br />
-                <strong>Address:</strong> {user.address} <br />
-              </p>
-            </div>
+            <>
+              <div className="tab-pane fade show active">
+                <h3>Account Information</h3>
+                <p>
+                  <strong>First Name:</strong> {user.first_name} <br />
+                  <strong>Last Name:</strong> {user.last_name} <br />
+                  <strong>Birth Date:</strong> {user.birth_date} <br />
+                  <strong>Address:</strong> {user.address} <br />
+                </p>
+              </div>
+              <button onClick={handleLogout}>Log Out</button>
+            </>
           )}
           {activeTab === "link1" && (
             <div className="tab-pane fade show active">
