@@ -1,11 +1,12 @@
+import { useState } from "react";
+import { Link, Route, Routes } from "react-router-dom";
+import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
 import Home from "./Main/Home";
 import Restaurant from "./Main/Restaurant";
 import Checkout from "./Store/Checkout";
-import { useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import DeliveryStatus from "./Store/DeliveryStatus";
 import "./style.css";
-import AccountActivation from "./Account/AccountActivation";
 
 function Nagivation() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,7 +27,7 @@ function Nagivation() {
             </button>
 
             <Link to="/restaurant" className="nav-item">
-              <i className="bi bi-basket3"></i>
+              <i className="bi bi-basket3 "></i>
             </Link>
           </div>
           <AccountModal
@@ -37,9 +38,10 @@ function Nagivation() {
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
+        {/* <Route path="/delivery-status" element={ <DeliveryStatus />} /> */}
         <Route path="/restaurant" element={<Restaurant />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/activate" element={<AccountActivation />} />
+        <Route path="/delivery-status" element={<DeliveryStatus />} />
       </Routes>
     </div>
   );
