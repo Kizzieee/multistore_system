@@ -39,7 +39,7 @@ function Nagivation() {
         <Route path="/" element={<Home />} />
         <Route path="/restaurant" element={<Restaurant />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/activation" element={<AccountActivation />} />
+        <Route path="/activate" element={<AccountActivation />} />
       </Routes>
     </div>
   );
