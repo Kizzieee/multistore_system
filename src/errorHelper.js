@@ -3,6 +3,17 @@ import React from "react";
 export default function renderErrorMessages(error) {
   if (!error) return null;
 
+  if (typeof error === "string") {
+    return (
+      <>
+        <br />
+        <div className="alert alert-danger" role="alert">
+          <p>{error}</p>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <br />
