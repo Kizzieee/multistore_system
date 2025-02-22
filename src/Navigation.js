@@ -5,15 +5,18 @@ import AccountModal from "./Account/AccountModal";
 import Home from "./Main/Home";
 import Restaurant from "./Main/Restaurant";
 import Checkout from "./Store/Checkout";
-import DeliveryStatus from "./Store/DeliveryStatus";
 import "./style.css";
+import DeliveryStatus from "./Store/DeliveryStatus";
+import Account_View from "./Account/Account_View";
+import OwnResto from "./Store/OwnResto";
+import Orders from "./Store/Orders";
 
 function Nagivation() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <div className="row m-0">
+    <div className="row">
       <div className="navbar d-flex justify-content-center position-fixed navigation">
-        <div className="container m-0">
+        <div className="container">
           <Link to="/" className="nav-item">
             <h4 id="homepage">FoodVille</h4>
           </Link>
@@ -42,6 +45,10 @@ function Nagivation() {
         <Route path="/restaurant" element={<Restaurant />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/delivery-status" element={<DeliveryStatus />} />
+        <Route path="/activate" element={<AccountActivation />} />
+        <Route path="/account-view" element={<Account_View />} />
+        <Route path="/own-resto" element={<OwnResto />} />
+        <Route path="/orders" element={<Orders />} />
       </Routes>
     </div>
   );
