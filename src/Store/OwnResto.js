@@ -99,10 +99,10 @@ const OwnResto = () => {
             <h1>I Love Burger - Aurora Boulevard Cubao</h1>
             <div className="d-flex flex-column justify-content-between align-items-end gap-2">
               <button className="main-btn-primary ">
-                <i class="bi bi-border-width"></i> Orders
+                <i className="bi bi-border-width"></i> Orders
               </button>
               <button className="white-btn-primary" onClick={handleShow}>
-                <i class="bi bi-info-circle"></i> Store Info
+                <i className="bi bi-info-circle"></i> Store Info
               </button>
               <StoreInfo
                 show={showModal}
