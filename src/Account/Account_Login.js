@@ -4,10 +4,11 @@ import renderErrorMessages from "../errorHelper";
 import { login, register } from "../services/authService";
 import "../style.css";
 
-function Account_Login({ isModalOpen, setIsModalOpen }) {
+function Account_Login({ isModalOpen, setIsModalOpen, justLoggedIn, setJustLoggedIn }) {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false); // Track whether Sign Up is active
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState("");
   const [registrationForm, setRegistrationForm] = useState({
     first_name: "",
     last_name: "",
@@ -28,7 +29,7 @@ function Account_Login({ isModalOpen, setIsModalOpen }) {
 
     // Reset Registration Form
     setRegistrationForm(
-      Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
+      Object.fromEntries(Object.keys(registrationForm).map((key) => [key, ""]))
     );
 
     // Reset Login Form
@@ -67,6 +68,7 @@ function Account_Login({ isModalOpen, setIsModalOpen }) {
           setRegistrationForm(
             Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
           );
+          setSuccess("Please check your email to verify your new account.");
         } catch (error) {
           setError(error);
         }
@@ -80,6 +82,7 @@ function Account_Login({ isModalOpen, setIsModalOpen }) {
         );
         navigate("/");
         setIsModalOpen(!isModalOpen);
+        setJustLoggedIn(!justLoggedIn);
       } catch (error) {
         setError(error);
       }
@@ -229,6 +232,11 @@ function Account_Login({ isModalOpen, setIsModalOpen }) {
           </>
         )}
         {error && renderErrorMessages(error)}
+        {success && (
+          <div className="alert alert-success" role="alert">
+            {success}
+          </div>
+        )}
 
         {/* Toggle Button */}
         <div className="text-center my-3">

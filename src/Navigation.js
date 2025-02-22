@@ -13,6 +13,7 @@ function Nagivation() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [justLoggedIn, setJustLoggedIn] = useState(false);
   const [user, setUser] = useState({
     email: "",
     first_name: "",
@@ -26,12 +27,14 @@ function Nagivation() {
       try {
         const userData = await me();
         setUser(userData);
-        setIsLoggedIn(!isLoggedIn);
-      } catch (error) {}
+        setIsLoggedIn((prev) => !prev); // Functional update to avoid dependency issue
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
     }
 
     fetchUserInfo();
-  }, []);
+  }, [justLoggedIn]);
 
   const handleClickModal = () => {
     if (!isLoggedIn) {
@@ -73,6 +76,8 @@ function Nagivation() {
             onClose={() => setIsModalOpen(false)}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
+            justLoggedIn={justLoggedIn}
+            setJustLoggedIn={setJustLoggedIn}
           />
         </div>
       </div>
