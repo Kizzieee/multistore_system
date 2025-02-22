@@ -11,4 +11,3 @@ services:
       - 9229:9229
     volumes:
       - ./src:/usr/src/app/src
-      - .env:/usr/src/app/.env
