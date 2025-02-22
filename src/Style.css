@@ -256,3 +256,26 @@ background: linear-gradient(80deg, rgba(12,52,44,1) 0%, rgba(7,102,83,1) 34%, rg
   z-index: 999;
   background-color: #fff;
 }
+
+.navigation a {
+  font-size: 1.3rem;
+  text-decoration: none;
+  color: #000;
+
+}
+
+.navigation a #homepage {
+  color: var(--color-primary);
+}
+
+
+.activation-icon {
+  font-size: 5rem;
+  color: var(--color-secondary);
+}
+
+.full {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}

@@ -2,7 +2,6 @@ import OwnResto from "./OwnResto";
 import "../style.css";
 
 function Store_Creation() {
-
   return (
     <div
       className="modal fade"
@@ -26,7 +25,7 @@ function Store_Creation() {
           </div>
           <div className="modal-body d-flex flex-column gap-1 justify-content-between">
             <div className="row">
-              <div class="col-6 mb-3">
+              <div className="col-6 mb-3">
                 <label for="exampleFormControlInput1" className="form-label">
                   Store Name
                 </label>
@@ -37,7 +36,7 @@ function Store_Creation() {
                 />
               </div>
 
-              <div class="col-6 mb-3">
+              <div className="col-6 mb-3">
                 <label for="exampleFormControlInput1" className="form-label">
                   Upload Store Logo
                 </label>
@@ -50,7 +49,7 @@ function Store_Creation() {
             </div>
 
             <div className="row">
-              <div class="col-6 mb-3">
+              <div className="col-6 mb-3">
                 <label for="exampleFormControlInput1" className="form-label">
                   Email Address
                 </label>
@@ -61,7 +60,7 @@ function Store_Creation() {
                 />
               </div>
 
-              <div class="col-6 mb-3">
+              <div className="col-6 mb-3">
                 <label for="exampleFormControlInput1" className="form-label">
                   Mobile Number
                 </label>
@@ -74,7 +73,7 @@ function Store_Creation() {
             </div>
 
             <div className="row">
-              <div class="col-12 mb-3">
+              <div className="col-12 mb-3">
                 <label for="exampleFormControlInput1" className="form-label">
                   Location
                 </label>
@@ -84,12 +83,10 @@ function Store_Creation() {
                   id="exampleFormControlInput1"
                 />
               </div>
-
-            
             </div>
 
             <div className="row">
-              <div class="col-4 mb-3">
+              <div className="col-4 mb-3">
                 <label for="exampleFormControlInput1" className="form-label">
                   Operating Hours
                 </label>
@@ -101,7 +98,7 @@ function Store_Creation() {
                 />
               </div>
 
-              <div class="col-8">
+              <div className="col-8">
                 <label>Description</label>
                 <textarea
                   className="form-control"
@@ -119,10 +116,7 @@ function Store_Creation() {
             >
               Cancel
             </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-            >
+            <button type="button" className="btn btn-primary">
               Create
             </button>
           </div>

@@ -6,7 +6,7 @@ import "../style.css";
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <div>
+    <div className="mt-5">
       <HomeRestaurants />
     </div>
   );

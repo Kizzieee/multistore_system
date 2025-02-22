@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import milkshake from "../Assets/milkshake.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import CartQuantityAddMinus from "./CartQuantityAddMinus";
+import { useNavigate } from "react-router-dom";
 
 function Restaurant() {
   const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   const addToCart = (product) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.id === product.id);
       if (existingProduct) {
         return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         );
       } else {
         return [...prevCart, { ...product, quantity: 1 }];
@@ -21,18 +25,19 @@ function Restaurant() {
   };
 
   const updateQuantity = (productId, quantity) => {
-    setCart((prevCart) =>
-      prevCart
-        .map((item) =>
-          item.id === productId ? { ...item, quantity: quantity } : item
-        )
-        .filter((item) => item.quantity > 0) // Remove item if quantity is 0
+    setCart(
+      (prevCart) =>
+        prevCart
+          .map((item) =>
+            item.id === productId ? { ...item, quantity: quantity } : item
+          )
+          .filter((item) => item.quantity > 0) // Remove item if quantity is 0
     );
   };
 
   return (
-    <div className="mt-5">
-      <div id="RestaurantInfo" className="container">
+    <div className="my-5">
+      <div id="RestaurantInfo" className="container mt-5">
         <div className="row d-flex border-bottom pb-3">
           <div className="col-2 p-0 m-0">
             <div className="square-image-resto">
@@ -52,7 +57,10 @@ function Restaurant() {
               <i className="bi bi-star-fill text-color-main"></i> 4.9 (100+)
               Reviews
             </span>
-            <button type="button" className="btn-secondary-outline d-block mt-3">
+            <button
+              type="button"
+              className="btn-secondary-outline d-block mt-3"
+            >
               <i className="bi bi-info-circle pe-2"></i> More info
             </button>
           </div>
@@ -67,7 +75,8 @@ function Restaurant() {
                 <img src={milkshake} className="card-img-top" alt="..." />
                 <div>
                   <div className="card-body">
-                    <h5 className="card-title">Panda Milk Tea</h5>
+                    <h5 className="card-title m-0">Panda Milk Tea</h5>
+                    <small>&#8369; 125</small>
                     <p className="card-text card-text-menu">
                       Our best seller! Signature CoCo milk tea with black and
                       white pearls, upgrade with salty cream to indulge.
@@ -77,7 +86,12 @@ function Restaurant() {
                     <i
                       className="bi bi-plus-circle add-to-cart"
                       onClick={() =>
-                        addToCart({ id, name: "Panda Milk Tea", image: milkshake })
+                        addToCart({
+                          id,
+                          name: "Panda Milk Tea",
+                          image: milkshake,
+                          price: 125,
+                        })
                       }
                     ></i>
                   </div>
@@ -100,6 +114,7 @@ function Restaurant() {
                     </div>
                     <div className="d-flex flex-column ps-2">
                       <h6>{item.name}</h6>
+                      <small>&#8369; {item.price}</small>
                       <CartQuantityAddMinus
                         quantity={item.quantity}
                         onChange={(newQuantity) =>
@@ -115,7 +130,11 @@ function Restaurant() {
             </div>
 
             {cart.length > 0 && (
-              <button type="button" className="w-100 p-2 main-btn-primary">
+              <button
+                type="button"
+                className="w-100 p-2 main-btn-primary"
+                onClick={() => navigate("/checkout")}
+              >
                 Checkout
               </button>
             )}

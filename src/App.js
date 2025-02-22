@@ -1,9 +1,11 @@
 import Account_Login from "../src/Account/Account_Login";
 import Account_View from "../src/Account/Account_View";
 import Home from "../src/Main/Home";
+import Activation from "./Account/AccountActivation";
 import Checkout from "./Main/Checkout";
 import Restaurant from "./Main/Restaurant";
 import Nagivation from "./Navigation";
+import Checkout from "./Store/Checkout";
 import Orders from "./Store/Orders";
 import OwnResto from "./Store/OwnResto";
 import Store_Creation from "./Store/Store_Creation";
@@ -20,6 +22,7 @@ function App() {
       {/* <Checkout /> */}
       {/* <OwnResto /> */}
       {/* <Orders /> */}
+      {/* <Activation /> */}
     </div>
   );
 }
