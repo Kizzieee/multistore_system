@@ -98,12 +98,7 @@ function Nagivation() {
         <Route path="/checkout" element={<Checkout />} />
         <Route
           path="/activate"
-          element={
-            <AccountActivation
-              isModalOpen={isModalOpen}
-              setIsModalOpen={setIsModalOpen}
-            />
-          }
+          element={<AccountActivation setIsModalOpen={setIsModalOpen} />}
         />
       </Routes>
     </div>
