@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Checkout = () => {
   const navigate = useNavigate();
   const accountOwner = {
-    name: "Kizzelyn M. Floralde",
+    name: "John Doe",
     contact: "09123456789",
     address: "123 Main St, Victoria",
   };
@@ -17,7 +17,7 @@ const Checkout = () => {
   const [items, setItems] = useState([
     { name: "Item 1", quantity: 1, price: 100 },
   ]);
-  const deliveryFee = deliveryOption === "Delivery" ? 50 : 0;
+  const deliveryFee = deliveryOption === "Delivery" ? 60 : 0;
   const totalSum =
     items.reduce((sum, item) => sum + item.price * item.quantity, 0) +
     deliveryFee;
@@ -47,7 +47,7 @@ const Checkout = () => {
         <form className="mt-5">
           <div className="order-from p-2">
             <p className="m-0 p-0">Your order from</p>
-            <h3 className="m-0 p-0">The Original Pares Mami House</h3>
+            <h3 className="m-0 p-0">Hungry Hurry - Allen</h3>
           </div>
           {/* Customer Information */}
           <div className="mb-3 d-flex gap-3">
