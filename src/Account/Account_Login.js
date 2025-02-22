@@ -122,7 +122,9 @@ function Account_Login() {
           className="main-btn-outline-primary"
           onClick={() => setIsSignUp(!isSignUp)}
         >
-          {isSignUp ? "Already have an acount? Log in" : "Don't have an account? Sign up"}
+          {isSignUp
+            ? "Already have an acount? Log in"
+            : "Don't have an account? Sign up"}
         </button>
       </form>
     </div>

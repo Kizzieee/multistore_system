@@ -7,9 +7,6 @@ import "../style.css";
 function Account_View() {
   const [activeTab, setActiveTab] = useState("active");
 
-
-  
-
   return (
     <div className="container mt-5">
       <div className="row mb-3 d-flex justify-content-between">
@@ -27,7 +24,7 @@ function Account_View() {
         <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
           {/* Cart */}
           <button type="button" className="btn btn-success">
-            <i class="bi bi-cart3 pe-2"></i>
+            <i className="bi bi-cart3 pe-2"></i>
             Orders
           </button>
 
