@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build:
+      context: .
+      target: dev
+    environment:
+      NODE_ENV: production
+      REACT_APP_API_URL: "${REACT_APP_API_URL}"
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - ./src:/usr/src/app/src
+      - .env:/usr/src/app/.env
