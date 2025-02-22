@@ -27,21 +27,14 @@ function Account_Login() {
     setError(null);
 
     // Reset Registration Form
-    setRegistrationForm({
-      first_name: "",
-      last_name: "",
-      birth_date: "",
-      address: "",
-      email: "",
-      password: "",
-      confirm_password: "",
-    });
+    setRegistrationForm(
+      Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
+    );
 
     // Reset Login Form
-    setLoginForm({
-      login_email: "",
-      login_password: "",
-    });
+    setLoginForm(
+      Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
+    );
   };
 
   const handleLoginFormChange = async (e) => {
@@ -71,6 +64,9 @@ function Account_Login() {
           await register(submitData);
           setError(null);
           setIsSignUp(!isSignUp);
+          setRegistrationForm(
+            Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
+          );
         } catch (error) {
           setError(error);
         }
@@ -79,6 +75,9 @@ function Account_Login() {
       try {
         await login(loginForm.login_email, loginForm.login_password);
         setError(null);
+        setLoginForm(
+          Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
+        );
         navigate("/home");
       } catch (error) {
         setError(error);
