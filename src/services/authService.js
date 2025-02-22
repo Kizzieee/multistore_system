@@ -12,7 +12,7 @@ export const register = async (data) => {
     return response.data;
   } catch (error) {
     console.error("Failed to register: ", error);
-    throw error.response?.data || error;
+    throw error.response?.data || error?.message || error;
   }
 };
 
@@ -28,7 +28,7 @@ export async function login(email, password) {
     return response;
   } catch (error) {
     console.error("Failed to login: ", error);
-    throw error.response?.data || error;
+    throw error.response?.data || error?.message || error;
   }
 }
 
@@ -50,7 +50,7 @@ export async function refreshToken() {
     throw new Error("No refresh token available");
   } catch (error) {
     console.error("Failed to refresh token: ", error);
-    throw error.response?.data || error;
+    throw error.response?.data || error?.message || error;
   }
 }
 
@@ -62,6 +62,6 @@ export async function verifyToken(accessToken) {
     return response.data;
   } catch (error) {
     console.error("Failed to verify token: ", error);
-    throw error.response?.data || error;
+    throw error.response?.data || error?.message || error;
   }
 }
