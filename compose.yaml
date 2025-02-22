@@ -6,9 +6,15 @@ services:
     environment:
       NODE_ENV: production
       REACT_APP_API_URL: "${REACT_APP_API_URL}"
-      WATCHPACK_POLLING: "true" # Required for Windows to auto-reload
     ports:
       - 3000:3000
       - 9229:9229
-    volumes:
-      - ./src:/usr/src/app/src
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/src/app/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
