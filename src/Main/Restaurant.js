@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import milkshake from "../Assets/milkshake.jpg";
+import food1 from "../Assets/food (1).jpeg";
+import food2 from "../Assets/food (2).jpg";
+import food3 from "../Assets/food (3).jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import CartQuantityAddMinus from "./CartQuantityAddMinus";
@@ -35,6 +38,41 @@ function Restaurant() {
     );
   };
 
+  const menuItems = [
+    {
+      id: 1,
+      name: "Panda Milk Tea",
+      image: milkshake,
+      price: 125,
+      description:
+        "A delicious blend of milk tea with chewy black and white pearls, perfect for any time of the day.",
+    },
+    {
+      id: 2,
+      name: "Abodo",
+      image: food1,
+      price: 140,
+      description:
+        "Tender pork adobo with pineapple and boiled egg, served with steamed rice and atchara on the side.",
+    },
+    {
+      id: 3,
+      name: "Strawberry Smoothie",
+      image: food2,
+      price: 130,
+      description:
+        "Refreshing strawberry smoothie made from real strawberries, blended to perfection.",
+    },
+    {
+      id: 4,
+      name: "Burgeer Overload",
+      image: food3,
+      price: 150,
+      description:
+        "Burger patty topped with cheese, lettuce, tomatoes, and special sauce, served with fries on the side.",
+    },
+  ];
+
   return (
     <div className="my-5">
       <div id="RestaurantInfo" className="container mt-5">
@@ -47,9 +85,9 @@ function Restaurant() {
 
           <div className="col-10">
             <p>
-              <i className="bi bi-geo-alt"></i> Catarman, Northern Samar
+              <i className="bi bi-geo-alt"></i> Allen, Northern Samar
             </p>
-            <h2>Long Kee Food Haus - P Sevilla Street</h2>
+            <h2>Hungry Hurry - Allen</h2>
             <span className="me-5">
               <FontAwesomeIcon icon={faMotorcycle} /> : &#8369;60 delivery fee
             </span>
@@ -70,29 +108,28 @@ function Restaurant() {
       <div id="RestaurantMenu" className="container mt-5">
         <div id="PopularMenu" className="row gap-1">
           <div className="col-8 gap-3 p-0 d-flex flex-wrap">
-            {[1, 2, 3, 4].map((id) => (
-              <div key={id} className="card card-menu-item d-flex flex-row">
-                <img src={milkshake} className="card-img-top" alt="..." />
+            {menuItems.map((item) => (
+              <div
+                key={item.id}
+                className="card card-menu-item d-flex flex-row"
+              >
+                <img
+                  src={item.image}
+                  className="card-img-top"
+                  alt={item.name}
+                />
                 <div>
                   <div className="card-body">
-                    <h5 className="card-title m-0">Panda Milk Tea</h5>
-                    <small>&#8369; 125</small>
+                    <h5 className="card-title m-0">{item.name}</h5>
+                    <small>&#8369; {item.price}</small>
                     <p className="card-text card-text-menu">
-                      Our best seller! Signature CoCo milk tea with black and
-                      white pearls, upgrade with salty cream to indulge.
+                      {item.description}
                     </p>
                   </div>
                   <div>
                     <i
                       className="bi bi-plus-circle add-to-cart"
-                      onClick={() =>
-                        addToCart({
-                          id,
-                          name: "Panda Milk Tea",
-                          image: milkshake,
-                          price: 125,
-                        })
-                      }
+                      onClick={() => addToCart(item)}
                     ></i>
                   </div>
                 </div>
