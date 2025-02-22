@@ -40,15 +40,15 @@ function Nagivation() {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/multistore_system" element={<Home />} />
         {/* <Route path="/delivery-status" element={ <DeliveryStatus />} /> */}
-        <Route path="/restaurant" element={<Restaurant />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/delivery-status" element={<DeliveryStatus />} />
-        <Route path="/activate" element={<AccountActivation />} />
-        <Route path="/account-view" element={<Account_View />} />
-        <Route path="/own-resto" element={<OwnResto />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route path="/multistore_system/restaurant" element={<Restaurant />} />
+        <Route path="/multistore_system/checkout" element={<Checkout />} />
+        <Route path="/multistore_system/delivery-status" element={<DeliveryStatus />} />
+        <Route path="/multistore_system/activate" element={<AccountActivation />} />
+        <Route path="/multistore_system/account-view" element={<Account_View />} />
+        <Route path="/multistore_system/own-resto" element={<OwnResto />} />
+        <Route path="/multistore_system/orders" element={<Orders />} />
       </Routes>
     </div>
   );
