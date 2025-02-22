@@ -1,4 +1,4 @@
-    import { useState } from "react";
+import { useState } from "react";
 
 function Orders() {
   // Initial mock data for demonstration
@@ -79,18 +79,27 @@ function Orders() {
   const rejectedOrders = orders.filter((o) => o.status === "rejected");
 
   // All orders (including rejected)
-  const allOrders = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const allOrders = [...orders].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
 
   // --- Helpers for the linear status flow ---
   // We define the sequence of statuses in a linear path for "active" orders.
-  const statusSequence = ["new", "accepted", "preparing", "outForDelivery", "completed"];
+  const statusSequence = [
+    "new",
+    "accepted",
+    "preparing",
+    "outForDelivery",
+    "completed",
+  ];
   // 'rejected' is standalone when a user rejects from 'new', or if we want to allow rejecting at other stages, you can adjust accordingly.
 
   // This function gets the next statuses you can move into from the current status
   // in a linear fashion. You can decide whether you want to allow skipping or only the next immediate step.
   const getNextAllowedStatuses = (currentStatus) => {
     // If the order is "completed" or "rejected", no further transitions
-    if (currentStatus === "completed" || currentStatus === "rejected") return [];
+    if (currentStatus === "completed" || currentStatus === "rejected")
+      return [];
 
     // If the order is still "new", you can show "accepted" or "rejected" as possible transitions:
     if (currentStatus === "new") {
@@ -159,6 +168,15 @@ function Orders() {
 
     // Close the modal
     closeModal();
+  };
+
+  // --- Rendering helpers ---
+  const calculateSubTotal = (order) => {
+    const itemsSubTotal = order.items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    return itemsSubTotal;
   };
 
   // --- Rendering helpers ---
@@ -245,6 +263,10 @@ function Orders() {
               </div>
             ))}
             <hr />
+            <div className="d-flex justify-content-between">
+              <span>Subtotal:</span>
+              <span>&#8369;{calculateSubTotal(order)}</span>
+            </div>
             <div className="d-flex justify-content-between">
               <span>Delivery Fee:</span>
               <span>&#8369;{order.deliveryFee}</span>
@@ -403,9 +425,8 @@ function Orders() {
                   </>
                 ) : (
                   <p>
-                    Are you sure you want to{" "}
-                    <strong>{modalAction}</strong> Order #
-                    {selectedOrder?.orderNumber}?
+                    Are you sure you want to <strong>{modalAction}</strong>{" "}
+                    Order #{selectedOrder?.orderNumber}?
                   </p>
                 )}
               </div>
