@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/multistore_system/static/css/main.993cb8d4.css",
-    "main.js": "/multistore_system/static/js/main.044a061d.js",
+    "main.js": "/multistore_system/static/js/main.e806ea47.js",
     "static/js/488.6e40348b.chunk.js": "/multistore_system/static/js/488.6e40348b.chunk.js",
     "static/media/default_profile.jpg": "/multistore_system/static/media/default_profile.cfe9f79c746ba3002568.jpg",
     "static/media/sizzling.jpg": "/multistore_system/static/media/sizzling.73da70b4361be6b1d733.jpg",
@@ -13,11 +13,11 @@
     "static/media/food (1).jpeg": "/multistore_system/static/media/food (1).f31c46428c89aee1b843.jpeg",
     "index.html": "/multistore_system/index.html",
     "main.993cb8d4.css.map": "/multistore_system/static/css/main.993cb8d4.css.map",
-    "main.044a061d.js.map": "/multistore_system/static/js/main.044a061d.js.map",
+    "main.e806ea47.js.map": "/multistore_system/static/js/main.e806ea47.js.map",
     "488.6e40348b.chunk.js.map": "/multistore_system/static/js/488.6e40348b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.993cb8d4.css",
-    "static/js/main.044a061d.js"
+    "static/js/main.e806ea47.js"
   ]
 }
