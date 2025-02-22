@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import {
-  default as Account_View,
-  default as Account_View,
-} from "./Account/Account_View";
+import { default as Account_View } from "./Account/Account_View";
 import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
 import Home from "./Main/Home";
