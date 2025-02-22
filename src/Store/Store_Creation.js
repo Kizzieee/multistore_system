@@ -1,4 +1,3 @@
-import OwnResto from "./OwnResto";
 import "../style.css";
 
 function Store_Creation() {
@@ -26,7 +25,10 @@ function Store_Creation() {
           <div className="modal-body d-flex flex-column gap-1 justify-content-between">
             <div className="row">
               <div className="col-6 mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
                   Store Name
                 </label>
                 <input
@@ -37,7 +39,10 @@ function Store_Creation() {
               </div>
 
               <div className="col-6 mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
                   Upload Store Logo
                 </label>
                 <input
@@ -50,7 +55,10 @@ function Store_Creation() {
 
             <div className="row">
               <div className="col-6 mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
                   Email Address
                 </label>
                 <input
@@ -61,7 +69,10 @@ function Store_Creation() {
               </div>
 
               <div className="col-6 mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
                   Mobile Number
                 </label>
                 <input
@@ -74,7 +85,10 @@ function Store_Creation() {
 
             <div className="row">
               <div className="col-12 mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
                   Location
                 </label>
                 <input
@@ -87,7 +101,10 @@ function Store_Creation() {
 
             <div className="row">
               <div className="col-4 mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
                   Operating Hours
                 </label>
                 <input
