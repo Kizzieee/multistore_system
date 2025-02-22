@@ -5,6 +5,7 @@ import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
 import Home from "./Main/Home";
 import Restaurant from "./Main/Restaurant";
+import { getAccessToken, getRefreshToken } from "./services/tokenService";
 import { me } from "./services/userService";
 import Checkout from "./Store/Checkout";
 import "./style.css";
@@ -22,12 +23,21 @@ function Nagivation() {
     address: "",
   });
 
+  const accountModalProps = {
+    isModalOpen,
+    setIsModalOpen,
+    justLoggedIn,
+    setJustLoggedIn,
+  };
+
   useEffect(() => {
     async function fetchUserInfo() {
       try {
-        const userData = await me();
-        setUser(userData);
-        setIsLoggedIn((prev) => !prev); // Functional update to avoid dependency issue
+        if (getRefreshToken()) {
+          const userData = await me();
+          setUser(userData);
+          setIsLoggedIn((prev) => !prev); // Functional update to avoid dependency issue
+        }
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
@@ -36,7 +46,7 @@ function Nagivation() {
     fetchUserInfo();
   }, [justLoggedIn]);
 
-  const handleClickModal = () => {
+  const handleLoginClickModal = () => {
     if (!isLoggedIn) {
       setIsModalOpen(!isModalOpen);
     } else {
@@ -52,7 +62,7 @@ function Nagivation() {
             <h4 id="homepage">FoodVille</h4>
           </Link>
           <div className="d-flex gap-3 justify-content-end align-items-center">
-            <div onClick={handleClickModal}>
+            <div onClick={handleLoginClickModal}>
               {isLoggedIn ? (
                 <div className="user-info" style={{ cursor: "pointer" }}>
                   <span className="user-icon">👤</span>{" "}
@@ -74,16 +84,16 @@ function Nagivation() {
           <AccountModal
             show={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-            justLoggedIn={justLoggedIn}
-            setJustLoggedIn={setJustLoggedIn}
+            {...accountModalProps}
           />
         </div>
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/account" element={<Account_View user={user} />} />
+        <Route
+          path="/account"
+          element={<Account_View user={user} setIsLoggedIn={setIsLoggedIn} />}
+        />
         <Route path="/restaurant" element={<Restaurant />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route
