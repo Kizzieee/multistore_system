@@ -37,12 +37,11 @@ function AccountView(props) {
                 type="button"
                 className="btn border btn-success"
                 data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
+                data-bs-target="#createStoreModal"
               >
                 <i className="bi bi-shop pe-2"></i>
                 Create Restaurant
               </button>
-
               {/* Modal of the Create Store */}
               <StoreCreation />
             </div>
