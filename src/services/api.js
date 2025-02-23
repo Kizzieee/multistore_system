@@ -58,12 +58,11 @@ api.interceptors.response.use(
       } catch (refreshError) {
         clearTokens();
         const navigate = useNavigate();
-        navigate("/login");
+        navigate("/");
         return Promise.reject(refreshError);
       }
     }
 
-    // If the error is not 401, or we've already retried, reject
     return Promise.reject(error);
   }
 );
