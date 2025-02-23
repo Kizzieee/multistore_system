@@ -1,7 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const StoreInfo = ({ show, handleClose, storeData, handleSave }) => {
   const [formData, setFormData] = useState({ ...storeData });
+
+  useEffect(() => {
+    if (show) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, [show]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,33 +30,28 @@ const StoreInfo = ({ show, handleClose, storeData, handleSave }) => {
     handleClose();
   };
 
-  const handleBackdropClick = (e) => {
-    if (e.target.classList.contains("modal")) {
-      handleClose();
-    }
-  };
-
   return (
-    <div
-      className={`modal fade ${show ? "show d-block" : ""}`}
-      tabIndex="-1"
-      role="dialog"
-      onClick={handleBackdropClick}
-    >
-      <div className="modal-dialog">
-        <div className="modal-dialog">
-          <div className="modal-content text-dark   ">
+    <>
+      {/* Modal Backdrop */}
+      {show && <div className="modal-backdrop fade show"></div>}
+
+      {/* Modal */}
+      <div
+        className={`modal fade ${show ? "show d-block" : ""}`}
+        id="StoreInfoEditable"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="storeInfoEditableLabel"
+        aria-hidden={!show}
+      >
+        <div className="modal-dialog modal-dialog-centered ">
+          <div className="modal-content text-dark">
             <div className="modal-header">
               <h5 className="modal-title">Edit Store Info</h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={handleClose}
-              ></button>
             </div>
             <div className="modal-body">
               <form onSubmit={handleSubmit}>
-                <div className="row d-flex flex-row">
+                <div className="row">
                   <div className="mb-3 col-6">
                     <label className="form-label">Store Name</label>
                     <input
@@ -65,7 +72,7 @@ const StoreInfo = ({ show, handleClose, storeData, handleSave }) => {
                     />
                   </div>
                 </div>
-                <div className="row d-flex flex-row">
+                <div className="row">
                   <div className="mb-3 col-6">
                     <label className="form-label">Email Address</label>
                     <input
@@ -102,7 +109,7 @@ const StoreInfo = ({ show, handleClose, storeData, handleSave }) => {
                   />
                 </div>
 
-                <div className="row d-flex flex-row">
+                <div className="row">
                   <div className="col-4 mb-3">
                     <label className="form-label">Operating Hours</label>
                     <input
@@ -128,12 +135,12 @@ const StoreInfo = ({ show, handleClose, storeData, handleSave }) => {
                 <div className="modal-footer">
                   <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="main-btn-outline-primary"
                     onClick={handleClose}
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="main-btn-primary">
                     Save Changes
                   </button>
                 </div>
@@ -142,7 +149,7 @@ const StoreInfo = ({ show, handleClose, storeData, handleSave }) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
