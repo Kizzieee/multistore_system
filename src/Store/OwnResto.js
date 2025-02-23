@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const OwnResto = () => {
   const navigate = useNavigate();
-
+  const [isAvailable, setIsAvailable] = useState(true);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
@@ -92,9 +92,15 @@ const OwnResto = () => {
     );
   }, [products]);
 
+  useEffect(() => {
+    // Remove any existing modal backdrops when this component mounts
+    const modalBackdrops = document.querySelectorAll(".modal-backdrop");
+    modalBackdrops.forEach((backdrop) => backdrop.remove());
+  }, []);
+
   return (
-    <div className="row container m-auto mt-5">
-      <div className="container mt-5">
+    <div className="container mt-5 p-0">
+      <div className=" col-10 m-auto mt-5 p-0">
         <div className="row">
           <div className="col-md-12 resto-name-banner p-0">
             <div className="resto-name-banner-gradient"></div>
@@ -110,16 +116,16 @@ const OwnResto = () => {
                 <button className="white-btn-primary" onClick={handleShow}>
                   <i className="bi bi-info-circle"></i> Store Info
                 </button>
-                <StoreInfo
-                  show={showModal}
-                  handleClose={handleClose}
-                  storeData={storeData}
-                  handleSave={handleSave}
-                />
               </div>
             </div>
           </div>
         </div>
+        <StoreInfo
+          show={showModal}
+          handleClose={handleClose}
+          storeData={storeData}
+          handleSave={handleSave}
+        />
 
         <div className="row my-4">
           <div className="col-md-6">
@@ -211,16 +217,17 @@ const OwnResto = () => {
         <h4>Product List</h4>
         <table className="table table-striped table-bordered table-hover">
           <thead>
-            <tr>
+            <tr className="text-center">
               <th>Image</th>
               <th>Name</th>
               <th>Description</th>
               <th>Price</th>
               <th>Category</th>
               <th>Actions</th>
+              <th>Availability</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-center">
             {products.map((prod) => (
               <tr key={prod.id}>
                 <td>
@@ -251,6 +258,27 @@ const OwnResto = () => {
                     <i className="bi bi-trash"></i>
                   </button>
                 </td>
+                <td >
+                <button
+                    onClick={() =>
+                      setProducts(
+                        products.map((p) =>
+                          p.id === prod.id
+                            ? { ...p, available: !p.available }
+                            : p
+                        )
+                      )
+                    }
+                    className={`px-4 py-2 font-semibold rounded-lg ${
+                      prod.available
+                        ? "main-btn-primary"
+                        : "main-btn-outline-primary text-color-main"
+                    }`}
+                  >
+                    {prod.available ? "Available" : "Unavailable"}
+                  </button>
+                </td>
+                
               </tr>
             ))}
           </tbody>
