@@ -6,9 +6,8 @@ export default function renderErrorMessages(error) {
   if (typeof error === "string") {
     return (
       <>
-        <br />
         <div className="alert alert-danger" role="alert">
-          <p>{error}</p>
+          <span className="d-block">{error}</span>
         </div>
       </>
     );
@@ -22,14 +21,18 @@ export default function renderErrorMessages(error) {
           const messages = error[fieldKey];
 
           if (typeof messages === "string") {
-            return <p key={fieldKey}>{messages}</p>;
+            return (
+              <span className="d-block" key={fieldKey}>
+                {messages}
+              </span>
+            );
           }
 
           if (Array.isArray(messages)) {
             return messages.map((message, index) => (
-              <p key={`${fieldKey}-${index}`}>
+              <span className="d-block" key={`${fieldKey}-${index}`}>
                 {fieldKey} : {message}
-              </p>
+              </span>
             ));
           }
 
