@@ -1,20 +1,23 @@
 {
   "files": {
-    "main.css": "/multistore_system/static/css/main.bb974598.css",
-    "main.js": "/multistore_system/static/js/main.17d0d222.js",
+    "main.css": "/multistore_system/static/css/main.993cb8d4.css",
+    "main.js": "/multistore_system/static/js/main.f4306079.js",
     "static/js/488.6e40348b.chunk.js": "/multistore_system/static/js/488.6e40348b.chunk.js",
     "static/media/default_profile.jpg": "/multistore_system/static/media/default_profile.cfe9f79c746ba3002568.jpg",
     "static/media/sizzling.jpg": "/multistore_system/static/media/sizzling.73da70b4361be6b1d733.jpg",
+    "static/media/food (3).jpg": "/multistore_system/static/media/food (3).92afea1b6dd200f447d9.jpg",
     "static/media/bootstrap-icons.woff?": "/multistore_system/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
+    "static/media/food (2).jpg": "/multistore_system/static/media/food (2).fc7cbf3a11ecf496b248.jpg",
     "static/media/bootstrap-icons.woff2?": "/multistore_system/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
     "static/media/milkshake.jpg": "/multistore_system/static/media/milkshake.bd6b54db63544051a39f.jpg",
+    "static/media/food (1).jpeg": "/multistore_system/static/media/food (1).f31c46428c89aee1b843.jpeg",
     "index.html": "/multistore_system/index.html",
-    "main.bb974598.css.map": "/multistore_system/static/css/main.bb974598.css.map",
-    "main.17d0d222.js.map": "/multistore_system/static/js/main.17d0d222.js.map",
+    "main.993cb8d4.css.map": "/multistore_system/static/css/main.993cb8d4.css.map",
+    "main.f4306079.js.map": "/multistore_system/static/js/main.f4306079.js.map",
     "488.6e40348b.chunk.js.map": "/multistore_system/static/js/488.6e40348b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.bb974598.css",
-    "static/js/main.17d0d222.js"
+    "static/css/main.993cb8d4.css",
+    "static/js/main.f4306079.js"
   ]
 }
