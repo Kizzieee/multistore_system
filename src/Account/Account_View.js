@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import defaultProfile from "../Assets/default_profile.jpg";
 import { logout } from "../services/authService";
 import Store_Creation from "../Store/Store_Creation";
-import ReviewOrder from "../PastOrdersModal/ReviewOrder";
 import "../style.css";
 import Account_Purchase_History from "./Account_Purchase_History";
 
@@ -34,7 +33,6 @@ function Account_View(props) {
               <h3>{user.first_name}</h3>
             </div>
             <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
-              {/* Create Store */}
               <button
                 type="button"
                 className="btn border btn-success"
@@ -73,35 +71,36 @@ function Account_View(props) {
               </li>
             </ul>
 
-          <div className="tab-content mt-3 col-10 border-start">
-            {activeTab === "active" && (
-              <>
+            <div className="tab-content mt-3 col-10 border-start">
+              {activeTab === "active" && (
+                <>
+                  <div className="tab-pane fade show active">
+                    <h3>Account Information</h3>
+                    <p>
+                      <strong>First Name:</strong> {user.first_name} <br />
+                      <strong>Last Name:</strong> {user.last_name} <br />
+                      <strong>Birth Date:</strong> {user.birth_date} <br />
+                      <strong>Address:</strong> {user.address} <br />
+                    </p>
+                  </div>
+                  <button className="btn btn-danger" onClick={handleLogout}>
+                    Log Out
+                  </button>
+                </>
+              )}
+              {activeTab === "link1" && (
                 <div className="tab-pane fade show active">
-                  <h3>Account Information</h3>
-                  <p>
-                    <strong>First Name:</strong> {user.first_name} <br />
-                    <strong>Last Name:</strong> {user.last_name} <br />
-                    <strong>Birth Date:</strong> {user.birth_date} <br />
-                    <strong>Address:</strong> {user.address} <br />
-                  </p>
+                  {/* Purchase History */}
+                  <Account_Purchase_History />
                 </div>
-                <button className="btn btn-danger" onClick={handleLogout}>
-                  Log Out
-                </button>
-              </>
-            )}
-            {activeTab === "link1" && (
-              <div className="tab-pane fade show active">
-                {/* Purchase History */}
-                <Account_Purchase_History />
-              </div>
-            )}
-            {activeTab === "link2" && (
-              <div className="tab-pane fade show active">
-                <h3>Link 2 Content</h3>
-                <p>This is the content for Link 2.</p>
-              </div>
-            )}
+              )}
+              {activeTab === "link2" && (
+                <div className="tab-pane fade show active">
+                  <h3>Link 2 Content</h3>
+                  <p>This is the content for Link 2.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
