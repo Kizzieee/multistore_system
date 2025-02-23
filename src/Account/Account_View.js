@@ -11,10 +11,6 @@ function Account_View(props) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
 
-  if (!user.email) {
-    return <div>Loading...</div>;
-  }
-
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -92,7 +88,9 @@ function Account_View(props) {
                     <strong>Address:</strong> {user.address} <br />
                   </p>
                 </div>
-                <button onClick={handleLogout}>Log Out</button>
+                <button className="btn btn-danger" onClick={handleLogout}>
+                  Log Out
+                </button>
               </>
             )}
             {activeTab === "link1" && (

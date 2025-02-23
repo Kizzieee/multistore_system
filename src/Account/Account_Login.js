@@ -20,8 +20,8 @@ function Account_Login(props) {
     confirm_password: "",
   });
   const [loginForm, setLoginForm] = useState({
-    login_email: "",
-    login_password: "",
+    email: "",
+    password: "",
   });
 
   const handleToggle = () => {
@@ -76,7 +76,7 @@ function Account_Login(props) {
       }
     } else {
       try {
-        await login(loginForm.login_email, loginForm.login_password);
+        await login(loginForm.email, loginForm.password);
         setError(null);
         setLoginForm(
           Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
@@ -203,12 +203,12 @@ function Account_Login(props) {
         ) : (
           <>
             <div className="mb-2 p-0">
-              <label htmlFor="login_email">Email Address</label>
+              <label htmlFor="email">Email Address</label>
               <input
                 type="email"
                 id="login_email"
-                name="login_email"
-                value={loginForm.login_email}
+                name="email"
+                value={loginForm.email}
                 onChange={handleLoginFormChange}
                 placeholder="example@domain.com"
                 required
@@ -216,12 +216,12 @@ function Account_Login(props) {
               />
             </div>
             <div className="mb-2 p-0">
-              <label htmlFor="login_password">Password</label>
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 id="login_password"
-                name="login_password"
-                value={loginForm.login_password}
+                name="password"
+                value={loginForm.password}
                 onChange={handleLoginFormChange}
                 required
                 className="form-control"
