@@ -10,11 +10,16 @@ import DeliveryStatus from "./Store/DeliveryStatus";
 import Account_View from "./Account/Account_View";
 import OwnResto from "./Store/OwnResto";
 import Orders from "./Store/Orders";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 function Nagivation() {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <div className="row">
+    <div className="row m-0">
       <div className="navbar d-flex justify-content-center position-fixed navigation">
         <div className="container">
           <Link to="/" className="nav-item">
@@ -29,6 +34,30 @@ function Nagivation() {
               Log in / Sign up
             </button>
 
+            <button
+              className="delivery-btn bg-white d-flex flex-row align-items-center gap-3"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#staticBackdrop"
+              aria-controls="staticBackdrop"
+            >
+              <motion.div
+                className="delivery-icon"
+                initial={{ x: 0 }}
+                animate={{ x: 10, opacity: 0.5 }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut",
+                }}
+              >
+                <FontAwesomeIcon icon={faMotorcycle} size="60" />
+              </motion.div>
+              <p className="p-0 m-0">Delivery</p>
+            </button>
+            <DeliveryStatus id="myOffcanvas" />
+
             <Link to="/restaurant" className="nav-item">
               <i className="bi bi-basket3 "></i>
             </Link>
@@ -40,15 +69,15 @@ function Nagivation() {
         </div>
       </div>
       <Routes>
-        <Route path="/multistore_system" element={<Home />} />
+        <Route path="/" element={<Home />} />
         {/* <Route path="/delivery-status" element={ <DeliveryStatus />} /> */}
-        <Route path="/multistore_system/restaurant" element={<Restaurant />} />
-        <Route path="/multistore_system/checkout" element={<Checkout />} />
-        <Route path="/multistore_system/delivery-status" element={<DeliveryStatus />} />
-        <Route path="/multistore_system/activate" element={<AccountActivation />} />
-        <Route path="/multistore_system/account-view" element={<Account_View />} />
-        <Route path="/multistore_system/own-resto" element={<OwnResto />} />
-        <Route path="/multistore_system/orders" element={<Orders />} />
+        <Route path="/restaurant" element={<Restaurant />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/delivery-status" element={<DeliveryStatus />} />
+        <Route path="/activate" element={<AccountActivation />} />
+        <Route path="/account-view" element={<Account_View />} />
+        <Route path="/own-resto" element={<OwnResto />} />
+        <Route path="/orders" element={<Orders />} />
       </Routes>
     </div>
   );
