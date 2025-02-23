@@ -11,6 +11,7 @@ import MoreInfo from "./MoreInfo";
 
 function Restaurant() {
   const [cart, setCart] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const navigate = useNavigate();
 
   const addToCart = (product) => {
@@ -39,10 +40,20 @@ function Restaurant() {
     );
   };
 
+  const categories = [
+    "Beverages",
+    "Burgers",
+    "Desserts",
+    "Filipino Dishes",
+    "Smoothies",
+    "Snacks",
+  ].sort(); // Sort categories alphabetically
+
   const menuItems = [
     {
       id: 1,
       name: "Panda Milk Tea",
+      category: "Beverages",
       image: milkshake,
       price: 125,
       description:
@@ -50,7 +61,8 @@ function Restaurant() {
     },
     {
       id: 2,
-      name: "Abodo",
+      name: "Adobo",
+      category: "Filipino Dishes",
       image: food1,
       price: 140,
       description:
@@ -59,6 +71,7 @@ function Restaurant() {
     {
       id: 3,
       name: "Strawberry Smoothie",
+      category: "Smoothies",
       image: food2,
       price: 130,
       description:
@@ -66,13 +79,19 @@ function Restaurant() {
     },
     {
       id: 4,
-      name: "Burgeer Overload",
+      name: "Burger Overload",
+      category: "Burgers",
       image: food3,
       price: 150,
       description:
         "Burger patty topped with cheese, lettuce, tomatoes, and special sauce, served with fries on the side.",
     },
-  ];
+  ].sort((a, b) => a.name.localeCompare(b.name)); // Sort menu items alphabetically
+
+  const filteredItems =
+    selectedCategory === "All"
+      ? menuItems
+      : menuItems.filter((item) => item.category === selectedCategory);
 
   return (
     <div className="my-5">
@@ -110,35 +129,65 @@ function Restaurant() {
       </div>
 
       <div id="RestaurantMenu" className="container mt-5">
+        {/* Category Dropdown */}
+        <div className="mb-4 p-0 category-select">
+          <label htmlFor="categorySelect" className="me-2 fw-bold">
+            Category:
+          </label>
+          <select
+            id="categorySelect"
+            className="form-select w-auto d-inline-block"
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            value={selectedCategory}
+          >
+            <option value="All">All</option>
+            {categories.map((category, index) => (
+              <option
+                key={index}
+                value={category}
+                className="text-warning-emphasis"
+              >
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div id="PopularMenu" className="row gap-1">
           <div className="col-8 gap-3 p-0 d-flex flex-wrap">
-            {menuItems.map((item) => (
-              <div
-                key={item.id}
-                className="card card-menu-item d-flex flex-row"
-              >
-                <img
-                  src={item.image}
-                  className="card-img-top"
-                  alt={item.name}
-                />
-                <div>
-                  <div className="card-body">
-                    <h5 className="card-title m-0">{item.name}</h5>
-                    <small>&#8369; {item.price}</small>
-                    <p className="card-text card-text-menu">
-                      {item.description}
-                    </p>
-                  </div>
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="card card-menu-item d-flex flex-row"
+                >
+                  <img
+                    src={item.image}
+                    className="card-img-top"
+                    alt={item.name}
+                  />
                   <div>
-                    <i
-                      className="bi bi-plus-circle add-to-cart"
-                      onClick={() => addToCart(item)}
-                    ></i>
+                    <div className="card-body">
+                      <h5 className="card-title m-0">{item.name}</h5>
+                      <small>&#8369; {item.price}</small>
+                      <p className="card-text card-text-menu">
+                        {item.description}
+                      </p>
+                    </div>
+                    <div>
+                      <i
+                        className="bi bi-plus-circle add-to-cart"
+                        onClick={() => addToCart(item)}
+                      ></i>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-center">
+                No items available in this category.
+              </p>
+            )}
           </div>
 
           <div className="col-3 m-0 rounded p-0 bg-light cart-view">
