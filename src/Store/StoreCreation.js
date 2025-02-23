@@ -5,7 +5,7 @@ import renderErrorMessages from "../errorHelper";
 import { createStore } from "../services/storeService";
 import "../style.css";
 
-function Store_Creation() {
+function StoreCreation() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
@@ -287,4 +287,4 @@ function Store_Creation() {
   );
 }
 
-export default Store_Creation;
+export default StoreCreation;

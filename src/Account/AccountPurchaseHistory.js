@@ -4,7 +4,7 @@ import ReviewOrder from "../PastOrdersModal/ReviewOrder";
 import ViewOrder from "../PastOrdersModal/ViewOrder";
 import "../style.css";
 
-const Account_Purchase_History = () => {
+const AccountPurchaseHistory = () => {
   const [reviewedOrders, setReviewedOrders] = useState({});
 
   const handleReviewSubmit = (orderId) => {
@@ -190,4 +190,4 @@ const Account_Purchase_History = () => {
   );
 };
 
-export default Account_Purchase_History;
+export default AccountPurchaseHistory;

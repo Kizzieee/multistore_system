@@ -4,7 +4,7 @@ import renderErrorMessages from "../errorHelper";
 import { login, register } from "../services/authService";
 import "../style.css";
 
-function Account_Login(props) {
+function AccountLogin(props) {
   const { isModalOpen, setIsModalOpen, justLoggedIn, setJustLoggedIn } = props;
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false); // Track whether Sign Up is active
@@ -257,4 +257,4 @@ function Account_Login(props) {
   );
 }
 
-export default Account_Login;
+export default AccountLogin;

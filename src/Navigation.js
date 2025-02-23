@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import { useLayoutEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import { default as Account_View } from "./Account/Account_View";
 import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
+import { default as AccountView } from "./Account/AccountView";
 import Home from "./Main/Home";
 import Restaurant from "./Main/Restaurant";
 import ProtectedRoute from "./ProtectedRoute";
@@ -154,7 +154,7 @@ function Navigation() {
           path="/account"
           element={
             <ProtectedRoute {...protectedRouteProps}>
-              <Account_View
+              <AccountView
                 user={user}
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}

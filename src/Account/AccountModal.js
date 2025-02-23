@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "../style.css";
-import Account_Login from "./Account_Login";
+import AccountLogin from "./AccountLogin";
 
 function AccountModal(props) {
   const {
@@ -54,7 +54,7 @@ function AccountModal(props) {
               ></button>
             </div>
             <div className="modal-body">
-              <Account_Login {...accountLoginProps} />
+              <AccountLogin {...accountLoginProps} />
             </div>
           </div>
         </div>

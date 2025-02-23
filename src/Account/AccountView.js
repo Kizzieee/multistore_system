@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import defaultProfile from "../Assets/default_profile.jpg";
 import { logout } from "../services/authService";
-import Store_Creation from "../Store/Store_Creation";
+import StoreCreation from "../Store/StoreCreation";
 import "../style.css";
-import Account_Purchase_History from "./Account_Purchase_History";
+import AccountPurchaseHistory from "./AccountPurchaseHistory";
 
-function Account_View(props) {
+function AccountView(props) {
   const { user, setIsLoggedIn } = props;
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
@@ -44,7 +44,7 @@ function Account_View(props) {
               </button>
 
               {/* Modal of the Create Store */}
-              <Store_Creation />
+              <StoreCreation />
             </div>
           </div>
           <div className="row d-flex">
@@ -91,7 +91,7 @@ function Account_View(props) {
               {activeTab === "link1" && (
                 <div className="tab-pane fade show active">
                   {/* Purchase History */}
-                  <Account_Purchase_History />
+                  <AccountPurchaseHistory />
                 </div>
               )}
               {activeTab === "link2" && (
@@ -108,4 +108,4 @@ function Account_View(props) {
   );
 }
 
-export default Account_View;
+export default AccountView;

@@ -1,5 +1,5 @@
-import Account_Login from "../src/Account/Account_Login";
-import Account_View from "../src/Account/Account_View";
+import AccountLogin from "../src/Account/AccountLogin";
+import AccountView from "../src/Account/AccountView";
 import Home from "../src/Main/Home";
 import Activation from "./Account/AccountActivation";
 // import Checkout from "./Main/Checkout";
@@ -7,14 +7,14 @@ import Restaurant from "./Main/Restaurant";
 import Nagivation from "./Navigation";
 import Orders from "./Store/Orders";
 import OwnResto from "./Store/OwnResto";
-import Store_Creation from "./Store/Store_Creation";
+import StoreCreation from "./Store/StoreCreation";
 import "./style.css";
 
 function App() {
   return (
     <div>
-      {/* <Account_Login /> */}
-      {/* <Account_View /> */}
+      {/* <AccountLogin /> */}
+      {/* <AccountView /> */}
       {/* <Home /> */}
       {/* <Restaurant /> */}
       <Nagivation />
