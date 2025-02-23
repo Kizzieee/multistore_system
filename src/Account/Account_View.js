@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import defaultProfile from "../Assets/default_profile.jpg";
 import { logout } from "../services/authService";
 import Store_Creation from "../Store/Store_Creation";
+import ReviewOrder from "../PastOrdersModal/ReviewOrder";
 import "../style.css";
 import Account_Purchase_History from "./Account_Purchase_History";
 
@@ -20,61 +21,57 @@ function Account_View(props) {
   return (
     <div className="row mt-5">
       <div className="container mt-5">
-        <div className=" mb-3 d-flex justify-content-between">
-          <div className="col-2 d-flex flex-column align-items-center">
-            <div className="profile_picture">
-              <img
-                src={defaultProfile}
-                className="profile_picture_img"
-                alt="User's profile"
-              />
+        <div className="col-10 m-auto">
+          <div className=" mb-3 d-flex justify-content-between">
+            <div className="col-2 d-flex flex-column align-items-center">
+              <div className="profile_picture">
+                <img
+                  src={defaultProfile}
+                  className="profile_picture_img"
+                  alt="User's profile"
+                />
+              </div>
+              <h3>{user.first_name}</h3>
             </div>
-            <h3>{user.first_name}</h3>
-          </div>
+            <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
+              {/* Create Store */}
+              <button
+                type="button"
+                className="btn border btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                <i className="bi bi-shop pe-2"></i>
+                Create Restaurant
+              </button>
 
-          <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
-            {/* Create Store */}
-            <button
-              type="button"
-              className="btn border border-success"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-            >
-              <i className="bi bi-shop pe-2"></i>
-              Create Store
-            </button>
-
-            {/* Modal of the Create Store */}
-            <Store_Creation />
+              {/* Modal of the Create Store */}
+              <Store_Creation />
+            </div>
           </div>
-        </div>
-        <div className="row d-flex">
-          <ul className="nav nav-pills flex-column col-2">
-            <li className="nav-item">
-              <button
-                className={`nav-link ${activeTab === "active" ? "active" : ""}`}
-                onClick={() => setActiveTab("active")}
-              >
-                Account Setting
-              </button>
-            </li>
-            <li className="nav-item">
-              <button
-                className={`nav-link ${activeTab === "link1" ? "active" : ""}`}
-                onClick={() => setActiveTab("link1")}
-              >
-                Past Orders
-              </button>
-            </li>
-            <li className="nav-item">
-              <button
-                className={`nav-link ${activeTab === "link2" ? "active" : ""}`}
-                onClick={() => setActiveTab("link2")}
-              >
-                Notifications
-              </button>
-            </li>
-          </ul>
+          <div className="row d-flex">
+            <ul className="nav nav-pills flex-column col-2">
+              <li className="nav-item">
+                <button
+                  className={`nav-link  ${
+                    activeTab === "active" ? "active  " : ""
+                  }`}
+                  onClick={() => setActiveTab("active")}
+                >
+                  Account Setting
+                </button>
+              </li>
+              <li className="nav-item" id="orders">
+                <button
+                  className={`nav-link  ${
+                    activeTab === "link1" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("link1")}
+                >
+                  Orders
+                </button>
+              </li>
+            </ul>
 
           <div className="tab-content mt-3 col-10 border-start">
             {activeTab === "active" && (

@@ -1,3 +1,4 @@
+import { Modal } from "bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import renderErrorMessages from "../errorHelper";
@@ -30,6 +31,7 @@ function Store_Creation() {
       setError(null);
       setSuccess("Store created successfully.");
       setTimeout(() => {
+        handleCreate();
         navigate("/own-resto");
       }, 3000);
     } catch (error) {
@@ -64,6 +66,14 @@ function Store_Creation() {
     );
   };
 
+  const handleCreate = () => {
+    const modalElement = document.getElementById("exampleModal");
+    if (modalElement) {
+      const modalInstance = Modal.getInstance(modalElement);
+      modalInstance?.hide();
+    }
+  };
+
   return (
     <div
       className="modal fade"
@@ -76,7 +86,7 @@ function Store_Creation() {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
-              Create Shop
+              Create Restaurant
             </h1>
             <button
               type="button"

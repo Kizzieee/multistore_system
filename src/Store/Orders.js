@@ -283,165 +283,171 @@ function Orders() {
 
   // --- JSX Rendering ---
   return (
-    <div className="container py-4 mt-5">
-      <h2 className="mb-4">Orders</h2>
+    <div className="container-fluid mt-5">
+      <div className="col-10 m-auto py-4 mt-5">
+        <h2 className="mb-4">Orders</h2>
 
-      {/* NAV PILLS */}
-      <ul className="nav nav-pills mb-3">
-        <li className="nav-item ">
-          <button
-            className={`nav-link  ${activeTab === "all" ? "active" : ""}`}
-            onClick={() => handleTabClick("all")}
+        {/* NAV PILLS */}
+        <ul className="nav nav-pills mb-3">
+          <li className="nav-item ">
+            <button
+              className={`nav-link  ${activeTab === "all" ? "active" : ""}`}
+              onClick={() => handleTabClick("all")}
+            >
+              All Orders
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "new" ? "active" : ""}`}
+              onClick={() => handleTabClick("new")}
+            >
+              New
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "active" ? "active" : ""}`}
+              onClick={() => handleTabClick("active")}
+            >
+              Active
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${
+                activeTab === "completed" ? "active" : ""
+              }`}
+              onClick={() => handleTabClick("completed")}
+            >
+              Completed
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "rejected" ? "active" : ""}`}
+              onClick={() => handleTabClick("rejected")}
+            >
+              Rejected
+            </button>
+          </li>
+        </ul>
+
+        {/* TAB CONTENT */}
+        <div>
+          {/* ALL ORDERS TAB */}
+          {activeTab === "all" && (
+            <div className="row row-cols-1 row-cols-md-2 g-4">
+              {allOrders.map((order) => renderOrder(order))}
+              {allOrders.length === 0 && (
+                <div className="text-center my-5">No orders to display.</div>
+              )}
+            </div>
+          )}
+
+          {/* NEW TAB */}
+          {activeTab === "new" && (
+            <div className="row row-cols-1 row-cols-md-2 g-4">
+              {newOrders.map((order) => renderOrder(order))}
+              {newOrders.length === 0 && (
+                <div className="text-center my-5">No new orders.</div>
+              )}
+            </div>
+          )}
+
+          {/* ACTIVE TAB */}
+          {activeTab === "active" && (
+            <div className="row row-cols-1 row-cols-md-2 g-4">
+              {activeOrders.map((order) => renderOrder(order))}
+              {activeOrders.length === 0 && (
+                <div className="text-center my-5">No active orders.</div>
+              )}
+            </div>
+          )}
+
+          {/* COMPLETED TAB */}
+          {activeTab === "completed" && (
+            <div className="row row-cols-1 row-cols-md-2 g-4">
+              {completedOrders.map((order) => renderOrder(order))}
+              {completedOrders.length === 0 && (
+                <div className="text-center my-5">No completed orders.</div>
+              )}
+            </div>
+          )}
+
+          {/* REJECTED TAB */}
+          {activeTab === "rejected" && (
+            <div className="row row-cols-1 row-cols-md-2 g-4">
+              {rejectedOrders.map((order) => renderOrder(order))}
+              {rejectedOrders.length === 0 && (
+                <div className="text-center my-5">No rejected orders.</div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* CONFIRMATION MODAL (Bootstrap 5 style) */}
+        {showModal && (
+          <div
+            className="modal fade show"
+            style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
           >
-            All Orders
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "new" ? "active" : ""}`}
-            onClick={() => handleTabClick("new")}
-          >
-            New
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "active" ? "active" : ""}`}
-            onClick={() => handleTabClick("active")}
-          >
-            Active
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "completed" ? "active" : ""}`}
-            onClick={() => handleTabClick("completed")}
-          >
-            Completed
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "rejected" ? "active" : ""}`}
-            onClick={() => handleTabClick("rejected")}
-          >
-            Rejected
-          </button>
-        </li>
-      </ul>
-
-      {/* TAB CONTENT */}
-      <div>
-        {/* ALL ORDERS TAB */}
-        {activeTab === "all" && (
-          <div className="row row-cols-1 row-cols-md-2 g-4">
-            {allOrders.map((order) => renderOrder(order))}
-            {allOrders.length === 0 && (
-              <div className="text-center my-5">No orders to display.</div>
-            )}
-          </div>
-        )}
-
-        {/* NEW TAB */}
-        {activeTab === "new" && (
-          <div className="row row-cols-1 row-cols-md-2 g-4">
-            {newOrders.map((order) => renderOrder(order))}
-            {newOrders.length === 0 && (
-              <div className="text-center my-5">No new orders.</div>
-            )}
-          </div>
-        )}
-
-        {/* ACTIVE TAB */}
-        {activeTab === "active" && (
-          <div className="row row-cols-1 row-cols-md-2 g-4">
-            {activeOrders.map((order) => renderOrder(order))}
-            {activeOrders.length === 0 && (
-              <div className="text-center my-5">No active orders.</div>
-            )}
-          </div>
-        )}
-
-        {/* COMPLETED TAB */}
-        {activeTab === "completed" && (
-          <div className="row row-cols-1 row-cols-md-2 g-4">
-            {completedOrders.map((order) => renderOrder(order))}
-            {completedOrders.length === 0 && (
-              <div className="text-center my-5">No completed orders.</div>
-            )}
-          </div>
-        )}
-
-        {/* REJECTED TAB */}
-        {activeTab === "rejected" && (
-          <div className="row row-cols-1 row-cols-md-2 g-4">
-            {rejectedOrders.map((order) => renderOrder(order))}
-            {rejectedOrders.length === 0 && (
-              <div className="text-center my-5">No rejected orders.</div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* CONFIRMATION MODAL (Bootstrap 5 style) */}
-      {showModal && (
-        <div
-          className="modal fade show"
-          style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Confirm Action</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={closeModal}
-                ></button>
-              </div>
-              <div className="modal-body">
-                {modalAction === "updateStatus" ? (
-                  <>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Confirm Action</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={closeModal}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  {modalAction === "updateStatus" ? (
+                    <>
+                      <p>
+                        Choose the <strong>next status</strong> for Order #
+                        {selectedOrder?.orderNumber}:
+                      </p>
+                      <div className="mb-3">
+                        <select
+                          className="form-select"
+                          value={selectedNextStatus}
+                          onChange={(e) =>
+                            setSelectedNextStatus(e.target.value)
+                          }
+                        >
+                          {/* Get the next allowed statuses based on current status */}
+                          {getNextAllowedStatuses(selectedOrder?.status).map(
+                            (st) => (
+                              <option value={st} key={st}>
+                                {renderStatusLabel(st)}
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </div>
+                    </>
+                  ) : (
                     <p>
-                      Choose the <strong>next status</strong> for Order #
-                      {selectedOrder?.orderNumber}:
+                      Are you sure you want to <strong>{modalAction}</strong>{" "}
+                      Order #{selectedOrder?.orderNumber}?
                     </p>
-                    <div className="mb-3">
-                      <select
-                        className="form-select"
-                        value={selectedNextStatus}
-                        onChange={(e) => setSelectedNextStatus(e.target.value)}
-                      >
-                        {/* Get the next allowed statuses based on current status */}
-                        {getNextAllowedStatuses(selectedOrder?.status).map(
-                          (st) => (
-                            <option value={st} key={st}>
-                              {renderStatusLabel(st)}
-                            </option>
-                          )
-                        )}
-                      </select>
-                    </div>
-                  </>
-                ) : (
-                  <p>
-                    Are you sure you want to <strong>{modalAction}</strong>{" "}
-                    Order #{selectedOrder?.orderNumber}?
-                  </p>
-                )}
-              </div>
-              <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={closeModal}>
-                  Cancel
-                </button>
-                <button className="btn btn-primary" onClick={confirmAction}>
-                  Yes, Confirm
-                </button>
+                  )}
+                </div>
+                <div className="modal-footer">
+                  <button className="btn btn-secondary" onClick={closeModal}>
+                    Cancel
+                  </button>
+                  <button className="btn btn-primary" onClick={confirmAction}>
+                    Yes, Confirm
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,14 @@
+import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { motion } from "framer-motion";
 import { useLayoutEffect, useState } from "react";
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Routes,
+  useNavigate,
+  useNavigate,
+} from "react-router-dom";
 import { default as Account_View } from "./Account/Account_View";
 import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
@@ -10,9 +19,8 @@ import { getRefreshToken } from "./services/tokenService";
 import { me } from "./services/userService";
 import Checkout from "./Store/Checkout";
 import DeliveryStatus from "./Store/DeliveryStatus";
-import Orders from "./Store/Orders";
+import { default as Orders, default as Orders } from "./Store/Orders";
 import OwnResto from "./Store/OwnResto";
-import "./style.css";
 
 function Navigation() {
   const navigate = useNavigate();
@@ -72,7 +80,7 @@ function Navigation() {
   }
 
   return (
-    <div className="row">
+    <div className="row m-0">
       <div className="navbar d-flex justify-content-center position-fixed navigation">
         <div className="container">
           <Link to="/" className="nav-item">
@@ -98,6 +106,29 @@ function Navigation() {
                 <i className="bi bi-basket3 "></i>
               </Link>
             )}
+            <button
+              className="delivery-btn bg-white d-flex flex-row align-items-center gap-3"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#staticBackdrop"
+              aria-controls="staticBackdrop"
+            >
+              <motion.div
+                className="delivery-icon"
+                initial={{ x: 0 }}
+                animate={{ x: 10, opacity: 0.5 }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut",
+                }}
+              >
+                <FontAwesomeIcon icon={faMotorcycle} size="60" />
+              </motion.div>
+              <p className="p-0 m-0">Delivery</p>
+            </button>
+            <DeliveryStatus id="myOffcanvas" />
           </div>
           <AccountModal
             show={isModalOpen}

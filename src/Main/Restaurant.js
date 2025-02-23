@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import CartQuantityAddMinus from "./CartQuantityAddMinus";
 import { useNavigate } from "react-router-dom";
+import MoreInfo from "./MoreInfo";
 
 function Restaurant() {
   const [cart, setCart] = useState([]);
@@ -98,9 +99,12 @@ function Restaurant() {
             <button
               type="button"
               className="btn-secondary-outline d-block mt-3"
+              data-bs-toggle="modal"
+              data-bs-target="#moreInfo"
             >
               <i className="bi bi-info-circle pe-2"></i> More info
             </button>
+            <MoreInfo />
           </div>
         </div>
       </div>
