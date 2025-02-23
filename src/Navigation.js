@@ -2,13 +2,7 @@ import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import { useLayoutEffect, useState } from "react";
-import {
-  Link,
-  Route,
-  Routes,
-  useNavigate,
-  useNavigate,
-} from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { default as Account_View } from "./Account/Account_View";
 import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
@@ -19,7 +13,7 @@ import { getRefreshToken } from "./services/tokenService";
 import { me } from "./services/userService";
 import Checkout from "./Store/Checkout";
 import DeliveryStatus from "./Store/DeliveryStatus";
-import { default as Orders, default as Orders } from "./Store/Orders";
+import { default as Orders } from "./Store/Orders";
 import OwnResto from "./Store/OwnResto";
 
 function Navigation() {
@@ -101,11 +95,6 @@ function Navigation() {
                 </button>
               )}
             </div>
-            {isLoggedIn && (
-              <Link to="/restaurant" className="nav-item">
-                <i className="bi bi-basket3 "></i>
-              </Link>
-            )}
             <button
               className="delivery-btn bg-white d-flex flex-row align-items-center gap-3"
               type="button"
@@ -128,6 +117,11 @@ function Navigation() {
               </motion.div>
               <p className="p-0 m-0">Delivery</p>
             </button>
+            {isLoggedIn && (
+              <Link to="/restaurant" className="nav-item">
+                <i className="bi bi-basket3 "></i>
+              </Link>
+            )}
             <DeliveryStatus id="myOffcanvas" />
           </div>
           <AccountModal
