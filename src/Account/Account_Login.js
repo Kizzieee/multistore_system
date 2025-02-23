@@ -1,8 +1,10 @@
 import { useState } from "react";
 import "../style.css";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Account_Login() {
+  const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false); // Track whether Sign Up is active
 
   return (
@@ -16,7 +18,13 @@ function Account_Login() {
         </p>
       </div>
 
-      <form className="row d-flex flex-column justify-content-center align-items-center needs-validation">
+      <form
+        className="row d-flex flex-column justify-content-center align-items-center needs-validation"
+        onSubmit={(e) => {
+          e.preventDefault();
+          navigate("/account-view");
+        }}
+      >
         {/* Toggle Between Login & Sign Up */}
         {isSignUp ? (
           <>
@@ -27,7 +35,7 @@ function Account_Login() {
                 id="firstname"
                 className="form-control"
                 placeholder="John"
-                required
+                // required
               />
             </div>
             <div className="mb-2 p-0">
@@ -37,7 +45,7 @@ function Account_Login() {
                 id="lastname"
                 className="form-control"
                 placeholder="Doe"
-                required
+                // required
               />
             </div>
             <div className="mb-2 p-0">
@@ -51,7 +59,7 @@ function Account_Login() {
                 id="address"
                 className="form-control"
                 placeholder="123 Street, City"
-                required
+                // required
               />
             </div>
             <div className="mb-2 p-0">
@@ -61,7 +69,7 @@ function Account_Login() {
                 id="email"
                 className="form-control"
                 placeholder="example@mail.com"
-                required
+                // required
               />
             </div>
             <div className="mb-2 p-0">
@@ -70,7 +78,7 @@ function Account_Login() {
                 type="password"
                 id="password"
                 className="form-control"
-                required
+                // required
               />
             </div>
             <div className="mb-2 p-0">
@@ -79,10 +87,14 @@ function Account_Login() {
                 type="password"
                 id="confirm-password"
                 className="form-control"
-                required
+                // required
               />
             </div>
-            <button type="submit" className="main-btn-primary">
+            <button
+              type="submit"
+              className="main-btn-primary"
+             
+            >
               Sign Up
             </button>
           </>
@@ -95,7 +107,7 @@ function Account_Login() {
                 id="inputemailaddress"
                 className="form-control"
                 placeholder="example@mail.com"
-                required
+                // required
               />
             </div>
             <div className="mb-2 p-0">
@@ -104,10 +116,14 @@ function Account_Login() {
                 type="password"
                 id="inputpassword"
                 className="form-control"
-                required
+                // required
               />
             </div>
-            <button type="submit" className="main-btn-primary">
+            <button
+              type="submit"
+              className="main-btn-primary"
+             
+            >
               Log In
             </button>
           </>
