@@ -28,6 +28,7 @@ function Navigation() {
     last_name: "",
     birth_date: "",
     address: "",
+    groups: [],
   });
 
   const protectedRouteProps = { isLoggedIn, setIsModalOpen };

@@ -10,6 +10,7 @@ function AccountView(props) {
   const { user, setIsLoggedIn } = props;
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
+  const isStoreOwner = user?.groups?.includes("Store Owner");
 
   const handleLogout = () => {
     logout();
@@ -17,11 +18,17 @@ function AccountView(props) {
     setIsLoggedIn(false);
   };
 
+  const handleCreateOrViewStore = () => {
+    if (isStoreOwner) {
+      navigate("/own-resto");
+    }
+  };
+
   return (
     <div className="row mt-5">
       <div className="container mt-5">
         <div className="col-10 m-auto">
-          <div className=" mb-3 d-flex justify-content-between">
+          <div className="mb-3 d-flex justify-content-between">
             <div className="col-2 d-flex flex-column align-items-center">
               <div className="profile_picture">
                 <img
@@ -32,26 +39,30 @@ function AccountView(props) {
               </div>
               <h3>{user.first_name}</h3>
             </div>
+
             <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
               <button
                 type="button"
                 className="btn border btn-success"
                 data-bs-toggle="modal"
                 data-bs-target="#createStoreModal"
+                onClick={handleCreateOrViewStore}
               >
                 <i className="bi bi-shop pe-2"></i>
-                Create Restaurant
+                {isStoreOwner ? "View " : "Create "}
+                Restaurant
               </button>
               {/* Modal of the Create Store */}
               <StoreCreation />
             </div>
           </div>
+
           <div className="row d-flex">
             <ul className="nav nav-pills flex-column col-2">
               <li className="nav-item">
                 <button
-                  className={`nav-link  ${
-                    activeTab === "active" ? "active  " : ""
+                  className={`nav-link ${
+                    activeTab === "active" ? "active" : ""
                   }`}
                   onClick={() => setActiveTab("active")}
                 >
@@ -60,7 +71,7 @@ function AccountView(props) {
               </li>
               <li className="nav-item" id="orders">
                 <button
-                  className={`nav-link  ${
+                  className={`nav-link ${
                     activeTab === "link1" ? "active" : ""
                   }`}
                   onClick={() => setActiveTab("link1")}
@@ -87,16 +98,11 @@ function AccountView(props) {
                   </button>
                 </>
               )}
+
               {activeTab === "link1" && (
                 <div className="tab-pane fade show active">
                   {/* Purchase History */}
                   <AccountPurchaseHistory />
-                </div>
-              )}
-              {activeTab === "link2" && (
-                <div className="tab-pane fade show active">
-                  <h3>Link 2 Content</h3>
-                  <p>This is the content for Link 2.</p>
                 </div>
               )}
             </div>
