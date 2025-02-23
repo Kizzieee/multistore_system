@@ -31,7 +31,7 @@ function Store_Creation() {
       setError(null);
       setSuccess("Store created successfully.");
       setTimeout(() => {
-        handleCreate();
+        handleModal();
         navigate("/own-resto");
       }, 3000);
     } catch (error) {
@@ -66,8 +66,8 @@ function Store_Creation() {
     );
   };
 
-  const handleCreate = () => {
-    const modalElement = document.getElementById("exampleModal");
+  const handleModal = () => {
+    const modalElement = document.getElementById("createStoreModal");
     if (modalElement) {
       const modalInstance = Modal.getInstance(modalElement);
       modalInstance?.hide();
@@ -77,15 +77,15 @@ function Store_Creation() {
   return (
     <div
       className="modal fade"
-      id="exampleModal"
+      id="createStoreModal"
       tabIndex="-1"
-      aria-labelledby="exampleModalLabel"
+      aria-labelledby="createStoreModalLabel"
       aria-hidden="true"
     >
       <div className="modal-dialog bg-secondary">
         <div className="modal-content">
           <div className="modal-header">
-            <h1 className="modal-title fs-5" id="exampleModalLabel">
+            <h1 className="modal-title fs-5" id="createStoreModalLabel">
               Create Restaurant
             </h1>
             <button
