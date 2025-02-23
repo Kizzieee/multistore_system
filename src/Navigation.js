@@ -140,7 +140,14 @@ function Navigation() {
           path="/activate"
           element={<AccountActivation setIsModalOpen={setIsModalOpen} />}
         />
-        <Route path="/own-resto" element={<OwnResto />} />
+        <Route
+          path="/own-resto"
+          element={
+            <ProtectedRoute {...protectedRouteProps}>
+              <OwnResto />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/orders"
           element={
