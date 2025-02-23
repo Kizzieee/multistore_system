@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { default as Account_View } from "./Account/Account_View";
 import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
 import Home from "./Main/Home";
 import Restaurant from "./Main/Restaurant";
-import { getAccessToken, getRefreshToken } from "./services/tokenService";
+import ProtectedRoute from "./ProtectedRoute";
+import { getRefreshToken } from "./services/tokenService";
 import { me } from "./services/userService";
 import Checkout from "./Store/Checkout";
 import DeliveryStatus from "./Store/DeliveryStatus";
@@ -13,11 +14,12 @@ import Orders from "./Store/Orders";
 import OwnResto from "./Store/OwnResto";
 import "./style.css";
 
-function Nagivation() {
+function Navigation() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [justLoggedIn, setJustLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({
     email: "",
     first_name: "",
@@ -26,6 +28,8 @@ function Nagivation() {
     address: "",
   });
 
+  const protectedRouteProps = { isLoggedIn, setIsModalOpen };
+
   const accountModalProps = {
     isModalOpen,
     setIsModalOpen,
@@ -33,16 +37,18 @@ function Nagivation() {
     setJustLoggedIn,
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     async function fetchUserInfo() {
       try {
         if (getRefreshToken()) {
           const userData = await me();
+          setIsLoggedIn(true);
           setUser(userData);
-          setIsLoggedIn((prev) => !prev); // Functional update to avoid dependency issue
         }
       } catch (error) {
         console.error("Error fetching user info:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -56,6 +62,14 @@ function Nagivation() {
       navigate("/account");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="row">
@@ -79,10 +93,11 @@ function Nagivation() {
                 </button>
               )}
             </div>
-
-            <Link to="/restaurant" className="nav-item">
-              <i className="bi bi-basket3 "></i>
-            </Link>
+            {isLoggedIn && (
+              <Link to="/restaurant" className="nav-item">
+                <i className="bi bi-basket3 "></i>
+              </Link>
+            )}
           </div>
           <AccountModal
             show={isModalOpen}
@@ -93,11 +108,6 @@ function Nagivation() {
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/delivery-status" element={ <DeliveryStatus />} /> */}
-        <Route
-          path="/account"
-          element={<Account_View user={user} setIsLoggedIn={setIsLoggedIn} />}
-        />
         <Route path="/restaurant" element={<Restaurant />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/delivery-status" element={<DeliveryStatus />} />
@@ -106,10 +116,30 @@ function Nagivation() {
           element={<AccountActivation setIsModalOpen={setIsModalOpen} />}
         />
         <Route path="/own-resto" element={<OwnResto />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute {...protectedRouteProps}>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/account"
+          element={
+            <ProtectedRoute {...protectedRouteProps}>
+              <Account_View
+                user={user}
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );
 }
 
-export default Nagivation;
+export default Navigation;
