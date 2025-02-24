@@ -27,12 +27,10 @@ function AccountLogin(props) {
   const handleToggle = () => {
     setIsSignUp(!isSignUp);
     setError(null);
-
     // Reset Registration Form
     setRegistrationForm(
       Object.fromEntries(Object.keys(registrationForm).map((key) => [key, ""]))
     );
-
     // Reset Login Form
     setLoginForm(
       Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))

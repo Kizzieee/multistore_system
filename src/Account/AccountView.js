@@ -7,21 +7,14 @@ import "../style.css";
 import AccountPurchaseHistory from "./AccountPurchaseHistory";
 
 function AccountView(props) {
-  const { user, setIsLoggedIn } = props;
+  const { user, setIsLoggedIn, isStoreOwner } = props;
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
-  const isStoreOwner = user?.groups?.includes("Store Owner");
 
   const handleLogout = () => {
     logout();
-    navigate("/");
     setIsLoggedIn(false);
-  };
-
-  const handleCreateOrViewStore = () => {
-    if (isStoreOwner) {
-      navigate("/own-resto");
-    }
+    navigate("/");
   };
 
   return (
@@ -37,22 +30,32 @@ function AccountView(props) {
                   alt="User's profile"
                 />
               </div>
-              <h3>{user.first_name}</h3>
+              <h3>{user?.first_name}</h3>
             </div>
 
             <div className="col-2 d-flex flex-column align-items-end justify-content-center gap-2">
-              <button
-                type="button"
-                className="btn border btn-success"
-                data-bs-toggle="modal"
-                data-bs-target="#createStoreModal"
-                onClick={handleCreateOrViewStore}
-              >
-                <i className="bi bi-shop pe-2"></i>
-                {isStoreOwner ? "View " : "Create "}
-                Restaurant
-              </button>
-              {/* Modal of the Create Store */}
+              {!isStoreOwner ? (
+                <button
+                  type="button"
+                  className="btn border btn-success"
+                  data-bs-toggle="modal"
+                  data-bs-target="#createStoreModal"
+                >
+                  <i className="bi bi-shop pe-2"></i>Create Restaurant
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="btn border btn-info"
+                    onClick={() => {
+                      navigate("/own-resto");
+                    }}
+                  >
+                    <i className="bi bi-shop pe-2"></i>View Restaurant
+                  </button>
+                </>
+              )}
               <StoreCreation />
             </div>
           </div>
@@ -87,10 +90,10 @@ function AccountView(props) {
                   <div className="tab-pane fade show active">
                     <h3>Account Information</h3>
                     <p>
-                      <strong>First Name:</strong> {user.first_name} <br />
-                      <strong>Last Name:</strong> {user.last_name} <br />
-                      <strong>Birth Date:</strong> {user.birth_date} <br />
-                      <strong>Address:</strong> {user.address} <br />
+                      <strong>First Name:</strong> {user?.first_name} <br />
+                      <strong>Last Name:</strong> {user?.last_name} <br />
+                      <strong>Birth Date:</strong> {user?.birth_date} <br />
+                      <strong>Address:</strong> {user?.address} <br />
                     </p>
                   </div>
                   <button className="btn btn-danger" onClick={handleLogout}>
