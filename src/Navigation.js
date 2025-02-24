@@ -30,15 +30,15 @@ function Navigation() {
     address: "",
     groups: [],
   });
-
-  const protectedRouteProps = { isLoggedIn, setIsModalOpen };
-
+  const isStoreOwner = user?.groups?.includes("Store Owner");
+  const protectedRouteProps = { isLoggedIn, setIsModalOpen, isStoreOwner };
   const accountModalProps = {
     isModalOpen,
     setIsModalOpen,
     justLoggedIn,
     setJustLoggedIn,
   };
+  const accountViewProps = { user, setIsLoggedIn, isStoreOwner };
 
   useLayoutEffect(() => {
     async function fetchUserInfo() {
@@ -162,11 +162,7 @@ function Navigation() {
           path="/account"
           element={
             <ProtectedRoute {...protectedRouteProps}>
-              <AccountView
-                user={user}
-                isLoggedIn={isLoggedIn}
-                setIsLoggedIn={setIsLoggedIn}
-              />
+              <AccountView {...accountViewProps} />
             </ProtectedRoute>
           }
         />
