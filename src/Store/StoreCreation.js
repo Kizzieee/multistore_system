@@ -12,6 +12,7 @@ function StoreCreation() {
   const [createStoreForm, setCreateStoreForm] = useState({
     name: "",
     image: null,
+    email: "",
     mobile_number: "",
     address: {
       city: "",

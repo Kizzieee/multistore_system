@@ -5,6 +5,7 @@ export const createStore = async (data) => {
     const formData = new FormData();
 
     formData.append("name", data.name);
+    formData.append("email", data.email);
     formData.append("mobile_number", data.mobile_number);
     formData.append("delivery_fee", data.delivery_fee);
     formData.append("description", data.description);
