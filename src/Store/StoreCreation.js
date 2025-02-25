@@ -1,14 +1,11 @@
-import { Modal } from "bootstrap";
+import { Modal, Toast } from "bootstrap";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import renderErrorMessages from "../errorHelper";
 import { createStore } from "../services/storeService";
 import "../style.css";
 
-function StoreCreation() {
-  const navigate = useNavigate();
+function StoreCreation({ setSuccessMessage, setIsStoreOwner }) {
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState("");
   const [createStoreForm, setCreateStoreForm] = useState({
     name: "",
     image: null,
@@ -18,7 +15,7 @@ function StoreCreation() {
       city: "",
       province: "",
     },
-    delivery_fee: null,
+    delivery_fee: "",
     description: "",
     opening_time: "",
     closing_time: "",
@@ -30,11 +27,20 @@ function StoreCreation() {
     try {
       await createStore(createStoreForm);
       setError(null);
-      setSuccess("Store created successfully.");
-      setTimeout(() => {
-        handleModal();
-        navigate("/own-resto");
-      }, 3000);
+      setSuccessMessage("Store created successfully.");
+
+      const toastEl = document.getElementById("storeCreated");
+      if (toastEl) {
+        const toast = new Toast(toastEl);
+        toast.show();
+        setTimeout(() => {
+          toast.hide();
+        }, 3000);
+      }
+
+      setIsStoreOwner(true);
+      handleCancel();
+      handleModal();
     } catch (error) {
       setError(error);
     }
@@ -62,8 +68,8 @@ function StoreCreation() {
   };
 
   const handleCancel = () => {
-    setCreateStoreForm(
-      Object.fromEntries(Object.keys(createStoreForm).map((key) => [key, ""]))
+    setCreateStoreForm((prev) =>
+      Object.fromEntries(Object.keys(prev).map((key) => [key, prev[key] ?? ""]))
     );
   };
 
@@ -71,7 +77,8 @@ function StoreCreation() {
     const modalElement = document.getElementById("createStoreModal");
     if (modalElement) {
       const modalInstance = Modal.getInstance(modalElement);
-      modalInstance?.hide();
+      modalInstance.hide();
+      console.log(modalElement);
     }
   };
 
@@ -108,7 +115,7 @@ function StoreCreation() {
                     type="text"
                     id="name"
                     name="name"
-                    value={createStoreForm.name}
+                    value={createStoreForm?.name}
                     onChange={handleCreateStoreFormChange}
                     className="form-control"
                     required
@@ -146,7 +153,7 @@ function StoreCreation() {
                     type="email"
                     id="email"
                     name="email"
-                    value={createStoreForm.email}
+                    value={createStoreForm?.email}
                     onChange={handleCreateStoreFormChange}
                     className="form-control"
                     required
@@ -161,7 +168,7 @@ function StoreCreation() {
                     type="number"
                     id="mobile_number"
                     name="mobile_number"
-                    value={createStoreForm.mobile_number}
+                    value={createStoreForm?.mobile_number}
                     onChange={handleCreateStoreFormChange}
                     className="form-control"
                     required
@@ -178,7 +185,7 @@ function StoreCreation() {
                     type="text"
                     id="city"
                     name="address.city"
-                    value={createStoreForm.address.city}
+                    value={createStoreForm?.address?.city}
                     onChange={handleCreateStoreFormChange}
                     className="form-control"
                     required
@@ -192,7 +199,7 @@ function StoreCreation() {
                     type="text"
                     id="province"
                     name="address.province"
-                    value={createStoreForm.address.province}
+                    value={createStoreForm?.address?.province}
                     onChange={handleCreateStoreFormChange}
                     className="form-control"
                     required
@@ -211,7 +218,7 @@ function StoreCreation() {
                       type="time"
                       id="opening_time"
                       name="opening_time"
-                      value={createStoreForm.opening_time}
+                      value={createStoreForm?.opening_time}
                       onChange={handleCreateStoreFormChange}
                       className="form-control"
                       required
@@ -225,7 +232,7 @@ function StoreCreation() {
                       type="time"
                       id="closing_time"
                       name="closing_time"
-                      value={createStoreForm.closing_time}
+                      value={createStoreForm?.closing_time}
                       onChange={handleCreateStoreFormChange}
                       className="form-control"
                       required
@@ -239,7 +246,7 @@ function StoreCreation() {
                       type="number"
                       id="delivery_fee"
                       name="delivery_fee"
-                      value={createStoreForm.delivery_fee}
+                      value={createStoreForm?.delivery_fee}
                       onChange={handleCreateStoreFormChange}
                       className="form-control"
                       required
@@ -254,7 +261,7 @@ function StoreCreation() {
                   type="text"
                   id="description"
                   name="description"
-                  value={createStoreForm.description}
+                  value={createStoreForm?.description}
                   onChange={handleCreateStoreFormChange}
                   className="form-control"
                   rows="3"
@@ -262,11 +269,6 @@ function StoreCreation() {
                 />
               </div>
               {error && renderErrorMessages(error)}
-              {success && (
-                <div className="alert alert-success" role="alert">
-                  {success}
-                </div>
-              )}
             </div>
             <div className="modal-footer">
               <button
