@@ -1,7 +1,7 @@
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import AccountActivation from "./Account/AccountActivation";
 import AccountModal from "./Account/AccountModal";
@@ -22,6 +22,7 @@ function Navigation() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [justLoggedIn, setJustLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isStoreOwner, setIsStoreOwner] = useState(false);
   const [user, setUser] = useState({
     email: "",
     first_name: "",
@@ -30,7 +31,6 @@ function Navigation() {
     address: "",
     groups: [],
   });
-  const isStoreOwner = user?.groups?.includes("Store Owner");
   const protectedRouteProps = { isLoggedIn, setIsModalOpen, isStoreOwner };
   const accountModalProps = {
     isModalOpen,
@@ -38,7 +38,12 @@ function Navigation() {
     justLoggedIn,
     setJustLoggedIn,
   };
-  const accountViewProps = { user, setIsLoggedIn, isStoreOwner };
+  const accountViewProps = {
+    user,
+    setIsLoggedIn,
+    isStoreOwner,
+    setIsStoreOwner,
+  };
 
   useLayoutEffect(() => {
     async function fetchUserInfo() {
@@ -57,6 +62,10 @@ function Navigation() {
 
     fetchUserInfo();
   }, [justLoggedIn]);
+
+  useEffect(() => {
+    setIsStoreOwner(user?.groups?.includes("Store Owner"));
+  }, [user?.groups]);
 
   const handleLoginClickModal = () => {
     if (!isLoggedIn) {
