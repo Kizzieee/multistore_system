@@ -7,9 +7,10 @@ import "../style.css";
 import AccountPurchaseHistory from "./AccountPurchaseHistory";
 
 function AccountView(props) {
-  const { user, setIsLoggedIn, isStoreOwner } = props;
+  const { user, setIsLoggedIn, isStoreOwner, setIsStoreOwner } = props;
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleLogout = () => {
     logout();
@@ -44,19 +45,20 @@ function AccountView(props) {
                   <i className="bi bi-shop pe-2"></i>Create Restaurant
                 </button>
               ) : (
-                <>
-                  <button
-                    type="button"
-                    className="btn border btn-info"
-                    onClick={() => {
-                      navigate("/own-resto");
-                    }}
-                  >
-                    <i className="bi bi-shop pe-2"></i>View Restaurant
-                  </button>
-                </>
+                <button
+                  type="button"
+                  className="btn border btn-info"
+                  onClick={() => {
+                    navigate("/own-resto");
+                  }}
+                >
+                  <i className="bi bi-shop pe-2"></i>View Restaurant
+                </button>
               )}
-              <StoreCreation />
+              <StoreCreation
+                setSuccessMessage={setSuccessMessage}
+                setIsStoreOwner={setIsStoreOwner}
+              />
             </div>
           </div>
 
@@ -104,12 +106,41 @@ function AccountView(props) {
 
               {activeTab === "link1" && (
                 <div className="tab-pane fade show active">
-                  {/* Purchase History */}
                   <AccountPurchaseHistory />
                 </div>
               )}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Bootstrap Toast Notification */}
+      <div className="toast-container position-fixed top-0 end-0 p-3">
+        <div
+          id="storeCreated"
+          className="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          style={{
+            width: "300px",
+            fontSize: "1rem",
+            backgroundColor: "rgba(170, 255, 170, 0.8)",
+          }}
+        >
+          <div
+            className="toast-header"
+            style={{ backgroundColor: "rgba(140, 255, 140, 0.8)" }}
+          >
+            <strong className="me-auto">Success</strong>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div className="toast-body">{successMessage}</div>
         </div>
       </div>
     </div>
