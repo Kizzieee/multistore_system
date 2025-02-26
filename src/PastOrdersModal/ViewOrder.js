@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
 import milkshake from "../Assets/milkshake.jpg";
 import "../style.css";
-import { Modal } from "bootstrap";
 import ReviewAppreciation from "./ReviewAppreciation";
 
 function ViewOrder() {
@@ -14,7 +12,7 @@ function ViewOrder() {
         aria-labelledby="reviewOrderLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog modal-orders">
+        <div className="modal-dialog modal-dialog-centered modal-orders">
           <div className="modal-content">
             <div className="modal-header">
               <div className="d-flex flex-row gap-3">

@@ -26,7 +26,7 @@ function ReviewAppreciation() {
       aria-labelledby="reviewAppreciationLabel"
       aria-hidden="true"
     >
-      <div className="modal-dialog modal-orders">
+      <div className="modal-dialog modal-dialog-centered modal-orders">
         <div className="modal-content">
           <div className="modal-header d-flex flex-column">
             <h5 className="m-0">I Love Burger - Allen</h5>

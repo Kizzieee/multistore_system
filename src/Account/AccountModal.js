@@ -42,7 +42,7 @@ function AccountModal(props) {
         className={`modal fade show d-block d-flex justify-content-center`}
         tabIndex="-1"
       >
-        <div className={`modal-dialog account-modal`}>
+        <div className={`modal-dialog modal-dialog-centered account-modal`}>
           <div className="modal-content">
             <div className="modal-header border-0">
               <h5 className="modal-title"> </h5>

@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { Modal } from "bootstrap";
+import { useEffect, useState } from "react";
 import milkshake from "../Assets/milkshake.jpg";
 import "../style.css";
-import { Modal } from "bootstrap";
 import ReviewAppreciation from "./ReviewAppreciation";
 
 function ReviewOrder() {
@@ -16,7 +16,7 @@ function ReviewOrder() {
     if (!reviewOrderModalElement) return;
 
     const reviewOrderModal = Modal.getOrCreateInstance(reviewOrderModalElement);
-    
+
     const handleHidden = () => {
       if (isSubmitted) {
         const reviewAppreciationModal = Modal.getOrCreateInstance(
@@ -30,13 +30,18 @@ function ReviewOrder() {
     reviewOrderModalElement.addEventListener("hidden.bs.modal", handleHidden);
 
     return () => {
-      reviewOrderModalElement.removeEventListener("hidden.bs.modal", handleHidden);
+      reviewOrderModalElement.removeEventListener(
+        "hidden.bs.modal",
+        handleHidden
+      );
     };
   }, [isSubmitted]);
 
   const handleReviewSubmit = () => {
     setIsSubmitted(true);
-    const reviewOrderModal = Modal.getInstance(document.getElementById("reviewOrder"));
+    const reviewOrderModal = Modal.getInstance(
+      document.getElementById("reviewOrder")
+    );
     if (reviewOrderModal) {
       reviewOrderModal.hide();
     }
@@ -51,7 +56,7 @@ function ReviewOrder() {
         aria-labelledby="reviewOrderLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog modal-orders">
+        <div className="modal-dialog modal-dialog-centered modal-orders">
           <div className="modal-content">
             <div className="modal-header">
               <div className="d-flex flex-row gap-3">

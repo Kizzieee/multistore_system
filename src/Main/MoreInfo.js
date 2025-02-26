@@ -1,5 +1,4 @@
 import "../style.css";
-import { Modal } from "bootstrap";
 
 function MoreInfo() {
   return (
@@ -11,7 +10,7 @@ function MoreInfo() {
         aria-labelledby="moreInfoLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog modal-orders">
+        <div className="modal-dialog modal-dialog-centered modal-orders">
           <div className="modal-content">
             <div className="modal-header border border-0">
               <div className="d-flex flex-row gap-3">
