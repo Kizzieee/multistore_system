@@ -117,6 +117,7 @@ function AccountLogin(props) {
                 required
                 placeholder="John"
                 className="form-control"
+                autoComplete="on"
               />
             </div>
             <div className="mb-2 p-0">
@@ -130,6 +131,7 @@ function AccountLogin(props) {
                 required
                 placeholder="Doe"
                 className="form-control"
+                autoComplete="on"
               />
             </div>
             <div className="mb-2 p-0">
@@ -155,6 +157,7 @@ function AccountLogin(props) {
                 placeholder="123 Street, City"
                 required
                 className="form-control"
+                autoComplete="on"
               />
             </div>
             <div className="mb-2 p-0">
@@ -168,6 +171,7 @@ function AccountLogin(props) {
                 placeholder="example@domain.com"
                 required
                 className="form-control"
+                autoComplete="on"
               />
             </div>
             <div className="mb-2 p-0">
@@ -201,7 +205,7 @@ function AccountLogin(props) {
         ) : (
           <>
             <div className="mb-2 p-0">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="login_email">Email Address</label>
               <input
                 type="email"
                 id="login_email"
@@ -211,10 +215,11 @@ function AccountLogin(props) {
                 placeholder="example@domain.com"
                 required
                 className="form-control"
+                autoComplete="on"
               />
             </div>
             <div className="mb-2 p-0">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="login_password">Password</label>
               <input
                 type="password"
                 id="login_password"
