@@ -1,10 +1,12 @@
-import { Modal, Toast } from "bootstrap";
-import { useState } from "react";
+import { Toast } from "bootstrap";
+import { useContext, useState } from "react";
 import renderErrorMessages from "../errorHelper";
+import { GlobalContext } from "../GlobalContext";
 import { createStore } from "../services/storeService";
 import "../style.css";
 
-function StoreCreation({ setSuccessMessage, setIsStoreOwner }) {
+function StoreCreation({ setSuccessMessage }) {
+  const { setIsStoreOwner } = useContext(GlobalContext);
   const [error, setError] = useState(null);
   const [createStoreForm, setCreateStoreForm] = useState({
     name: "",
@@ -40,7 +42,6 @@ function StoreCreation({ setSuccessMessage, setIsStoreOwner }) {
 
       setIsStoreOwner(true);
       handleCancel();
-      handleModal();
     } catch (error) {
       setError(error);
     }
@@ -73,24 +74,17 @@ function StoreCreation({ setSuccessMessage, setIsStoreOwner }) {
     );
   };
 
-  const handleModal = () => {
-    const modalElement = document.getElementById("createStoreModal");
-    if (modalElement) {
-      const modalInstance = Modal.getInstance(modalElement);
-      modalInstance.hide();
-      console.log(modalElement);
-    }
-  };
-
   return (
     <div
       className="modal fade"
       id="createStoreModal"
-      tabIndex="-1"
+      tabIndex="10"
       aria-labelledby="createStoreModalLabel"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
       aria-hidden="true"
     >
-      <div className="modal-dialog bg-secondary">
+      <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="createStoreModalLabel">
@@ -129,6 +123,7 @@ function StoreCreation({ setSuccessMessage, setIsStoreOwner }) {
                   <input
                     type="file"
                     id="image"
+                    accept=".jpg, .jpeg, .png"
                     name="image"
                     onChange={(e) =>
                       setCreateStoreForm({

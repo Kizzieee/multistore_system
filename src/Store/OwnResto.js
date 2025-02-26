@@ -1,102 +1,11 @@
-import StoreInfo from "./StoreInfo";
-import React, { useState, useEffect } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../GlobalContext";
+
 const OwnResto = () => {
   const navigate = useNavigate();
-  const [isAvailable, setIsAvailable] = useState(true);
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [popularProducts, setPopularProducts] = useState([]);
-  const [categoryName, setCategoryName] = useState("");
-  const [product, setProduct] = useState({
-    name: "",
-    description: "",
-    image: "",
-    price: "",
-    category: "",
-  });
-  const [editingProduct, setEditingProduct] = useState(null);
-
-  // Handle Category CRUD
-  const addCategory = () => {
-    if (categoryName && !categories.includes(categoryName)) {
-      setCategories([...categories, categoryName]);
-      setCategoryName("");
-    }
-  };
-
-  const deleteCategory = (name) => {
-    setCategories(categories.filter((c) => c !== name));
-    setProducts(products.filter((p) => p.category !== name));
-  };
-
-  // Handle Product CRUD
-  const addProduct = () => {
-    if (product.name && product.price && product.category) {
-      if (editingProduct) {
-        setProducts(
-          products.map((p) =>
-            p.id === editingProduct ? { ...product, id: editingProduct } : p
-          )
-        );
-        setEditingProduct(null);
-      } else {
-        setProducts([
-          ...products,
-          { ...product, id: Date.now(), popularity: 0 },
-        ]);
-      }
-      setProduct({
-        name: "",
-        description: "",
-        image: "",
-        price: "",
-        category: "",
-      });
-    }
-  };
-
-  const deleteProduct = (id) => {
-    setProducts(products.filter((p) => p.id !== id));
-  };
-
-  const editProduct = (prod) => {
-    setProduct(prod);
-    setEditingProduct(prod.id);
-  };
-
-  //Store Info Modal
-  const [showModal, setShowModal] = useState(false); // Correct state variable
-
-  const handleShow = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
-
-  const storeData = {
-    name: "Sample Store",
-    email: "store@example.com",
-    mobile: "1234567890",
-    location: "123 Main Street",
-    operatingHours: "9 AM - 9 PM",
-    description: "A great store for your needs.",
-  };
-
-  const handleSave = (updatedData) => {
-    console.log("Updated Store Data:", updatedData);
-    setShowModal(false); // Close modal after saving
-  };
-
-  // Sort top 4 popular products
-  useEffect(() => {
-    setPopularProducts(
-      [...products].sort((a, b) => b.popularity - a.popularity).slice(0, 4)
-    );
-  }, [products]);
-
-  useEffect(() => {
-    // Remove any existing modal backdrops when this component mounts
-    const modalBackdrops = document.querySelectorAll(".modal-backdrop");
-    modalBackdrops.forEach((backdrop) => backdrop.remove());
-  }, []);
+  // const { user } = useContext(GlobalContext);
+  // console.log("user", user);
 
   return (
     <div className="container mt-5 p-0">
@@ -113,19 +22,22 @@ const OwnResto = () => {
                 >
                   <i className="bi bi-border-width"></i> Orders
                 </button>
-                <button className="white-btn-primary" onClick={handleShow}>
+                <button
+                  className="white-btn-primary"
+                  // onClick={handleShow}
+                >
                   <i className="bi bi-info-circle"></i> Store Info
                 </button>
               </div>
             </div>
           </div>
         </div>
-        <StoreInfo
+        {/* <StoreInfo
           show={showModal}
           handleClose={handleClose}
           storeData={storeData}
           handleSave={handleSave}
-        />
+        /> */}
 
         <div className="row my-4">
           <div className="col-md-6">
@@ -134,13 +46,16 @@ const OwnResto = () => {
               type="text"
               className="form-control"
               placeholder="Enter category name"
-              value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
+              // value={categoryName}
+              // onChange={(e) => setCategoryName(e.target.value)}
             />
-            <button className="main-btn-primary mt-2" onClick={addCategory}>
+            <button
+              className="main-btn-primary mt-2"
+              // onClick={addCategory}
+            >
               Add Category
             </button>
-            <ul className="mt-3 list-category">
+            {/* <ul className="mt-3 list-category">
               {categories.map((cat, index) => (
                 <li
                   key={index}
@@ -155,7 +70,7 @@ const OwnResto = () => {
                   </button>
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </div>
           <div className="col-md-6">
             <h4>Manage Products</h4>
@@ -163,59 +78,62 @@ const OwnResto = () => {
               type="text"
               className="form-control"
               placeholder="Product Name"
-              value={product.name}
-              onChange={(e) => setProduct({ ...product, name: e.target.value })}
+              // value={product.name}
+              // onChange={(e) => setProduct({ ...product, name: e.target.value })}
             />
             <input
               type="text"
               className="form-control mt-2"
               placeholder="Description"
-              value={product.description}
-              onChange={(e) =>
-                setProduct({ ...product, description: e.target.value })
-              }
+              // value={product.description}
+              // onChange={(e) =>
+              //   setProduct({ ...product, description: e.target.value })
+              // }
             />
             <input
               type="file"
               className="form-control mt-2"
-              onChange={(e) =>
-                setProduct({
-                  ...product,
-                  image: URL.createObjectURL(e.target.files[0]),
-                })
-              }
+              // onChange={(e) =>
+              //   setProduct({
+              //     ...product,
+              //     image: URL.createObjectURL(e.target.files[0]),
+              //   })
+              // }
             />
             <input
               type="number"
               className="form-control mt-2"
               placeholder="Price"
-              value={product.price}
-              onChange={(e) =>
-                setProduct({ ...product, price: e.target.value })
-              }
+              // value={product.price}
+              // onChange={(e) =>
+              //   setProduct({ ...product, price: e.target.value })
+              // }
             />
             <select
               className="form-select mt-2"
-              value={product.category}
-              onChange={(e) =>
-                setProduct({ ...product, category: e.target.value })
-              }
+              // value={product.category}
+              // onChange={(e) =>
+              //   setProduct({ ...product, category: e.target.value })
+              // }
             >
               <option value="">Select Category</option>
-              {categories.map((cat, index) => (
+              {/* {categories.map((cat, index) => (
                 <option key={index} value={cat}>
                   {cat}
                 </option>
-              ))}
+              ))} */}
             </select>
-            <button className="main-btn-primary mt-2" onClick={addProduct}>
-              {editingProduct ? "Update Product" : "Add Product"}
+            <button
+              className="main-btn-primary mt-2"
+              // onClick={addProduct}
+            >
+              {/* {editingProduct ? "Update Product" : "Add Product"} */}
             </button>
           </div>
         </div>
 
         <h4>Product List</h4>
-        <table className="table table-striped table-bordered table-hover">
+        {/* <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr className="text-center">
               <th>Image</th>
@@ -258,8 +176,8 @@ const OwnResto = () => {
                     <i className="bi bi-trash"></i>
                   </button>
                 </td>
-                <td >
-                <button
+                <td>
+                  <button
                     onClick={() =>
                       setProducts(
                         products.map((p) =>
@@ -278,11 +196,10 @@ const OwnResto = () => {
                     {prod.available ? "Available" : "Unavailable"}
                   </button>
                 </td>
-                
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
       </div>
     </div>
   );

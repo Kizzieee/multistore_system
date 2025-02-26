@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import defaultProfile from "../Assets/default_profile.jpg";
+import { GlobalContext } from "../GlobalContext";
 import { logout } from "../services/authService";
 import StoreCreation from "../Store/StoreCreation";
 import "../style.css";
 import AccountPurchaseHistory from "./AccountPurchaseHistory";
 
-function AccountView(props) {
-  const { user, setIsLoggedIn, isStoreOwner, setIsStoreOwner } = props;
+function AccountView() {
+  const { setIsLoggedIn, user, setUser, isStoreOwner } =
+    useContext(GlobalContext);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
   const [successMessage, setSuccessMessage] = useState("");
@@ -15,6 +17,7 @@ function AccountView(props) {
   const handleLogout = () => {
     logout();
     setIsLoggedIn(false);
+    setUser(null);
     navigate("/");
   };
 
@@ -55,10 +58,7 @@ function AccountView(props) {
                   <i className="bi bi-shop pe-2"></i>View Restaurant
                 </button>
               )}
-              <StoreCreation
-                setSuccessMessage={setSuccessMessage}
-                setIsStoreOwner={setIsStoreOwner}
-              />
+              <StoreCreation setSuccessMessage={setSuccessMessage} />
             </div>
           </div>
 
