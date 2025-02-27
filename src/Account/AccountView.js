@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { Toast, ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import defaultProfile from "../Assets/default_profile.jpg";
 import { GlobalContext } from "../GlobalContext";
@@ -11,8 +12,14 @@ function AccountView() {
   const { setIsLoggedIn, user, setUser, isStoreOwner } =
     useContext(GlobalContext);
   const navigate = useNavigate();
+  const [toastData, setToastData] = useState({
+    severity: "",
+    header: "",
+    body: "",
+    show: false,
+  });
+  const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState("active");
-  const [successMessage, setSuccessMessage] = useState("");
 
   const handleLogout = () => {
     logout();
@@ -42,8 +49,7 @@ function AccountView() {
                 <button
                   type="button"
                   className="btn border btn-success"
-                  data-bs-toggle="modal"
-                  data-bs-target="#createStoreModal"
+                  onClick={() => setShowModal(true)}
                 >
                   <i className="bi bi-shop pe-2"></i>Create Restaurant
                 </button>
@@ -58,7 +64,11 @@ function AccountView() {
                   <i className="bi bi-shop pe-2"></i>View Restaurant
                 </button>
               )}
-              <StoreCreation setSuccessMessage={setSuccessMessage} />
+              <StoreCreation
+                setToastData={setToastData}
+                showModal={showModal}
+                setShowModal={setShowModal}
+              />
             </div>
           </div>
 
@@ -115,33 +125,21 @@ function AccountView() {
       </div>
 
       {/* Bootstrap Toast Notification */}
-      <div className="toast-container position-fixed top-0 end-0 p-3">
-        <div
-          id="storeCreated"
-          className="toast"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-          style={{
-            width: "300px",
-            fontSize: "1rem",
-            backgroundColor: "rgba(170, 255, 170, 0.8)",
-          }}
-        >
-          <div
-            className="toast-header"
-            style={{ backgroundColor: "rgba(140, 255, 140, 0.8)" }}
+      <div aria-live="polite" aria-atomic="true" style={{ minHeight: "240px" }}>
+        <ToastContainer className="p-3" position="top-end">
+          <Toast
+            onClose={() => setToastData({ ...toastData, show: false })}
+            show={toastData.show}
+            delay={3000}
+            autohide
+            className={`bg-${toastData.severity}`}
           >
-            <strong className="me-auto">Success</strong>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="toast-body">{successMessage}</div>
-        </div>
+            <Toast.Header>
+              <strong className="me-auto">{toastData.header}</strong>
+            </Toast.Header>
+            <Toast.Body>{toastData?.body}</Toast.Body>
+          </Toast>
+        </ToastContainer>
       </div>
     </div>
   );
