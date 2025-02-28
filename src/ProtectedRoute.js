@@ -20,7 +20,7 @@ const ProtectedRoute = ({ setIsModalOpen, children }) => {
       setIsModalOpen(true);
     }
 
-    if (location.pathname === "/own-resto" && !isStoreOwner) {
+    if (location.pathname === "/own-resto" && isStoreOwner === false) {
       navigate("/");
     }
   }, [

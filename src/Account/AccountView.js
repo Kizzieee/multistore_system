@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
-import { Toast, ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import defaultProfile from "../Assets/default_profile.jpg";
 import { GlobalContext } from "../GlobalContext";
+import MyToast from "../MyToast";
 import { logout } from "../services/authService";
 import StoreCreation from "../Store/StoreCreation";
 import "../style.css";
@@ -12,12 +12,6 @@ function AccountView() {
   const { setIsLoggedIn, user, setUser, isStoreOwner } =
     useContext(GlobalContext);
   const navigate = useNavigate();
-  const [toastData, setToastData] = useState({
-    severity: "",
-    header: "",
-    body: "",
-    show: false,
-  });
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState("active");
 
@@ -65,7 +59,6 @@ function AccountView() {
                 </button>
               )}
               <StoreCreation
-                setToastData={setToastData}
                 showModal={showModal}
                 setShowModal={setShowModal}
               />
@@ -123,24 +116,7 @@ function AccountView() {
           </div>
         </div>
       </div>
-
-      {/* Bootstrap Toast Notification */}
-      <div aria-live="polite" aria-atomic="true" style={{ minHeight: "240px" }}>
-        <ToastContainer className="p-3" position="top-end">
-          <Toast
-            onClose={() => setToastData({ ...toastData, show: false })}
-            show={toastData.show}
-            delay={3000}
-            autohide
-            className={`bg-${toastData.severity}`}
-          >
-            <Toast.Header>
-              <strong className="me-auto">{toastData.header}</strong>
-            </Toast.Header>
-            <Toast.Body>{toastData?.body}</Toast.Body>
-          </Toast>
-        </ToastContainer>
-      </div>
+      <MyToast />
     </div>
   );
 }

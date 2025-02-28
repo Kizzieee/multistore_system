@@ -48,7 +48,7 @@ function Navigation() {
     if (user) {
       setIsStoreOwner(user.groups?.includes("Store Owner"));
     } else {
-      setIsStoreOwner(false);
+      setIsStoreOwner(null);
     }
   }, [user, setIsStoreOwner]);
 

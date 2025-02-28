@@ -5,7 +5,8 @@ import { GlobalContext } from "../GlobalContext";
 import { createStore } from "../services/storeService";
 import "../style.css";
 
-function StoreCreation({ setToastData, showModal, setShowModal }) {
+function StoreCreation({ showModal, setShowModal }) {
+  const { setToastData } = useContext(GlobalContext);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { setIsStoreOwner } = useContext(GlobalContext);
@@ -36,7 +37,7 @@ function StoreCreation({ setToastData, showModal, setShowModal }) {
       setToastData({
         severity: "info",
         header: "Success",
-        body: "Congratulations! You have created your own restaurant!",
+        body: "Congratulations! You have successfully created your own restaurant!",
         show: true,
       });
     } catch (error) {
@@ -78,7 +79,7 @@ function StoreCreation({ setToastData, showModal, setShowModal }) {
     <Modal
       show={showModal}
       onHide={cleanUpModalForm}
-      keyboard={false}
+      keyboard="false"
       backdrop="static"
       aria-labelledby="contained-modal-title-vcenter"
       centered
@@ -93,12 +94,12 @@ function StoreCreation({ setToastData, showModal, setShowModal }) {
           <div className="d-flex flex-column gap-1 justify-content-between">
             <div className="row">
               <div className="col-6 mb-3">
-                <label htmlFor="name" className="form-label">
+                <label htmlFor="store_name" className="form-label">
                   Store Name
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="store_name"
                   name="name"
                   value={createStoreForm?.name}
                   onChange={handleCreateStoreFormChange}
@@ -108,12 +109,12 @@ function StoreCreation({ setToastData, showModal, setShowModal }) {
               </div>
 
               <div className="col-md-6 mb-3">
-                <label htmlFor="image" className="form-label">
+                <label htmlFor="store_image" className="form-label">
                   Upload Store Logo
                 </label>
                 <input
                   type="file"
-                  id="image"
+                  id="store_image"
                   accept=".jpg, .jpeg, .png"
                   name="image"
                   onChange={(e) =>
