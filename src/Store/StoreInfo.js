@@ -1,154 +1,283 @@
-import React, { useState, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Modal } from "react-bootstrap";
+import renderErrorMessages from "../errorHelper";
+import { GlobalContext } from "../GlobalContext";
+import { updateStore } from "../services/storeService";
 
-const StoreInfo = ({ show, handleClose, storeData, handleSave }) => {
-  const [formData, setFormData] = useState({ ...storeData });
+const StoreInfo = ({
+  showEditRestaurantModal,
+  setShowEditRestaurantModal,
+  store,
+  setStore,
+}) => {
+  const { setToastData } = useContext(GlobalContext);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [updateRestaurantForm, setUpdateRestaurantForm] = useState({});
 
   useEffect(() => {
-    if (show) {
-      document.body.classList.add("modal-open");
-    } else {
-      document.body.classList.remove("modal-open");
+    if (showEditRestaurantModal && store) {
+      setUpdateRestaurantForm({
+        name: store.name || "",
+        email: store.email || "",
+        mobile_number: store.mobile_number || "",
+        delivery_fee: store.delivery_fee || "",
+        description: store.description || "",
+        opening_time: store.opening_time || "",
+        closing_time: store.closing_time || "",
+        address: {
+          city: store.address?.city || "",
+          province: store.address?.province || "",
+        },
+        image: null,
+      });
     }
+  }, [showEditRestaurantModal, store]);
 
-    return () => {
-      document.body.classList.remove("modal-open");
-    };
-  }, [show]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, logo: e.target.files[0] });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleSave(formData);
-    handleClose();
+
+    setIsLoading(true);
+    setError(null);
+    try {
+      const updatedStore = await updateStore(store.id, updateRestaurantForm);
+      setStore(updatedStore);
+      setToastData({
+        severity: "info",
+        header: "Success",
+        body: "Congratulations! You have successfully updated your restaurant!",
+        show: true,
+      });
+      setShowEditRestaurantModal(false);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    if (name.startsWith("address.")) {
+      const fieldName = name.split(".")[1];
+      setUpdateRestaurantForm({
+        ...updateRestaurantForm,
+        address: {
+          ...updateRestaurantForm.address,
+          [fieldName]: value,
+        },
+      });
+    } else {
+      setUpdateRestaurantForm({
+        ...updateRestaurantForm,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    setShowEditRestaurantModal(false);
   };
 
   return (
     <>
-      {/* Modal Backdrop */}
-      {show && <div className="modal-backdrop fade show"></div>}
-
-      {/* Modal */}
-      <div
-        className={`modal fade ${show ? "show d-block" : ""}`}
-        id="StoreInfoEditable"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="storeInfoEditableLabel"
-        aria-hidden={!show}
+      <Modal
+        show={showEditRestaurantModal}
+        onHide={handleCancel}
+        keyboard="false"
+        backdrop="static"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
       >
-        <div className="modal-dialog modal-dialog-centered ">
-          <div className="modal-content text-dark">
-            <div className="modal-header">
-              <h5 className="modal-title">Edit Store Info</h5>
+        <Modal.Header className="fs-5" closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Edit Restaurant
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleSubmit}>
+            <div className="row">
+              <div className="mb-3 col-6">
+                <label htmlFor="store_name" className="form-label">
+                  Store Name
+                </label>
+                <input
+                  value={updateRestaurantForm.name || ""}
+                  onChange={handleChange}
+                  name="name"
+                  id="store_name"
+                  type="text"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="mb-3 col-6">
+                <label htmlFor="store_image" className="form-label">
+                  Upload Store Logo
+                </label>
+                <input
+                  onChange={(e) =>
+                    setUpdateRestaurantForm({
+                      ...updateRestaurantForm,
+                      image: e.target.files[0],
+                    })
+                  }
+                  id="store_image"
+                  accept=".jpg, .jpeg, .png"
+                  type="file"
+                  name="image"
+                  className="form-control"
+                />
+                <span className="small">
+                  Up to <strong>5MB</strong>
+                </span>
+              </div>
             </div>
-            <div className="modal-body">
-              <form onSubmit={handleSubmit}>
-                <div className="row">
-                  <div className="mb-3 col-6">
-                    <label className="form-label">Store Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3 col-6">
-                    <label className="form-label">Upload Store Logo</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      onChange={handleFileChange}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="mb-3 col-6">
-                    <label className="form-label">Email Address</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="col-6 mb-3">
-                    <label className="form-label">Mobile Number</label>
-                    <input
-                      type="tel"
-                      className="form-control"
-                      name="mobile"
-                      value={formData.mobile}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
+            <div className="row">
+              <div className="mb-3 col-6">
+                <label htmlFor="email" className="form-label">
+                  Email Address
+                </label>
+                <input
+                  value={updateRestaurantForm.email || ""}
+                  onChange={handleChange}
+                  name="email"
+                  id="email"
+                  type="email"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="col-6 mb-3">
+                <label htmlFor="mobile_number" className="form-label">
+                  Mobile Number
+                </label>
+                <input
+                  value={updateRestaurantForm.mobile_number || ""}
+                  onChange={handleChange}
+                  name="mobile_number"
+                  id="mobile_number"
+                  type="tel"
+                  className="form-control"
+                  required
+                />
+              </div>
+            </div>
 
-                <div className="mb-3">
-                  <label className="form-label">Location</label>
+            <div className="row">
+              <div className="col-6 mb-3">
+                <label htmlFor="city" className="form-label">
+                  City
+                </label>
+                <input
+                  value={updateRestaurantForm.address?.city || ""}
+                  onChange={handleChange}
+                  name="address.city"
+                  id="city"
+                  type="text"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="col-6 mb-3">
+                <label htmlFor="province" className="form-label">
+                  Province
+                </label>
+                <input
+                  value={updateRestaurantForm.address?.province || ""}
+                  onChange={handleChange}
+                  name="address.province"
+                  id="province"
+                  type="text"
+                  className="form-control"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mb-3">
+              Operating Hours:
+              <div className="row g-3">
+                <div className="col-md-4">
+                  <label htmlFor="opening_time" className="form-label">
+                    Opening
+                  </label>
                   <input
-                    type="text"
-                    className="form-control"
-                    name="location"
-                    value={formData.location}
+                    value={updateRestaurantForm.opening_time || ""}
                     onChange={handleChange}
+                    name="opening_time"
+                    id="opening_time"
+                    type="time"
+                    className="form-control"
                     required
                   />
                 </div>
-
-                <div className="row">
-                  <div className="col-4 mb-3">
-                    <label className="form-label">Operating Hours</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="operatingHours"
-                      value={formData.operatingHours}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="col-8 mb-3">
-                    <label className="form-label">Description</label>
-                    <textarea
-                      className="form-control"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleChange}
-                      required
-                    ></textarea>
-                  </div>
+                <div className="col-md-4">
+                  <label htmlFor="closing_time" className="form-label">
+                    Closing
+                  </label>
+                  <input
+                    value={updateRestaurantForm.closing_time || ""}
+                    onChange={handleChange}
+                    name="closing_time"
+                    id="closing_time"
+                    type="time"
+                    className="form-control"
+                    required
+                  />
                 </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="main-btn-outline-primary"
-                    onClick={handleClose}
-                  >
-                    Cancel
-                  </button>
-                  <button type="submit" className="main-btn-primary">
-                    Save Changes
-                  </button>
+                <div className="col-md-4">
+                  <label htmlFor="delivery_fee" className="form-label">
+                    Delivery Fee:
+                  </label>
+                  <input
+                    value={updateRestaurantForm.delivery_fee || ""}
+                    onChange={handleChange}
+                    name="delivery_fee"
+                    id="delivery_fee"
+                    type="number"
+                    className="form-control"
+                    required
+                  />
                 </div>
-              </form>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+
+            <div className="row">
+              <div className="col-12 mb-3">
+                <label htmlFor="description" className="form-label">
+                  Description
+                </label>
+                <textarea
+                  value={updateRestaurantForm.description || ""}
+                  onChange={handleChange}
+                  name="description"
+                  id="description"
+                  className="form-control"
+                  required
+                ></textarea>
+              </div>
+              {error && renderErrorMessages(error)}
+            </div>
+            <Modal.Footer>
+              <button
+                onClick={handleCancel}
+                type="button"
+                className="btn btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={isLoading}
+                type="submit"
+                className="btn btn-primary"
+              >
+                {isLoading ? "Saving Changes..." : "Save Changes"}
+              </button>
+            </Modal.Footer>
+          </form>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

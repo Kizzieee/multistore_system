@@ -1,11 +1,49 @@
-import { useContext } from "react";
+import { Store } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GlobalContext } from "../GlobalContext";
+import renderErrorMessages from "../errorHelper";
+import MyToast from "../MyToast";
+import { fetchMyStore } from "../services/storeService";
+import StoreInfo from "./StoreInfo";
 
 const OwnResto = () => {
   const navigate = useNavigate();
-  // const { user } = useContext(GlobalContext);
-  // console.log("user", user);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+  const [showEditRestaurantModal, setShowEditRestaurantModal] = useState(false);
+  const [store, setStore] = useState(null);
+
+  useEffect(() => {
+    const fetchStoreData = async () => {
+      try {
+        setIsLoading(true);
+        const storeData = await fetchMyStore();
+        setStore(storeData);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStoreData();
+  }, [setStore]);
+
+  if (isLoading === true) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        {renderErrorMessages(error)}
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5 p-0">
@@ -14,7 +52,23 @@ const OwnResto = () => {
           <div className="col-md-12 resto-name-banner p-0">
             <div className="resto-name-banner-gradient"></div>
             <div className="resto-banner-details d-flex justify-content-between align-items-end">
-              <h1>Hungry Hurry - Allen</h1>
+              <h1>{store?.display_name}</h1>
+              {store?.image && (
+                <img
+                  src={
+                    typeof store.image === "string"
+                      ? store.image
+                      : URL.createObjectURL(store.image)
+                  }
+                  alt="Store Logo"
+                  className="me-3 rounded"
+                  style={{
+                    width: "230px",
+                    height: "130px",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
               <div className="d-flex flex-column justify-content-between align-items-end gap-2">
                 <button
                   className="main-btn-primary"
@@ -24,7 +78,7 @@ const OwnResto = () => {
                 </button>
                 <button
                   className="white-btn-primary"
-                  // onClick={handleShow}
+                  onClick={() => setShowEditRestaurantModal(true)}
                 >
                   <i className="bi bi-info-circle"></i> Store Info
                 </button>
@@ -32,12 +86,12 @@ const OwnResto = () => {
             </div>
           </div>
         </div>
-        {/* <StoreInfo
-          show={showModal}
-          handleClose={handleClose}
-          storeData={storeData}
-          handleSave={handleSave}
-        /> */}
+        <StoreInfo
+          showEditRestaurantModal={showEditRestaurantModal}
+          setShowEditRestaurantModal={setShowEditRestaurantModal}
+          store={store}
+          setStore={setStore}
+        />
 
         <div className="row my-4">
           <div className="col-md-6">
@@ -201,6 +255,7 @@ const OwnResto = () => {
           </tbody>
         </table> */}
       </div>
+      <MyToast />
     </div>
   );
 };
