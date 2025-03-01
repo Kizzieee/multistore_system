@@ -38,3 +38,13 @@ export const deleteProductCategory = async (categoryId) => {
     throw error?.response?.data || error?.message || error;
   }
 };
+
+export const fetchProducts = async () => {
+  try {
+    const response = await api.get("store/products/");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch products: ", error);
+    throw error?.response?.data || error?.message || error;
+  }
+};

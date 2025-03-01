@@ -1,4 +1,3 @@
-import { Store } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import renderErrorMessages from "../errorHelper";
@@ -7,6 +6,7 @@ import {
   addProductCategory,
   deleteProductCategory,
   fetchProductCategories,
+  fetchProducts,
 } from "../services/productService";
 import { fetchMyStore } from "../services/storeService";
 import StoreInfo from "./StoreInfo";
@@ -18,6 +18,7 @@ const OwnResto = () => {
   const [showEditRestaurantModal, setShowEditRestaurantModal] = useState(false);
   const [store, setStore] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [addCategory, setAddCategory] = useState({ name: "" });
   const [isAddingCategory, setIsAddingCategory] = useState(false);
 
@@ -28,6 +29,9 @@ const OwnResto = () => {
         const storeData = await fetchMyStore();
         setStore(storeData);
         const categoriesData = await fetchProductCategories();
+        setCategories(categoriesData);
+        const productsData = await fetchProducts();
+        setProducts(productsData);
         setCategories(categoriesData);
       } catch (error) {
         setError(error);
@@ -181,8 +185,7 @@ const OwnResto = () => {
               // value={product.name}
               // onChange={(e) => setProduct({ ...product, name: e.target.value })}
             />
-            <input
-              type="text"
+            <textarea
               className="form-control mt-2"
               placeholder="Description"
               // value={product.description}
@@ -217,11 +220,11 @@ const OwnResto = () => {
               // }
             >
               <option value="">Select Category</option>
-              {/* {categories.map((cat, index) => (
-                <option key={index} value={cat}>
-                  {cat}
+              {categories.map((category) => (
+                <option key={category?.id} value={category?.name}>
+                  {category?.name}
                 </option>
-              ))} */}
+              ))}
             </select>
             <button
               className="main-btn-primary mt-2"
@@ -233,7 +236,7 @@ const OwnResto = () => {
         </div>
 
         <h4>Product List</h4>
-        {/* <table className="table table-striped table-bordered table-hover">
+        <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr className="text-center">
               <th>Image</th>
@@ -241,65 +244,68 @@ const OwnResto = () => {
               <th>Description</th>
               <th>Price</th>
               <th>Category</th>
-              <th>Actions</th>
               <th>Availability</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody className="text-center">
-            {products.map((prod) => (
-              <tr key={prod.id}>
+            {products.map((product) => (
+              <tr key={product?.id}>
                 <td>
-                  {prod.image && (
+                  {product?.image && (
                     <img
-                      src={prod.image}
-                      alt={prod.name}
-                      width="50"
-                      height="50"
+                      src={product?.image}
+                      alt={product?.name}
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                      }}
                     />
                   )}
                 </td>
-                <td>{prod.name}</td>
-                <td>{prod.description}</td>
-                <td>&#8369;{prod.price}</td>
-                <td>{prod.category}</td>
+                <td>{product?.name}</td>
                 <td>
-                  <button
-                    className="btn btn-outline-warning btn-sm me-2"
-                    onClick={() => editProduct(prod)}
-                  >
-                    <i className="bi bi-pencil-square"></i>
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => deleteProduct(prod.id)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </button>
+                  {product?.description?.length > 100
+                    ? `${product.description.substring(0, 100)}...`
+                    : product.description}
                 </td>
+                <td>&#8369;{product?.price}</td>
+                <td>{product?.category}</td>
                 <td>
                   <button
-                    onClick={() =>
-                      setProducts(
-                        products.map((p) =>
-                          p.id === prod.id
-                            ? { ...p, available: !p.available }
-                            : p
-                        )
-                      )
-                    }
+                    // onClick={() =>
+                    //   setProducts(
+                    //     products.map((p) =>
+                    //       p.id === product?.id
+                    //         ? { ...p, available: !p.available }
+                    //         : p
+                    //     )
+                    //   )
+                    // }
                     className={`px-4 py-2 font-semibold rounded-lg ${
-                      prod.available
+                      product?.is_available
                         ? "main-btn-primary"
                         : "main-btn-outline-primary text-color-main"
                     }`}
                   >
-                    {prod.available ? "Available" : "Unavailable"}
+                    {product?.is_available ? "Available" : "Unavailable"}
                   </button>
+                </td>
+                <td>
+                  <div className="d-flex gap-2">
+                    <button className="btn btn-outline-warning btn-sm">
+                      <i className="bi bi-pencil-square"></i>
+                    </button>
+                    <button className="btn btn-danger btn-sm">
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table> */}
+        </table>
       </div>
       <MyToast />
     </div>
