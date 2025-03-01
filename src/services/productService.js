@@ -19,6 +19,7 @@ export const addProductCategory = async (data) => {
     throw error?.response?.data || error?.message || error;
   }
 };
+
 export const updateProductCategory = async (categoryId, data) => {
   try {
     const response = await api.patch(`store/categories/${categoryId}/`, data);
@@ -45,6 +46,53 @@ export const fetchProducts = async () => {
     return response.data;
   } catch (error) {
     console.error("Failed to fetch products: ", error);
+    throw error?.response?.data || error?.message || error;
+  }
+};
+
+export const fetchMyProducts = async () => {
+  try {
+    const response = await api.get("store/products/my_products/");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch my products: ", error);
+    throw error?.response?.data || error?.message || error;
+  }
+};
+
+export const addProduct = async (data) => {
+  try {
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("is_available", data.is_available);
+    formData.append("category", data.category);
+
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+
+    const response = await api.post("store/products/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Failed to add product: ", error);
+    throw error?.response?.data || error?.message || error;
+  }
+};
+
+export const deleteProduct = async (productId) => {
+  try {
+    const response = await api.delete(`store/products/${productId}/`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to delete product : ", error);
     throw error?.response?.data || error?.message || error;
   }
 };

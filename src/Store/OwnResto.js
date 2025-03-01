@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import renderErrorMessages from "../errorHelper";
 import MyToast from "../MyToast";
 import {
+  addProduct,
   addProductCategory,
+  deleteProduct,
   deleteProductCategory,
+  fetchMyProducts,
   fetchProductCategories,
-  fetchProducts,
 } from "../services/productService";
 import { fetchMyStore } from "../services/storeService";
 import StoreInfo from "./StoreInfo";
@@ -18,9 +20,20 @@ const OwnResto = () => {
   const [showEditRestaurantModal, setShowEditRestaurantModal] = useState(false);
   const [store, setStore] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
   const [addCategory, setAddCategory] = useState({ name: "" });
   const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [isExecutingRequest, setIsExecutingRequest] = useState(false);
+  const [productOperation, setProductOperation] = useState("add");
+  const [productBtnText, setProductBtnText] = useState("Add Product");
+  const [product, setProduct] = useState({
+    name: "",
+    description: "",
+    price: "",
+    is_available: true,
+    category: "",
+    image: null,
+  });
 
   useEffect(() => {
     const fetchStoreData = async () => {
@@ -30,7 +43,7 @@ const OwnResto = () => {
         setStore(storeData);
         const categoriesData = await fetchProductCategories();
         setCategories(categoriesData);
-        const productsData = await fetchProducts();
+        const productsData = await fetchMyProducts();
         setProducts(productsData);
         setCategories(categoriesData);
       } catch (error) {
@@ -71,6 +84,54 @@ const OwnResto = () => {
     } catch (error) {
       setError(error);
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (productOperation === "add") {
+      setIsExecutingRequest(true);
+      setProductBtnText("Adding Product...");
+      try {
+        const addedProduct = await addProduct(product);
+        setProducts((prevProducts) => [addedProduct, ...prevProducts]);
+        setProduct({
+          name: "",
+          description: "",
+          price: "",
+          is_available: true,
+          category: "",
+          image: null,
+        });
+        document.getElementById("productImage").value = "";
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsExecutingRequest(false);
+        setProductBtnText("Add Product");
+      }
+    }
+    if (productOperation === "edit") {
+      setIsExecutingRequest(true);
+      setProductBtnText("Saving Changes...");
+      console.log(product);
+    }
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    try {
+      await deleteProduct(productId);
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== productId)
+      );
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  const handleChangeManageProduct = (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
   };
 
   if (isLoading === true) {
@@ -153,7 +214,7 @@ const OwnResto = () => {
               <button
                 disabled={isAddingCategory}
                 type="submit"
-                className="main-btn-primary mt-2"
+                className="btn btn-primary mt-2"
               >
                 {isAddingCategory ? "Adding Category..." : "Add Category"}
               </button>
@@ -177,61 +238,101 @@ const OwnResto = () => {
             </ul>
           </div>
           <div className="col-md-6">
-            <h4>Manage Products</h4>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Product Name"
-              // value={product.name}
-              // onChange={(e) => setProduct({ ...product, name: e.target.value })}
-            />
-            <textarea
-              className="form-control mt-2"
-              placeholder="Description"
-              // value={product.description}
-              // onChange={(e) =>
-              //   setProduct({ ...product, description: e.target.value })
-              // }
-            />
-            <input
-              type="file"
-              className="form-control mt-2"
-              // onChange={(e) =>
-              //   setProduct({
-              //     ...product,
-              //     image: URL.createObjectURL(e.target.files[0]),
-              //   })
-              // }
-            />
-            <input
-              type="number"
-              className="form-control mt-2"
-              placeholder="Price"
-              // value={product.price}
-              // onChange={(e) =>
-              //   setProduct({ ...product, price: e.target.value })
-              // }
-            />
-            <select
-              className="form-select mt-2"
-              // value={product.category}
-              // onChange={(e) =>
-              //   setProduct({ ...product, category: e.target.value })
-              // }
-            >
-              <option value="">Select Category</option>
-              {categories.map((category) => (
-                <option key={category?.id} value={category?.name}>
-                  {category?.name}
-                </option>
-              ))}
-            </select>
-            <button
-              className="main-btn-primary mt-2"
-              // onClick={addProduct}
-            >
-              {/* {editingProduct ? "Update Product" : "Add Product"} */}
-            </button>
+            <form onSubmit={handleSubmit}>
+              <h4>Manage Products</h4>
+              <input
+                value={product?.name}
+                onChange={handleChangeManageProduct}
+                name="name"
+                type="text"
+                placeholder="Product Name"
+                className="form-control"
+                required
+              />
+              <textarea
+                value={product?.description}
+                onChange={handleChangeManageProduct}
+                name="description"
+                placeholder="Description"
+                className="form-control mt-2"
+                required
+              />
+              <input
+                onChange={(e) =>
+                  setProduct({
+                    ...product,
+                    image: e.target.files[0],
+                  })
+                }
+                name="image"
+                id="productImage"
+                accept=".jpg, .jpeg, .png"
+                type="file"
+                className="form-control mt-2"
+              />
+              <span className="small">
+                Up to <strong>5MB</strong>
+              </span>
+              <input
+                value={product?.price}
+                onChange={handleChangeManageProduct}
+                name="price"
+                type="number"
+                placeholder="Price"
+                className="form-control mt-2"
+                required
+              />
+              <div className="d-flex align-items-center mt-2">
+                <select
+                  value={product?.category || ""}
+                  onChange={(e) => {
+                    setProduct({
+                      ...product,
+                      category: parseInt(e.target.value, 10),
+                    });
+                  }}
+                  name="category"
+                  className="form-select flex-grow-1"
+                  required
+                  style={{ maxWidth: "75%" }}
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((category) => (
+                    <option key={category?.id} value={category?.id}>
+                      {category?.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="form-check ms-2">
+                  <input
+                    checked={product?.is_available ?? true}
+                    onChange={(e) => {
+                      setProduct({
+                        ...product,
+                        is_available: e.target.checked,
+                      });
+                    }}
+                    name="is_available"
+                    id="availableCheckbox"
+                    type="checkbox"
+                    className="form-check-input"
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="availableCheckbox"
+                  >
+                    Available
+                  </label>
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={isExecutingRequest}
+                className="btn btn-primary mt-2"
+              >
+                {productOperation === "add" ? "Add Product" : "Save Changes"}
+              </button>
+            </form>
           </div>
         </div>
 
@@ -273,31 +374,21 @@ const OwnResto = () => {
                 <td>&#8369;{product?.price}</td>
                 <td>{product?.category}</td>
                 <td>
-                  <button
-                    // onClick={() =>
-                    //   setProducts(
-                    //     products.map((p) =>
-                    //       p.id === product?.id
-                    //         ? { ...p, available: !p.available }
-                    //         : p
-                    //     )
-                    //   )
-                    // }
-                    className={`px-4 py-2 font-semibold rounded-lg ${
-                      product?.is_available
-                        ? "main-btn-primary"
-                        : "main-btn-outline-primary text-color-main"
-                    }`}
-                  >
-                    {product?.is_available ? "Available" : "Unavailable"}
-                  </button>
+                  {product?.is_available ? (
+                    <i className="bi bi-check-circle-fill text-success"></i>
+                  ) : (
+                    <i className="bi bi-x-circle-fill text-danger"></i>
+                  )}
                 </td>
                 <td>
                   <div className="d-flex gap-2">
                     <button className="btn btn-outline-warning btn-sm">
                       <i className="bi bi-pencil-square"></i>
                     </button>
-                    <button className="btn btn-danger btn-sm">
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDeleteProduct(product?.id)}
+                    >
                       <i className="bi bi-trash"></i>
                     </button>
                   </div>
