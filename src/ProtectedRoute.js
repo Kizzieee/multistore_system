@@ -14,6 +14,9 @@ const ProtectedRoute = ({ setIsModalOpen, children }) => {
     }
 
     setLoading(false);
+    console.log("user", user);
+    console.log("isLoggedIn", isLoggedIn);
+    console.log("isStoreOwner", isStoreOwner);
 
     if (!isLoggedIn) {
       navigate("/");
@@ -33,10 +36,6 @@ const ProtectedRoute = ({ setIsModalOpen, children }) => {
   ]);
 
   if (loading) {
-    console.log("user", user);
-    console.log("isLoggedIn", isLoggedIn);
-    console.log("isStoreOwner", isStoreOwner);
-
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-primary" role="status">

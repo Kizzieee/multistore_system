@@ -35,6 +35,7 @@ function Navigation() {
         setIsLoggedIn(true);
       } catch (error) {
         setUser(null);
+        setIsLoggedIn(false);
       } finally {
         setLoading(false);
       }

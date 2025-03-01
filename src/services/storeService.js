@@ -68,7 +68,7 @@ export const updateStore = async (storeId, data) => {
 
 export const fetchMyStore = async () => {
   try {
-    const response = await api.get(`store/stores/my_store/`);
+    const response = await api.get("store/stores/my_store/");
     return response.data;
   } catch (error) {
     console.error("Failed to fetch your store: ", error);
