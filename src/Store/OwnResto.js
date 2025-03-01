@@ -3,6 +3,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import renderErrorMessages from "../errorHelper";
 import MyToast from "../MyToast";
+import {
+  addProductCategory,
+  deleteProductCategory,
+  fetchProductCategories,
+} from "../services/productService";
 import { fetchMyStore } from "../services/storeService";
 import StoreInfo from "./StoreInfo";
 
@@ -12,6 +17,9 @@ const OwnResto = () => {
   const [isLoading, setIsLoading] = useState(null);
   const [showEditRestaurantModal, setShowEditRestaurantModal] = useState(false);
   const [store, setStore] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [addCategory, setAddCategory] = useState({ name: "" });
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
 
   useEffect(() => {
     const fetchStoreData = async () => {
@@ -19,6 +27,8 @@ const OwnResto = () => {
         setIsLoading(true);
         const storeData = await fetchMyStore();
         setStore(storeData);
+        const categoriesData = await fetchProductCategories();
+        setCategories(categoriesData);
       } catch (error) {
         setError(error);
       } finally {
@@ -28,6 +38,36 @@ const OwnResto = () => {
 
     fetchStoreData();
   }, [setStore]);
+
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    setIsAddingCategory(true);
+    try {
+      const addedCategory = await addProductCategory(addCategory);
+      setCategories((prevCategories) => [addedCategory, ...prevCategories]);
+      setAddCategory({ name: "" });
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsAddingCategory(false);
+    }
+  };
+
+  const handleCategoryChange = (e) => {
+    const { name, value } = e.target;
+    setAddCategory({ ...addCategory, [name]: value });
+  };
+
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      await deleteProductCategory(categoryId);
+      setCategories((prevCategories) =>
+        prevCategories.filter((category) => category.id !== categoryId)
+      );
+    } catch (error) {
+      setError(error);
+    }
+  };
 
   if (isLoading === true) {
     return (
@@ -96,35 +136,41 @@ const OwnResto = () => {
         <div className="row my-4">
           <div className="col-md-6">
             <h4>Manage Categories</h4>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter category name"
-              // value={categoryName}
-              // onChange={(e) => setCategoryName(e.target.value)}
-            />
-            <button
-              className="main-btn-primary mt-2"
-              // onClick={addCategory}
-            >
-              Add Category
-            </button>
-            {/* <ul className="mt-3 list-category">
-              {categories.map((cat, index) => (
+            <form onSubmit={handleAddCategory}>
+              <input
+                onChange={handleCategoryChange}
+                value={addCategory.name}
+                name="name"
+                type="text"
+                placeholder="Enter category name"
+                className="form-control"
+                required
+              />
+              <button
+                disabled={isAddingCategory}
+                type="submit"
+                className="main-btn-primary mt-2"
+              >
+                {isAddingCategory ? "Adding Category..." : "Add Category"}
+              </button>
+            </form>
+            <ul className="mt-3 list-category">
+              {categories.map((category) => (
                 <li
-                  key={index}
+                  key={category?.id}
                   className="col-12 d-flex justify-content-between align-items-center p-2 border rounded"
                 >
-                  {cat}{" "}
+                  {" "}
+                  {category?.name}
                   <button
                     className="btn btn-danger btn-sm"
-                    onClick={() => deleteCategory(cat)}
+                    onClick={() => handleDeleteCategory(category?.id)}
                   >
                     <i className="bi bi-trash"></i>
                   </button>
                 </li>
               ))}
-            </ul> */}
+            </ul>
           </div>
           <div className="col-md-6">
             <h4>Manage Products</h4>
