@@ -38,13 +38,13 @@ function ViewOrder() {
               <div className="border rounded p-2">
                 <div>
                   <p className="m-0">
-                    <i class="bi bi-geo-alt"></i> Order from
+                    <i className="bi bi-geo-alt"></i> Order from
                   </p>
                   <p className="ps-4 m-0 h6">Allen, Northern Samar</p>
                 </div>
                 <div>
                   <p className="m-0 mt-3">
-                    <i class="bi bi-geo-alt"></i> Delivered to
+                    <i className="bi bi-geo-alt"></i> Delivered to
                   </p>
                   <p className="ps-4 m-0 h6">Amoec Allen Main Branch</p>
                 </div>

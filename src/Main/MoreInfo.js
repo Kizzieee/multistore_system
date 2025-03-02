@@ -26,10 +26,10 @@ function MoreInfo() {
 
             <div className="modal-body d-flex flex-column gap-3 justify-content-between">
               <h6>
-                <i class="bi bi-clock"></i> Now open until 10: 51 PM
+                <i className="bi bi-clock"></i> Now open until 10: 51 PM
               </h6>
               <h6>
-                <i class="bi bi-geo-alt"></i> 46 Aurora Street Boulevard
+                <i className="bi bi-geo-alt"></i> 46 Aurora Street Boulevard
                 Barangay Salapan 4th District
               </h6>
               <div className="d-flex flex-row justify-content-start align-items-center">

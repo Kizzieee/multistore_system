@@ -14,9 +14,6 @@ const ProtectedRoute = ({ setIsModalOpen, children }) => {
     }
 
     setLoading(false);
-    console.log("user", user);
-    console.log("isLoggedIn", isLoggedIn);
-    console.log("isStoreOwner", isStoreOwner);
 
     if (!isLoggedIn) {
       navigate("/");
