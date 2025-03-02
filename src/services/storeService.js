@@ -48,6 +48,7 @@ export const updateStore = async (storeId, data) => {
     if (data.address?.city) formData.append("address.city", data.address.city);
     if (data.address?.province)
       formData.append("address.province", data.address.province);
+    formData.append("is_live", data.is_live);
 
     if (data.image) {
       formData.append("image", data.image);
@@ -62,6 +63,16 @@ export const updateStore = async (storeId, data) => {
     return response.data;
   } catch (error) {
     console.error("Failed to update store: ", error);
+    throw error?.response?.data || error?.message || error;
+  }
+};
+
+export const fetchStores = async () => {
+  try {
+    const response = await api.get("store/stores/");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch stores: ", error);
     throw error?.response?.data || error?.message || error;
   }
 };

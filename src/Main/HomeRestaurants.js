@@ -1,100 +1,72 @@
-import sizzling from "../Assets/sizzling.jpg";
-import milkshake from "../Assets/milkshake.jpg";
-import { useNavigate } from "react-router-dom";
-import "../style.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import renderErrorMessages from "../errorHelper";
+import { fetchStores } from "../services/storeService";
+import "../style.css";
 
 function HomeRestaurants() {
   const navigate = useNavigate();
-  const [restoAvailability, setRestoAvailability] = useState(true);
+  const [restaurants, setRestaurants] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleClickStore = () => {
-    if (restoAvailability) {
-      navigate("/restaurant");
-    }
+  useEffect(() => {
+    const getStores = async () => {
+      try {
+        setIsLoading(true);
+        const fetchedRestaurants = await fetchStores();
+        setRestaurants(fetchedRestaurants);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getStores();
+  }, []);
+
+  const handleCardClick = (restaurant) => {
+    navigate("/restaurant", {
+      state: { restaurant },
+    });
   };
 
-  const restaurants = [
-    {
-      name: "Hungry Hurry",
-      image: sizzling,
-      rating: "4.9 (100+)",
-      time: "40-60 mins",
-      fee: 60,
-    },
-    {
-      name: "The Secret Cafe",
-      image: milkshake,
-      rating: "4.8 (200+)",
-      time: "30-50 mins",
-      fee: 50,
-    },
-    {
-      name: "Pasta Paradise",
-      image: sizzling,
-      rating: "4.7 (150+)",
-      time: "35-55 mins",
-      fee: 70,
-    },
-    {
-      name: "Burgers & More",
-      image: milkshake,
-      rating: "4.6 (250+)",
-      time: "25-45 mins",
-      fee: 40,
-    },
-    {
-      name: "Pizza Delight",
-      image: sizzling,
-      rating: "4.9 (300+)",
-      time: "30-50 mins",
-      fee: 65,
-    },
-    {
-      name: "Sweet Tooth Haven",
-      image: milkshake,
-      rating: "4.8 (120+)",
-      time: "20-40 mins",
-      fee: 30,
-    },
-    {
-      name: "Grill Master",
-      image: sizzling,
-      rating: "4.7 (180+)",
-      time: "45-60 mins",
-      fee: 80,
-    },
-    {
-      name: "Sushi Express",
-      image: milkshake,
-      rating: "4.9 (220+)",
-      time: "35-50 mins",
-      fee: 55,
-    },
-    {
-      name: "Taco Fiesta",
-      image: sizzling,
-      rating: "4.6 (130+)",
-      time: "25-40 mins",
-      fee: 45,
-    },
-    {
-      name: "Vegan Bites",
-      image: milkshake,
-      rating: "4.8 (170+)",
-      time: "30-45 mins",
-      fee: 50,
-    },
-    {
-      name: "Kizzelyn's Burgerddddd",
-      image: milkshake,
-      rating: "4.8 (170+)",
-      time: "30-45 mins",
-      fee: 50,
-    },
-  ];
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "";
+
+    const [hours, minutes] = timeStr.split(":");
+    const hour = parseInt(hours, 10);
+    const minute = parseInt(minutes, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary"></div>
+      </div>
+    );
+  }
+
+  if (restaurants.length === 0 || error) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        {error ? (
+          renderErrorMessages(error)
+        ) : (
+          <h2>No Restaurants right now ☹️</h2>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="container-fluid m-0 p-0">
@@ -104,42 +76,51 @@ function HomeRestaurants() {
 
           {/* Grid Container */}
           <div className="restaurant-grid">
-            {restaurants.map((resto, index) => (
+            {restaurants.map((restaurant) => (
               <div
-                key={index}
+                key={restaurant?.id}
                 className="card card-grid position-relative"
-                onClick={handleClickStore}
+                style={{ cursor: "pointer" }}
+                onClick={() => handleCardClick(restaurant)}
               >
-                {!restoAvailability && (
+                {!restaurant?.is_open && (
                   <div className="availability-resto-cover">
                     <p className="text-white text-center">
                       Operating Hours: <br />
-                      7:00 AM - 10:00 PM
+                      {formatTime(restaurant?.opening_time)} -{" "}
+                      {formatTime(restaurant?.closing_time)}
                     </p>
                   </div>
                 )}
                 <div className="card-resto-img">
                   <img
-                    src={resto.image}
+                    src={restaurant?.image}
                     className="card-img-top"
-                    alt={resto.name}
+                    alt={restaurant?.name}
                   />
                 </div>
                 <div className="card-body">
                   <div className="d-flex flex-row justify-content-between">
-                    <h5 className="card-title">{resto.name}</h5>
-                    <span>
+                    <h5 className="card-title">
+                      <i className="bi bi-shop-window"></i> {restaurant?.name}
+                    </h5>
+                    {/* <span>
                       <i className="bi bi-star-fill text-color-main"></i>{" "}
-                      {resto.rating}
-                    </span>
+                      {restaurant?.rating}
+                    </span> */}
                   </div>
                   <div className="d-flex flex-row justify-content-between">
-                    <small>
-                      <i className="bi bi-stopwatch"></i> {resto.time}
-                    </small>
+                    {/* <small>
+                      <i className="bi bi-stopwatch"></i> {restaurant?.time}
+                    </small> */}
                     <small>
                       <FontAwesomeIcon icon={faMotorcycle} /> : &#8369;
-                      {resto.fee}
+                      {restaurant?.delivery_fee}
+                    </small>
+                    <small>
+                      <i className="bi bi-geo-alt-fill"></i>
+                      {restaurant?.address?.city},{" "}
+                      {restaurant?.address?.province}
                     </small>
                   </div>
                 </div>

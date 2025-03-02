@@ -40,9 +40,12 @@ export const deleteProductCategory = async (categoryId) => {
   }
 };
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (storeId) => {
   try {
-    const response = await api.get("store/products/");
+    const url = storeId
+      ? `store/products/?store=${storeId}`
+      : "store/products/";
+    const response = await api.get(url);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch products: ", error);
