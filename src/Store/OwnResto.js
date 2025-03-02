@@ -7,6 +7,7 @@ import {
   addProductCategory,
   deleteProduct,
   deleteProductCategory,
+  editProduct,
   fetchMyProducts,
   fetchProductCategories,
 } from "../services/productService";
@@ -114,8 +115,54 @@ const OwnResto = () => {
     if (productOperation === "edit") {
       setIsExecutingRequest(true);
       setProductBtnText("Saving Changes...");
-      console.log(product);
+      try {
+        const updatedProduct = await editProduct(product);
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === updatedProduct.id ? updatedProduct : p
+          )
+        );
+        setProduct({
+          name: "",
+          description: "",
+          price: "",
+          is_available: true,
+          category: "",
+          image: null,
+        });
+        document.getElementById("productImage").value = "";
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsExecutingRequest(false);
+        setProductBtnText("Add Product");
+      }
     }
+  };
+
+  const handleEditProduct = (selectedProduct) => {
+    setProductOperation("edit");
+    setProduct({
+      id: selectedProduct?.id,
+      name: selectedProduct?.name,
+      description: selectedProduct?.description,
+      image: null,
+      price: selectedProduct?.price,
+      is_available: selectedProduct?.is_available,
+      category: selectedProduct?.category?.id,
+    });
+  };
+
+  const handleCancelEditProduct = () => {
+    setProductOperation("add");
+    setProduct({
+      name: "",
+      description: "",
+      price: "",
+      is_available: true,
+      category: "",
+      image: null,
+    });
   };
 
   const handleDeleteProduct = async (productId) => {
@@ -332,6 +379,16 @@ const OwnResto = () => {
               >
                 {productOperation === "add" ? "Add Product" : "Save Changes"}
               </button>
+              {productOperation === "edit" && (
+                <button
+                  type="submit"
+                  disabled={isExecutingRequest}
+                  onClick={handleCancelEditProduct}
+                  className="btn btn-secondary mt-2 ms-2"
+                >
+                  Cancel
+                </button>
+              )}
             </form>
           </div>
         </div>
@@ -372,7 +429,7 @@ const OwnResto = () => {
                     : product.description}
                 </td>
                 <td>&#8369;{product?.price}</td>
-                <td>{product?.category}</td>
+                <td>{product?.category?.name}</td>
                 <td>
                   {product?.is_available ? (
                     <i className="bi bi-check-circle-fill text-success"></i>
@@ -382,7 +439,10 @@ const OwnResto = () => {
                 </td>
                 <td>
                   <div className="d-flex gap-2">
-                    <button className="btn btn-outline-warning btn-sm">
+                    <button
+                      className="btn btn-outline-warning btn-sm"
+                      onClick={() => handleEditProduct(product)}
+                    >
                       <i className="bi bi-pencil-square"></i>
                     </button>
                     <button

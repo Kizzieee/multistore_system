@@ -87,6 +87,35 @@ export const addProduct = async (data) => {
   }
 };
 
+export const editProduct = async (data) => {
+  try {
+    console.log(data);
+
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("is_available", data.is_available);
+    formData.append("category", data.category);
+
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+
+    const response = await api.patch(`store/products/${data?.id}/`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Failed to edit product: ", error);
+    throw error?.response?.data || error?.message || error;
+  }
+};
+
 export const deleteProduct = async (productId) => {
   try {
     const response = await api.delete(`store/products/${productId}/`);
