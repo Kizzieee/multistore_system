@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
 import renderErrorMessages from "../errorHelper";
 import { GlobalContext } from "../GlobalContext";
 import { updateStore } from "../services/storeService";
@@ -13,7 +14,21 @@ const StoreInfo = ({
   const { setToastData } = useContext(GlobalContext);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [updateRestaurantForm, setUpdateRestaurantForm] = useState({});
+  const [updateRestaurantForm, setUpdateRestaurantForm] = useState({
+    name: "",
+    email: "",
+    mobile_number: "",
+    delivery_fee: "",
+    description: "",
+    opening_time: "",
+    closing_time: "",
+    address: {
+      city: "",
+      province: "",
+    },
+    image: null,
+    is_live: false,
+  });
 
   useEffect(() => {
     if (showEditRestaurantModal && store) {
@@ -30,6 +45,7 @@ const StoreInfo = ({
           province: store.address?.province || "",
         },
         image: null,
+        is_live: store?.is_live || false,
       });
     }
   }, [showEditRestaurantModal, store]);
@@ -67,6 +83,11 @@ const StoreInfo = ({
           [fieldName]: value,
         },
       });
+    } else if (name === "is_live") {
+      setUpdateRestaurantForm((prevState) => ({
+        ...prevState,
+        is_live: e.target.checked,
+      }));
     } else {
       setUpdateRestaurantForm({
         ...updateRestaurantForm,
@@ -89,13 +110,24 @@ const StoreInfo = ({
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header className="fs-5" closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
+        <Modal.Header
+          closeButton
+          className="d-flex justify-content-between align-items-center"
+        >
+          <Modal.Title id="contained-modal-title-vcenter" className="me-auto">
             Edit Restaurant
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
+            <Form.Check
+              checked={updateRestaurantForm?.is_live}
+              onChange={handleChange}
+              name="is_live"
+              type="switch"
+              label="Live"
+            />
+
             <div className="row">
               <div className="mb-3 col-6">
                 <label htmlFor="store_name" className="form-label">
