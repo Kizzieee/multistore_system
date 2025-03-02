@@ -16,6 +16,7 @@ import Orders from "./Store/Orders";
 import OwnResto from "./Store/OwnResto";
 
 import { GlobalContext } from "./GlobalContext";
+import { getAccessToken, getRefreshToken } from "./services/tokenService";
 import { me } from "./services/userService";
 
 function Navigation() {
@@ -26,13 +27,17 @@ function Navigation() {
   const [justLoggedIn, setJustLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user information
   useLayoutEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const userData = await me();
-        setUser(userData);
-        setIsLoggedIn(true);
+        if (!getAccessToken() && !getRefreshToken()) {
+          setUser(null);
+          setIsLoggedIn(false);
+        } else {
+          const userData = await me();
+          setUser(userData);
+          setIsLoggedIn(true);
+        }
       } catch (error) {
         setUser(null);
         setIsLoggedIn(false);
@@ -44,7 +49,6 @@ function Navigation() {
     fetchUserInfo();
   }, [justLoggedIn, setUser, setIsLoggedIn]);
 
-  // Set store owner status based on user info
   useEffect(() => {
     if (user) {
       setIsStoreOwner(user.groups?.includes("Store Owner"));
@@ -53,7 +57,6 @@ function Navigation() {
     }
   }, [user, setIsStoreOwner]);
 
-  // Handle modal open/close and login navigation
   const handleLoginClickModal = () => {
     if (!isLoggedIn) {
       setIsModalOpen(!isModalOpen);
