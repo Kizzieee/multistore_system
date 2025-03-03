@@ -1,7 +1,15 @@
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import {
+  default as React,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 
 import AccountActivation from "./Account/AccountActivation";
@@ -16,19 +24,29 @@ import Orders from "./Store/Orders";
 import OwnResto from "./Store/OwnResto";
 
 import { GlobalContext } from "./GlobalContext";
+import { fetchMyOrders } from "./services/orderService";
 import { getAccessToken, getRefreshToken } from "./services/tokenService";
 import { me } from "./services/userService";
+import OrdersV2 from "./Store/OrdersV2";
 
 function Navigation() {
-  const { isLoggedIn, setIsLoggedIn, user, setUser, setIsStoreOwner } =
-    useContext(GlobalContext);
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    user,
+    setUser,
+    setIsStoreOwner,
+    orders,
+    setOrders,
+  } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [justLoggedIn, setJustLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showOffCanvas, setShowOffCanvas] = useState(false);
 
   useLayoutEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchUserAndOrders = async () => {
       try {
         if (!getAccessToken() && !getRefreshToken()) {
           setUser(null);
@@ -37,6 +55,8 @@ function Navigation() {
           const userData = await me();
           setUser(userData);
           setIsLoggedIn(true);
+          const myOrders = await fetchMyOrders();
+          setOrders(myOrders);
         }
       } catch (error) {
         setUser(null);
@@ -46,8 +66,8 @@ function Navigation() {
       }
     };
 
-    fetchUserInfo();
-  }, [justLoggedIn, setUser, setIsLoggedIn]);
+    fetchUserAndOrders();
+  }, [justLoggedIn, setUser, setIsLoggedIn, setOrders]);
 
   useEffect(() => {
     if (user) {
@@ -99,40 +119,50 @@ function Navigation() {
                 </button>
               )}
             </div>
-
             {/* Delivery Button */}
-            <button
-              className="delivery-btn bg-white d-flex flex-row align-items-center gap-3"
-              type="button"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#staticBackdrop"
-              aria-controls="staticBackdrop"
-            >
-              <motion.div
-                className="delivery-icon"
-                initial={{ x: 0 }}
-                animate={{ x: 10, opacity: 0.5 }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "easeInOut",
-                }}
+            {orders.length > 0 && (
+              <button
+                className="delivery-btn bg-white d-flex flex-row align-items-center gap-3"
+                type="button"
+                onClick={() => setShowOffCanvas(true)}
               >
-                <FontAwesomeIcon icon={faMotorcycle} size="60" />
-              </motion.div>
-              <p className="p-0 m-0">Delivery</p>
-            </button>
-
+                <motion.div
+                  className="delivery-icon"
+                  initial={{ x: 0 }}
+                  animate={{ x: 10, opacity: 0.5 }}
+                  transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    ease: "easeInOut",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faMotorcycle} size="60" />
+                </motion.div>
+                <p className="p-0 m-0">Delivery</p>
+              </button>
+            )}
             {/* Restaurant Link */}
             {isLoggedIn && (
-              <Link to="/restaurant" className="nav-item">
-                <i className="bi bi-basket3"></i>
-              </Link>
+              <OverlayTrigger
+                trigger="click"
+                placement="bottom"
+                overlay={
+                  <Tooltip id="tooltip-unsupported">
+                    Feature not yet supported
+                  </Tooltip>
+                }
+              >
+                <span className="nav-item" style={{ cursor: "pointer" }}>
+                  <i className="bi bi-basket3"></i>
+                </span>
+              </OverlayTrigger>
             )}
-
             {/* Delivery Status Offcanvas */}
-            <DeliveryStatus id="myOffcanvas" />
+            <DeliveryStatus
+              showOffCanvas={showOffCanvas}
+              setShowOffCanvas={setShowOffCanvas}
+            />
           </div>
 
           {/* Account Modal */}
@@ -190,7 +220,8 @@ function Navigation() {
           path="/orders"
           element={
             <ProtectedRoute setIsModalOpen={setIsModalOpen}>
-              <Orders />
+              {/* <Orders /> */}
+              <OrdersV2 />
             </ProtectedRoute>
           }
         />
