@@ -12,6 +12,7 @@ export const GlobalProvider = ({ children }) => {
     body: "",
     show: false,
   });
+  const [orders, setOrders] = useState([]);
 
   return (
     <GlobalContext.Provider
@@ -24,6 +25,8 @@ export const GlobalProvider = ({ children }) => {
         setIsStoreOwner,
         toastData,
         setToastData,
+        orders,
+        setOrders,
       }}
     >
       {children}
