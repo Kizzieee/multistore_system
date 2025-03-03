@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Trash2, Plus, Minus } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 
 const CartQuantityAddMinus = ({ quantity, onChange }) => {
   return (

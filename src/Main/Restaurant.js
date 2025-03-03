@@ -2,6 +2,13 @@ import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import renderErrorMessages from "../errorHelper";
+import {
+  addCartItem,
+  deleteCartItem,
+  fetchCartItems,
+  updateCartItem,
+} from "../services/cartItemService";
 import { fetchProducts } from "../services/productService";
 import CartQuantityAddMinus from "./CartQuantityAddMinus";
 
@@ -12,7 +19,7 @@ function Restaurant() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [cart, setCart] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     const fetchRestoProducts = async () => {
@@ -20,6 +27,8 @@ function Restaurant() {
         setIsLoading(true);
         const storeProducts = await fetchProducts(restaurant?.id);
         setProducts(storeProducts);
+        const myCartItems = await fetchCartItems();
+        setCartItems(myCartItems);
       } catch (error) {
         setError(error);
       } finally {
@@ -41,31 +50,62 @@ function Restaurant() {
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
   };
 
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find((item) => item.id === product.id);
-      if (existingProduct) {
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+  const handleAddToCart = async (productId) => {
+    try {
+      let cartItemExists = false;
+
+      setCartItems((prevCartItems) => {
+        const existingItem = prevCartItems.find(
+          (cartItem) => cartItem?.product?.id === productId
         );
-      } else {
-        return [...prevCart, { ...product, quantity: 1 }];
+        if (existingItem) {
+          cartItemExists = true;
+          return prevCartItems.map((cartItem) =>
+            cartItem?.product?.id === productId
+              ? { ...cartItem, quantity: cartItem?.quantity + 1 }
+              : cartItem
+          );
+        } else {
+          return prevCartItems;
+        }
+      });
+      if (!cartItemExists) {
+        const addedCartItem = await addCartItem(productId);
+        setCartItems((prevCartItems) => [addedCartItem, ...prevCartItems]);
       }
-    });
+    } catch (error) {
+      setError(error);
+    }
   };
 
-  const updateQuantity = (productId, quantity) => {
-    setCart(
-      (prevCart) =>
+  const updateQuantity = async (cartItemId, quantity) => {
+    try {
+      if (quantity === 0) {
+        await deleteCartItem(cartItemId);
+      } else {
+        await updateCartItem(cartItemId, quantity);
+      }
+      setCartItems((prevCart) =>
         prevCart
-          .map((item) =>
-            item.id === productId ? { ...item, quantity: quantity } : item
+          .map((cartItem) =>
+            cartItem.id === cartItemId
+              ? { ...cartItem, quantity: quantity }
+              : cartItem
           )
-          .filter((item) => item.quantity > 0) // Remove item if quantity is 0
-    );
+          .filter((cartItem) => cartItem.quantity > 0)
+      );
+    } catch (error) {
+      setError(error);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="my-5">
@@ -124,87 +164,99 @@ function Restaurant() {
           </div>
         </div>
       </div>
-
-      <div id="RestaurantMenu" className="container mt-5">
-        <div id="PopularMenu" className="row gap-1">
-          <div
-            className={`d-flex flex-wrap gap-3 p-0 ${
-              restaurant?.is_open ? "col-8" : "col-12"
-            }`}
-          >
-            {products.map((product) => (
-              <div
-                key={product?.id}
-                className="card card-menu-item d-flex flex-row"
-              >
-                <img
-                  src={product?.image}
-                  className="card-img-top"
-                  alt={product?.name}
-                />
-                <div>
-                  <div className="card-body">
-                    <h5 className="card-title m-0">{product?.name}</h5>
-                    <small>&#8369; {product?.price}</small>
-                    <p className="card-text card-text-menu">
-                      {product?.description}
-                    </p>
-                  </div>
-                  {restaurant?.is_open && (
-                    <div>
-                      <i
-                        className="bi bi-plus-circle add-to-cart"
-                        onClick={() => addToCart(product)}
-                      ></i>
+      {error ? (
+        renderErrorMessages(error)
+      ) : (
+        <div id="RestaurantMenu" className="container mt-5">
+          <div id="PopularMenu" className="row gap-1">
+            <div
+              className={`d-flex flex-wrap gap-3 p-0 ${
+                restaurant?.is_open ? "col-8" : "col-12"
+              }`}
+            >
+              {products.map((product) => (
+                <div
+                  key={product?.id}
+                  className="card card-menu-item d-flex flex-row"
+                >
+                  <img
+                    src={product?.image}
+                    className="card-img-top"
+                    alt={product?.name}
+                  />
+                  <div>
+                    <div className="card-body">
+                      <h5 className="card-title m-0">{product?.name}</h5>
+                      <small>&#8369; {product?.price}</small>
+                      <p className="card-text card-text-menu m-0">
+                        {product?.description}
+                      </p>
+                      <strong>
+                        {product?.is_available ? "Available" : "Unavailable"}
+                      </strong>
                     </div>
+                    {restaurant?.is_open && product?.is_available && (
+                      <div>
+                        <i
+                          className="bi bi-plus-circle add-to-cart"
+                          onClick={() => handleAddToCart(product?.id)}
+                        ></i>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {restaurant?.is_open && (
+              <div className="col-4 m-0 rounded p-0 bg-light cart-view">
+                <h5 className="p-3 border rounded-top text-center">Cart</h5>
+                <div className="w-100 cart-items">
+                  {cartItems.length > 0 ? (
+                    cartItems.map((cartItem) => (
+                      <div
+                        key={cartItem?.id}
+                        className="cart-item d-flex flex-row justify-content-start px-2"
+                      >
+                        <div>
+                          <img
+                            src={cartItem?.product?.image}
+                            alt={cartItem?.product?.name}
+                          />
+                        </div>
+                        <div className="d-flex flex-column ps-2">
+                          <h6>{cartItem?.product?.name}</h6>
+                          <small>
+                            &#8369;{" "}
+                            {cartItem?.product?.price * cartItem?.quantity}
+                          </small>
+                          <CartQuantityAddMinus
+                            quantity={cartItem?.quantity}
+                            onChange={(newQuantity) =>
+                              updateQuantity(cartItem?.id, newQuantity)
+                            }
+                          />
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center">Your cart is empty.</p>
                   )}
                 </div>
-              </div>
-            ))}
-          </div>
-          {restaurant?.is_open && (
-            <div className="col-4 m-0 rounded p-0 bg-light cart-view">
-              <h5 className="p-3 border rounded-top text-center">Cart</h5>
-              <div className="w-100 cart-items">
-                {cart.length > 0 ? (
-                  cart.map((item) => (
-                    <div
-                      key={item.id}
-                      className="cart-item d-flex flex-row justify-content-start px-2"
-                    >
-                      <div>
-                        <img src={item.image} alt={item.name} />
-                      </div>
-                      <div className="d-flex flex-column ps-2">
-                        <h6>{item.name}</h6>
-                        <small>&#8369; {item.price}</small>
-                        <CartQuantityAddMinus
-                          quantity={item.quantity}
-                          onChange={(newQuantity) =>
-                            updateQuantity(item.id, newQuantity)
-                          }
-                        />
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center">Your cart is empty.</p>
+
+                {cartItems.length > 0 && (
+                  <button
+                    type="button"
+                    className="w-100 p-2 main-btn-primary"
+                    onClick={() => navigate("/checkout")}
+                  >
+                    Checkout
+                  </button>
                 )}
               </div>
-
-              {cart.length > 0 && (
-                <button
-                  type="button"
-                  className="w-100 p-2 main-btn-primary"
-                  onClick={() => navigate("/checkout")}
-                >
-                  Checkout
-                </button>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
