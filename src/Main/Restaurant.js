@@ -1,8 +1,10 @@
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Button, Modal } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import renderErrorMessages from "../errorHelper";
+import { GlobalContext } from "../GlobalContext";
 import {
   addCartItem,
   deleteCartItem,
@@ -14,21 +16,27 @@ import CartQuantityAddMinus from "./CartQuantityAddMinus";
 
 function Restaurant() {
   const navigate = useNavigate();
+  const { isLoggedIn } = useContext(GlobalContext);
   const { state } = useLocation();
   const restaurant = state?.restaurant;
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [cartUpdated, setCartUpdated] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [pendingProduct, setPendingProduct] = useState(null);
 
   useEffect(() => {
     const fetchRestoProducts = async () => {
       try {
         setIsLoading(true);
-        const storeProducts = await fetchProducts(restaurant?.id);
-        setProducts(storeProducts);
-        const myCartItems = await fetchCartItems();
-        setCartItems(myCartItems);
+        if (isLoggedIn) {
+          const storeProducts = await fetchProducts(restaurant?.id);
+          setProducts(storeProducts);
+          const myCartItems = await fetchCartItems();
+          setCartItems(myCartItems);
+        }
       } catch (error) {
         setError(error);
       } finally {
@@ -37,41 +45,37 @@ function Restaurant() {
     };
 
     fetchRestoProducts();
-  }, [restaurant]);
+  }, [restaurant, isLoggedIn, cartUpdated]);
 
-  const formatTime = (timeStr) => {
-    if (!timeStr) return "";
+  const handleAddToCart = (productId) => {
+    if (
+      cartItems.length > 0 &&
+      cartItems[0]?.product?.store?.id !== restaurant?.id
+    ) {
+      setPendingProduct(productId);
+      setShowModal(true);
+      return;
+    }
 
-    const [hours, minutes] = timeStr.split(":");
-    const hour = parseInt(hours, 10);
-    const minute = parseInt(minutes, 10);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const formattedHour = hour % 12 || 12;
-    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+    addNewItemToCart(productId);
   };
 
-  const handleAddToCart = async (productId) => {
+  const addNewItemToCart = async (productId) => {
     try {
-      let cartItemExists = false;
+      await addCartItem(productId);
+      setCartUpdated((prev) => !prev);
+    } catch (error) {
+      setError(error);
+    }
+  };
 
-      setCartItems((prevCartItems) => {
-        const existingItem = prevCartItems.find(
-          (cartItem) => cartItem?.product?.id === productId
-        );
-        if (existingItem) {
-          cartItemExists = true;
-          return prevCartItems.map((cartItem) =>
-            cartItem?.product?.id === productId
-              ? { ...cartItem, quantity: cartItem?.quantity + 1 }
-              : cartItem
-          );
-        } else {
-          return prevCartItems;
-        }
-      });
-      if (!cartItemExists) {
-        const addedCartItem = await addCartItem(productId);
-        setCartItems((prevCartItems) => [addedCartItem, ...prevCartItems]);
+  const confirmNewRestaurantCart = async () => {
+    try {
+      setShowModal(false);
+      await addNewItemToCart(pendingProduct);
+
+      if (pendingProduct) {
+        setPendingProduct(null);
       }
     } catch (error) {
       setError(error);
@@ -82,6 +86,7 @@ function Restaurant() {
     try {
       if (quantity === 0) {
         await deleteCartItem(cartItemId);
+        setCartUpdated((prev) => !prev);
       } else {
         await updateCartItem(cartItemId, quantity);
       }
@@ -97,6 +102,17 @@ function Restaurant() {
     } catch (error) {
       setError(error);
     }
+  };
+
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "";
+
+    const [hours, minutes] = timeStr.split(":");
+    const hour = parseInt(hours, 10);
+    const minute = parseInt(minutes, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
   };
 
   if (isLoading) {
@@ -247,7 +263,11 @@ function Restaurant() {
                   <button
                     type="button"
                     className="w-100 p-2 main-btn-primary"
-                    onClick={() => navigate("/checkout")}
+                    onClick={() =>
+                      navigate("/checkout", {
+                        state: { restaurant, cartItems },
+                      })
+                    }
                   >
                     Checkout
                   </button>
@@ -257,6 +277,31 @@ function Restaurant() {
           </div>
         </div>
       )}
+      {/* Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header>
+          <Modal.Title>
+            You are adding product from a different store!
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Adding this item will clear your current cart. Continue?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowModal(false);
+              setPendingProduct(null);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={confirmNewRestaurantCart}>
+            Continue
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

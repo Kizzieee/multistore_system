@@ -1,26 +1,28 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import { GlobalContext } from "../GlobalContext";
+import renderErrorMessages from "../errorHelper";
+import { createOrder } from "../services/orderService";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const accountOwner = {
-    name: "John Doe",
-    contact: "09123456789",
-    address: "123 Main St, Victoria",
-  };
+  const { user, setOrders } = useContext(GlobalContext);
+  const { state } = useLocation();
+  const restaurant = state?.restaurant;
+  const cartItems = state?.cartItems;
+  const [error, setError] = useState(null);
   const [deliveryOption, setDeliveryOption] = useState("Delivery");
   const [pickupDetails, setPickupDetails] = useState({
     date: new Date().toISOString().split("T")[0],
     time: "7:00 AM - 8:00 AM",
   });
-  const [items, setItems] = useState([
-    { name: "Item 1", quantity: 1, price: 100 },
-  ]);
-  const deliveryFee = deliveryOption === "Delivery" ? 60 : 0;
   const totalSum =
-    items.reduce((sum, item) => sum + item.price * item.quantity, 0) +
-    deliveryFee;
+    cartItems.reduce(
+      (sum, cartItem) => sum + cartItem?.product?.price * cartItem?.quantity,
+      0
+    ) + restaurant?.delivery_fee;
 
   const generateTimeSlots = () => {
     const slots = [];
@@ -41,31 +43,41 @@ const Checkout = () => {
     return slots;
   };
 
+  const handleCheckOut = async () => {
+    try {
+      const newOrder = await createOrder(restaurant?.id);
+      setOrders((prev) => [newOrder, ...prev]);
+      navigate("/", { state: { showOffCanvas: true } });
+    } catch (error) {
+      setError(error);
+    }
+  };
+
   return (
     <div className="container my-5">
       <div className="col-6 m-auto">
         <form className="mt-5">
           <div className="order-from p-2">
             <p className="m-0 p-0">Your order from</p>
-            <h3 className="m-0 p-0">Hungry Hurry - Allen</h3>
+            <h3 className="m-0 p-0">{restaurant?.display_name}</h3>
           </div>
           {/* Customer Information */}
-          <div className="mb-3 d-flex gap-3">
-            <div className="col-6">
+          <div className="mb-3 d-flex">
+            <div className="col-6 pe-1">
               <label className="form-label">Name:</label>
               <input
                 type="text"
                 className="form-control"
-                value={accountOwner.name}
+                value={user?.first_name + " " + user?.last_name}
                 disabled
               />
             </div>
-            <div className="col-5">
+            <div className="col-6">
               <label className="form-label">Contact Number:</label>
               <input
                 type="text"
                 className="form-control "
-                value={accountOwner.contact}
+                value={user?.mobile_number}
                 disabled
               />
             </div>
@@ -76,7 +88,7 @@ const Checkout = () => {
             <input
               type="text"
               className="form-control"
-              value={accountOwner.address}
+              value={user?.address}
               disabled
             />
           </div>
@@ -105,9 +117,10 @@ const Checkout = () => {
                 value="Pick up"
                 checked={deliveryOption === "Pick up"}
                 onChange={() => setDeliveryOption("Pick up")}
+                disabled
               />
               <label htmlFor="pickup" className="ms-2">
-                Pick up
+                Pick up (Currently not supported)
               </label>
             </div>
           </div>
@@ -141,19 +154,22 @@ const Checkout = () => {
 
           {/* Items List */}
           <h4>Items</h4>
-          {items.map((item, index) => (
-            <div key={index} className="d-flex justify-content-between mb-2">
+          {cartItems.map((cartItem) => (
+            <div
+              key={cartItem?.id}
+              className="d-flex justify-content-between mb-2"
+            >
               <span>
-                {item.name} (x{item.quantity})
+                {cartItem?.product?.name} (x{cartItem?.quantity})
               </span>
-              <span>₱{item.price * item.quantity}</span>
+              <span>₱{cartItem?.product?.price * cartItem?.quantity}</span>
             </div>
           ))}
 
           {/* Delivery Fee & Total */}
           <div className="d-flex justify-content-between mt-3">
             <strong>Delivery Fee:</strong>
-            <span>₱{deliveryFee}</span>
+            <span>₱{restaurant?.delivery_fee}</span>
           </div>
           <div className="d-flex justify-content-between mt-2">
             <strong>Total:</strong>
@@ -164,11 +180,12 @@ const Checkout = () => {
           <button
             type="button"
             className="main-btn-primary mt-3 w-100"
-            onClick={() => navigate("/delivery-status")}
+            onClick={handleCheckOut}
           >
             Checkout
           </button>
         </form>
+        {error && renderErrorMessages(error)}
       </div>
     </div>
   );

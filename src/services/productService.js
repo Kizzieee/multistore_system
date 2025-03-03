@@ -92,8 +92,6 @@ export const addProduct = async (data) => {
 
 export const editProduct = async (data) => {
   try {
-    console.log(data);
-
     const formData = new FormData();
 
     formData.append("name", data.name);
