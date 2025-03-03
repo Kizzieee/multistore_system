@@ -1,13 +1,15 @@
 import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import renderErrorMessages from "../errorHelper";
+import { GlobalContext } from "../GlobalContext";
 import { fetchStores } from "../services/storeService";
 import "../style.css";
 
 function HomeRestaurants() {
   const navigate = useNavigate();
+  const { user } = useContext(GlobalContext);
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +28,7 @@ function HomeRestaurants() {
     };
 
     getStores();
-  }, []);
+  }, [user]);
 
   const handleCardClick = (restaurant) => {
     navigate("/restaurant", {
