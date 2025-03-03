@@ -150,9 +150,30 @@ function Navigation() {
       {/* Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/restaurant" element={<Restaurant />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/delivery-status" element={<DeliveryStatus />} />
+        <Route
+          path="/restaurant"
+          element={
+            <ProtectedRoute setIsModalOpen={setIsModalOpen}>
+              <Restaurant />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute setIsModalOpen={setIsModalOpen}>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/delivery-status"
+          element={
+            <ProtectedRoute setIsModalOpen={setIsModalOpen}>
+              <DeliveryStatus />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/activate"
           element={<AccountActivation setIsModalOpen={setIsModalOpen} />}

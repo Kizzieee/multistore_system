@@ -74,8 +74,8 @@ function AccountLogin(props) {
       }
     } else {
       try {
-        await login(loginForm.email, loginForm.password);
         setError(null);
+        await login(loginForm.email, loginForm.password);
         setLoginForm(
           Object.fromEntries(Object.keys(loginForm).map((key) => [key, ""]))
         );
@@ -155,6 +155,20 @@ function AccountLogin(props) {
                 value={registrationForm.address}
                 onChange={handleRegistrationFormChange}
                 placeholder="123 Street, City"
+                required
+                className="form-control"
+                autoComplete="on"
+              />
+            </div>
+            <div className="mb-2 p-0">
+              <label htmlFor="mobile_number">Contact Number</label>
+              <input
+                type="number"
+                id="mobile_number"
+                name="mobile_number"
+                value={registrationForm.mobile_number}
+                onChange={handleRegistrationFormChange}
+                placeholder="09XXXXXXXXX"
                 required
                 className="form-control"
                 autoComplete="on"
