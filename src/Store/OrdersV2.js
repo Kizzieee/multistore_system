@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Table } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
@@ -29,6 +30,8 @@ function OrdersV2() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [selectedFeedbackOrder, setSelectedFeedbackOrder] = useState(null);
 
   useEffect(() => {
     const fetchMyStoreOrders = async () => {
@@ -68,6 +71,16 @@ function OrdersV2() {
     } catch (error) {
       setError(error);
     }
+  };
+
+  const handleViewFeedbacks = (order) => {
+    setSelectedFeedbackOrder(order);
+    setShowFeedbackModal(true);
+  };
+
+  const handleCloseFeedbackModal = () => {
+    setShowFeedbackModal(false);
+    setSelectedFeedbackOrder(null);
   };
 
   if (isLoading) {
@@ -131,6 +144,15 @@ function OrdersV2() {
                             Update Status
                           </Button>
                         )}
+                      {order?.status === "Completed" && (
+                        <Button
+                          variant="info"
+                          onClick={() => handleViewFeedbacks(order)}
+                          className="mt-3 ms-2"
+                        >
+                          View Feedback
+                        </Button>
+                      )}
                     </Card.Body>
                   </Card>
                 ))}
@@ -191,6 +213,63 @@ function OrdersV2() {
             disabled={!selectedStatus}
           >
             Confirm Update
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Feedback Modal */}
+      <Modal
+        show={showFeedbackModal}
+        onHide={handleCloseFeedbackModal}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Feedback for Order #{selectedFeedbackOrder?.id}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ maxHeight: "60vh", overflowY: "auto" }}>
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Rating</th>
+                <th>Comment</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedFeedbackOrder?.feedbacks?.map((feedback) => (
+                <tr key={feedback?.id}>
+                  <td>{feedback?.customer || "Anonymous"}</td>
+                  <td>
+                    {[...Array(feedback?.rating)].map((_, i) => (
+                      <i
+                        key={i}
+                        className="bi bi-star-fill"
+                        style={{
+                          color: "yellow",
+                          textShadow:
+                            "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                        }}
+                      />
+                    ))}
+                  </td>
+                  <td>{feedback.description || "No comment"}</td>
+                </tr>
+              ))}
+              {!selectedFeedbackOrder?.feedbacks?.length && (
+                <tr>
+                  <td colSpan="3" className="text-center">
+                    No feedback available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseFeedbackModal}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

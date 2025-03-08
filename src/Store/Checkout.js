@@ -8,7 +8,7 @@ import { createOrder } from "../services/orderService";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { user, setOrders } = useContext(GlobalContext);
+  const { user, setOrders, setCart } = useContext(GlobalContext);
   const { state } = useLocation();
   const restaurant = state?.restaurant;
   const cartItems = state?.cartItems;
@@ -47,6 +47,7 @@ const Checkout = () => {
     try {
       const newOrder = await createOrder(restaurant?.id);
       setOrders((prev) => [newOrder, ...prev]);
+      setCart({});
       navigate("/", { state: { showOffCanvas: true } });
     } catch (error) {
       setError(error);
