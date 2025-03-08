@@ -163,13 +163,53 @@ function Restaurant() {
                 <br />
                 {restaurant?.is_open ? (
                   <>
-                    <i className="bi bi-door-open"></i> OPEN
+                    <i className="bi bi-door-open"></i> : OPEN
                   </>
                 ) : (
                   <>
-                    <i className="bi bi-door-closed"></i> CLOSED
+                    <i className="bi bi-door-closed"></i> : CLOSED
                   </>
                 )}
+              </span>
+              <br />
+              <span>
+                {(() => {
+                  if (restaurant?.rating === 0) {
+                    return (
+                      <i
+                        className="bi bi-star"
+                        style={{
+                          color: "yellow",
+                          textShadow:
+                            "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                        }}
+                      ></i>
+                    );
+                  } else if (restaurant?.rating < 5) {
+                    return (
+                      <i
+                        className="bi bi-star-half"
+                        style={{
+                          color: "yellow",
+                          textShadow:
+                            "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                        }}
+                      ></i>
+                    );
+                  } else if (restaurant?.rating === 5) {
+                    return (
+                      <i
+                        className="bi bi-star-fill"
+                        style={{
+                          color: "yellow",
+                          textShadow:
+                            "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                        }}
+                      ></i>
+                    );
+                  }
+                })()}{" "}
+                : {restaurant?.rating}
               </span>
             </div>
             {/* <span>

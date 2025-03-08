@@ -105,16 +105,49 @@ function HomeRestaurants() {
                   <div className="d-flex flex-row justify-content-between">
                     <h5 className="card-title">
                       <i className="bi bi-shop-window"></i> {restaurant?.name}
+                      <br />
                     </h5>
-                    {/* <span>
-                      <i className="bi bi-star-fill text-color-main"></i>{" "}
-                      {restaurant?.rating}
-                    </span> */}
+                    <small>
+                      {(() => {
+                        if (restaurant?.rating === 0) {
+                          return (
+                            <i
+                              className="bi bi-star"
+                              style={{
+                                color: "yellow",
+                                textShadow:
+                                  "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                              }}
+                            ></i>
+                          );
+                        } else if (restaurant?.rating < 5) {
+                          return (
+                            <i
+                              className="bi bi-star-half"
+                              style={{
+                                color: "yellow",
+                                textShadow:
+                                  "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                              }}
+                            ></i>
+                          );
+                        } else if (restaurant?.rating === 5) {
+                          return (
+                            <i
+                              className="bi bi-star-fill"
+                              style={{
+                                color: "yellow",
+                                textShadow:
+                                  "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                              }}
+                            ></i>
+                          );
+                        }
+                      })()}{" "}
+                      Rating: {restaurant?.rating}
+                    </small>
                   </div>
                   <div className="d-flex flex-row justify-content-between">
-                    {/* <small>
-                      <i className="bi bi-stopwatch"></i> {restaurant?.time}
-                    </small> */}
                     <small>
                       <FontAwesomeIcon icon={faMotorcycle} /> : &#8369;
                       {restaurant?.delivery_fee}

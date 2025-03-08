@@ -7,7 +7,7 @@ import "../style.css";
 function AccountActivation({ setIsModalOpen }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
