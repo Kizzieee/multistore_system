@@ -11,14 +11,15 @@ import {
   fetchCartItems,
   updateCartItem,
 } from "../services/cartItemService";
+import { fetchCart } from "../services/cartService";
 import { fetchProducts } from "../services/productService";
 import CartQuantityAddMinus from "./CartQuantityAddMinus";
 
 function Restaurant() {
   const navigate = useNavigate();
-  const { isLoggedIn } = useContext(GlobalContext);
+  const { isLoggedIn, cart, setCart } = useContext(GlobalContext);
   const { state } = useLocation();
-  const restaurant = state?.restaurant;
+  const restaurant = state?.restaurant || cart?.store;
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +30,9 @@ function Restaurant() {
 
   useEffect(() => {
     const fetchRestoProducts = async () => {
+      if (!restaurant?.id) {
+        return navigate("/");
+      }
       try {
         setIsLoading(true);
         if (isLoggedIn) {
@@ -45,7 +49,7 @@ function Restaurant() {
     };
 
     fetchRestoProducts();
-  }, [restaurant, isLoggedIn, cartUpdated]);
+  }, [restaurant, isLoggedIn, cartUpdated, navigate]);
 
   const handleAddToCart = (productId) => {
     if (
@@ -64,6 +68,8 @@ function Restaurant() {
     try {
       await addCartItem(productId);
       setCartUpdated((prev) => !prev);
+      const myCart = await fetchCart();
+      setCart(myCart);
     } catch (error) {
       setError(error);
     }
@@ -87,6 +93,8 @@ function Restaurant() {
       if (quantity === 0) {
         await deleteCartItem(cartItemId);
         setCartUpdated((prev) => !prev);
+        const myCart = await fetchCart();
+        setCart(myCart);
       } else {
         await updateCartItem(cartItemId, quantity);
       }

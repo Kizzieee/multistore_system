@@ -20,10 +20,10 @@ import Restaurant from "./Main/Restaurant";
 import ProtectedRoute from "./ProtectedRoute";
 import Checkout from "./Store/Checkout";
 import DeliveryStatus from "./Store/DeliveryStatus";
-import Orders from "./Store/Orders";
 import OwnResto from "./Store/OwnResto";
 
 import { GlobalContext } from "./GlobalContext";
+import { fetchCart } from "./services/cartService";
 import { fetchMyOrders } from "./services/orderService";
 import { getAccessToken, getRefreshToken } from "./services/tokenService";
 import { me } from "./services/userService";
@@ -38,12 +38,17 @@ function Navigation() {
     setIsStoreOwner,
     orders,
     setOrders,
+    setCart,
+    cart,
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [justLoggedIn, setJustLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showOffCanvas, setShowOffCanvas] = useState(false);
+  const activeOrders = orders.filter(
+    (order) => order?.status !== "Completed" && order?.status !== "Rejected"
+  );
 
   useLayoutEffect(() => {
     const fetchUserAndOrders = async () => {
@@ -57,6 +62,8 @@ function Navigation() {
           setIsLoggedIn(true);
           const myOrders = await fetchMyOrders();
           setOrders(myOrders);
+          const myCart = await fetchCart();
+          setCart(myCart);
         }
       } catch (error) {
         setUser(null);
@@ -67,7 +74,7 @@ function Navigation() {
     };
 
     fetchUserAndOrders();
-  }, [justLoggedIn, setUser, setIsLoggedIn, setOrders]);
+  }, [justLoggedIn, setUser, setIsLoggedIn, setOrders, setCart]);
 
   useEffect(() => {
     if (user) {
@@ -120,7 +127,7 @@ function Navigation() {
               )}
             </div>
             {/* Delivery Button */}
-            {orders.length > 0 && (
+            {activeOrders.length > 0 && (
               <button
                 className="delivery-btn bg-white d-flex flex-row align-items-center gap-3"
                 type="button"
@@ -142,21 +149,48 @@ function Navigation() {
                 <p className="p-0 m-0">Delivery</p>
               </button>
             )}
-            {/* Restaurant Link */}
+            {/* Restaurant Link with Cart Badge */}
             {isLoggedIn && (
-              <OverlayTrigger
-                trigger="click"
-                placement="bottom"
-                overlay={
-                  <Tooltip id="tooltip-unsupported">
-                    Feature not yet supported
-                  </Tooltip>
-                }
-              >
-                <span className="nav-item" style={{ cursor: "pointer" }}>
-                  <i className="bi bi-basket3"></i>
-                </span>
-              </OverlayTrigger>
+              <>
+                {cart?.cart_item_count === 0 ? (
+                  // Render OverlayTrigger only when the cart is empty
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip-empty-cart">
+                        You don't have any items in your cart.
+                      </Tooltip>
+                    }
+                  >
+                    <div
+                      className="position-relative"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <i className="bi bi-basket3"></i>
+                    </div>
+                  </OverlayTrigger>
+                ) : (
+                  // Directly render the cart icon with navigation logic when the cart has items
+                  <div
+                    className="position-relative"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate("/restaurant")}
+                  >
+                    <i className="bi bi-basket3"></i>
+                    <span
+                      className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      style={{
+                        fontSize: "0.60rem",
+                        lineHeight: "1",
+                        padding: "0.25em 0.5em",
+                      }}
+                    >
+                      {cart?.cart_item_count || 0}
+                    </span>
+                  </div>
+                )}
+              </>
             )}
             {/* Delivery Status Offcanvas */}
             <DeliveryStatus

@@ -13,6 +13,7 @@ export const GlobalProvider = ({ children }) => {
     show: false,
   });
   const [orders, setOrders] = useState([]);
+  const [cart, setCart] = useState(null);
 
   return (
     <GlobalContext.Provider
@@ -27,6 +28,8 @@ export const GlobalProvider = ({ children }) => {
         setToastData,
         orders,
         setOrders,
+        cart,
+        setCart,
       }}
     >
       {children}
