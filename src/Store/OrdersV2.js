@@ -100,6 +100,9 @@ function OrdersV2() {
                       Order #{order?.id} - {order?.store?.display_name}
                     </Card.Header>
                     <Card.Body>
+                      <Card.Text>
+                        <strong>Customer: {order?.user?.name}</strong>
+                      </Card.Text>
                       <ListGroup variant="flush">
                         {order?.items.map((item) => (
                           <ListGroup.Item key={item?.id}>
@@ -118,13 +121,16 @@ function OrdersV2() {
                         Created At:{" "}
                         {new Date(order?.created_at).toLocaleString()}
                       </Card.Text>
-                      <Button
-                        variant="primary"
-                        onClick={() => handleShowModal(order)}
-                        className="mt-3"
-                      >
-                        Update Status
-                      </Button>
+                      {order?.status !== "Rejected" &&
+                        order?.status !== "Completed" && (
+                          <Button
+                            variant="primary"
+                            onClick={() => handleShowModal(order)}
+                            className="mt-3"
+                          >
+                            Update Status
+                          </Button>
+                        )}
                     </Card.Body>
                   </Card>
                 ))}
@@ -148,7 +154,24 @@ function OrdersV2() {
               >
                 <option value="">Select a status</option>
                 {orderStatuses
-                  .filter((status) => status !== "New") // Exclude "New" status
+                  .filter((status) => {
+                    if (selectedOrder?.status === "New") {
+                      return status === "Accepted" || status === "Rejected";
+                    }
+                    if (selectedOrder?.status === "Accepted") {
+                      return status === "Preparing Order";
+                    }
+                    if (selectedOrder?.status === "Preparing Order") {
+                      return status === "Out For Delivery";
+                    }
+                    if (selectedOrder?.status === "Out For Delivery") {
+                      return status === "Completed";
+                    }
+                    if (selectedOrder?.status === "Rejected") {
+                      return null;
+                    }
+                    return true;
+                  })
                   .map((status) => (
                     <option key={status} value={status}>
                       {status}
