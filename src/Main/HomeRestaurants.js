@@ -81,7 +81,7 @@ function HomeRestaurants() {
             {restaurants.map((restaurant) => (
               <div
                 key={restaurant?.id}
-                className="card card-grid position-relative"
+                className="card orders-card-grid position-relative"
                 style={{ cursor: "pointer" }}
                 onClick={() => handleCardClick(restaurant)}
               >
