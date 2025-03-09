@@ -32,6 +32,18 @@ function OrdersV2() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [selectedFeedbackOrder, setSelectedFeedbackOrder] = useState(null);
+  const [openOrderId, setOpenOrderId] = useState(null);
+  const [show, setShow] = useState(false);
+
+  const toggleOrder = (orderId) => {
+    setOpenOrderId(openOrderId === orderId ? null : orderId);
+  };
+
+  const handleClose = () => setShow(false);
+  const handleShow = (order) => {
+    setSelectedOrder(order); // Set the selected order
+    setShow(true);
+  };
 
   useEffect(() => {
     const fetchMyStoreOrders = async () => {
@@ -105,61 +117,118 @@ function OrdersV2() {
         <Tabs fill variant="pills" defaultActiveKey="New" id="orders-tabs">
           {orderStatuses.map((status) => (
             <Tab eventKey={status} title={status} key={status}>
-              {orders
-                .filter((order) => order?.status === status)
-                .map((order) => (
-                  <Card className="mt-3" key={order?.id}>
-                    <Card.Header>
-                      Order #{order?.id} - {order?.store?.display_name}
-                    </Card.Header>
-                    <Card.Body>
-                      <Card.Text>
-                        <strong>Customer: {order?.user?.name}</strong>
-                      </Card.Text>
-                      <ListGroup variant="flush">
-                        {order?.items.map((item) => (
-                          <ListGroup.Item key={item?.id}>
-                            {item?.product?.name} X {item?.quantity} - ₱
-                            {item?.price_per_item}
-                          </ListGroup.Item>
-                        ))}
-                      </ListGroup>
-                      <Card.Text className="mt-3">
-                        Delivery Fee: ₱{order?.store?.delivery_fee}
-                      </Card.Text>
-                      <Card.Text className="mt-3">
-                        <strong>Total Price: ₱{order?.total_price}</strong>
-                      </Card.Text>
-                      <Card.Text>
-                        Created At:{" "}
-                        {new Date(order?.created_at).toLocaleString()}
-                      </Card.Text>
-                      {order?.status !== "Rejected" &&
-                        order?.status !== "Completed" && (
+              <div className="orders-grid">
+                {orders
+                  .filter((order) => order?.status === status)
+                  .map((order) => (
+                    <Card className="mt-3 card-grid" key={order?.id}>
+                      <Card.Header className="d-flex justify-content-between">
+                        <div> Order #{order?.id} </div>
+                        <div>
+                          {new Date(order?.created_at).toLocaleString()}
+                        </div>
+                      </Card.Header>
+                      <Card.Body>
+                        <Card.Text>
+                          <strong>Customer: {order?.user?.name}</strong>
+                        </Card.Text>
+                        <ListGroup variant="flush">
+                          <div className="p-2 border rounded">
+                            TOTAL:
+                            <span className="float-end">
+                              ₱{order?.total_price}
+                            </span>
+                          </div>
+                        </ListGroup>
+                        <div className="d-flex flex-row gap-2 mt-3">
+                          {order?.status !== "Rejected" &&
+                            order?.status !== "Completed" && (
+                              <Button
+                                variant="outline-secondary"
+                                onClick={() => handleShowModal(order)}
+                                // className=" main-btn-outline-primary"
+                              >
+                                Update Status
+                              </Button>
+                            )}
+                          {order?.status === "Completed" && (
+                            <Button
+                              variant="outline-success"
+                              onClick={() => handleViewFeedbacks(order)}
+                              className=" ms-2"
+                            >
+                              View Feedback
+                            </Button>
+                          )}
                           <Button
-                            variant="primary"
-                            onClick={() => handleShowModal(order)}
-                            className="mt-3"
+                            className="main-btn-primary"
+                            onClick={() => handleShow(order)}
                           >
-                            Update Status
+                            View Order
                           </Button>
-                        )}
-                      {order?.status === "Completed" && (
-                        <Button
-                          variant="info"
-                          onClick={() => handleViewFeedbacks(order)}
-                          className="mt-3 ms-2"
-                        >
-                          View Feedback
-                        </Button>
-                      )}
-                    </Card.Body>
-                  </Card>
-                ))}
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  ))}
+              </div>
             </Tab>
           ))}
         </Tabs>
       </div>
+
+      {/* View Orders Modal */}
+      <Modal show={show} onHide={handleClose} className="orders-modal" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Order Details #{selectedOrder?.id}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedOrder ? (
+            <div>
+              <table class="table table-borderless">
+                <tr>
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Cost</th>
+                </tr>
+                <tbody>
+                  {selectedOrder?.items.map((item) => (
+                    <tr key={item?.id}>
+                      <td>{item?.product?.name}</td>
+                      <td>{item?.quantity}</td>
+                      <td>{item?.product?.price} </td>
+                      <td>₱ {item?.product?.price * item?.quantity}</td>
+                    </tr>
+                  ))}
+                  <tr className="border-top">
+                    <td colSpan={3}>Subtotal</td>
+                    <td>
+                      ₱{" "}
+                      {selectedOrder?.items?.reduce(
+                        (acc, item) =>
+                          acc + item?.product?.price * item?.quantity,
+                        0
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={3}>Delivery Fee</td>
+                    <td>₱ {selectedOrder?.store?.delivery_fee}</td>
+                  </tr>
+                  <tr className="table-warning">
+                    <td colSpan={3}>
+                      <strong>TOTAL</strong>
+                    </td>
+                    <td>₱ {selectedOrder?.total_price}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p>No order selected</p>
+          )}
+        </Modal.Body>
+      </Modal>
 
       {/* Update Status Modal */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
@@ -208,7 +277,7 @@ function OrdersV2() {
             Cancel
           </Button>
           <Button
-            variant="success"
+          variant="success"
             onClick={handleUpdateStatus}
             disabled={!selectedStatus}
           >
@@ -247,7 +316,7 @@ function OrdersV2() {
                         key={i}
                         className="bi bi-star-fill"
                         style={{
-                          color: "yellow",
+                          color: "#ff8427",
                           textShadow:
                             "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
                         }}

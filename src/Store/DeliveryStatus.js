@@ -74,20 +74,39 @@ function DeliveryStatus({ showOffCanvas, setShowOffCanvas }) {
                   onClick={(e) => e.stopPropagation()} // Prevent offcanvas from closing
                 >
                   <ul className="delivery-orders">
-                    {order?.items.map((item) => (
-                      <li
-                        key={item?.id}
-                        className="py-1 border-b last:border-none"
-                      >
-                        {item?.product?.name} x {item?.product?.quantity} - ₱
-                        {item?.price_per_item}
-                      </li>
-                    ))}
+                  <div className="mt-3 p-2 border rounded">
+                  {order?.items.map((item) => (
+                    <p key={item?.id}>
+                      <span>{item?.product?.name}</span>
+                      <span className="float-end">
+                        ₱{item?.product?.price} x {item?.quantity} = ₱
+                        {item?.product?.price * item?.quantity}
+                      </span>
+                    </p>
+                  ))}
+                  <p className="fw-bold">
+                    Subtotal:{" "}
+                    <span className="float-end">
+                      ₱
+                      {order?.items?.reduce(
+                        (acc, item) =>
+                          acc + item?.product?.price * item?.quantity,
+                        0
+                      )}
+                    </span>
+                  </p>
+                  <p className="border-bottom">
+                    Delivery Fee:
+                    <span className="float-end">
+                      ₱{order?.store?.delivery_fee}
+                    </span>
+                  </p>
+                  <p className="fw-bold">
+                    TOTAL:
+                    <span className="float-end">₱{order?.total_price}</span>
+                  </p>
+                </div>
                   </ul>
-                  <p>Delivery Fee - ₱{order?.store?.delivery_fee}</p>
-                  <div className="mt-2 font-bold">
-                    Total: ₱{order?.total_price}
-                  </div>
                 </div>
               )}
             </div>
