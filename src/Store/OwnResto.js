@@ -204,23 +204,25 @@ const OwnResto = () => {
           <div className="col-md-12 resto-name-banner p-0">
             <div className="resto-name-banner-gradient"></div>
             <div className="resto-banner-details d-flex justify-content-between align-items-end">
-              <h1>{store?.display_name}</h1>
-              {store?.image && (
-                <img
-                  src={
-                    typeof store.image === "string"
-                      ? store.image
-                      : URL.createObjectURL(store.image)
-                  }
-                  alt="Store Logo"
-                  className="me-3 rounded"
-                  style={{
-                    width: "230px",
-                    height: "130px",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
+              <div className="d-flex align-items-end">
+                {store?.image && (
+                  <img
+                    src={
+                      typeof store.image === "string"
+                        ? store.image
+                        : URL.createObjectURL(store.image)
+                    }
+                    alt="Store Logo"
+                    className="me-3 rounded"
+                    style={{
+                      width: "230px",
+                      height: "130px",
+                      objectFit: "cover",
+                    }}
+                  />
+                )}
+                <h1>{store?.display_name}</h1>
+              </div>
               <div className="d-flex flex-column justify-content-between align-items-end gap-2">
                 <button
                   className="main-btn-primary"
@@ -261,28 +263,30 @@ const OwnResto = () => {
               <button
                 disabled={isAddingCategory}
                 type="submit"
-                className="btn btn-primary mt-2"
+                className="main-btn-primary mt-2"
               >
                 {isAddingCategory ? "Adding Category..." : "Add Category"}
               </button>
             </form>
-            <ul className="mt-3 list-category">
-              {categories.map((category) => (
-                <li
-                  key={category?.id}
-                  className="col-12 d-flex justify-content-between align-items-center p-2 border rounded"
-                >
-                  {" "}
-                  {category?.name}
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDeleteCategory(category?.id)}
+            <div className="category-list bg-light">
+              <ul className="mt-3 list-category">
+                {categories.map((category) => (
+                  <li
+                    key={category?.id}
+                    className="col-12 bg-white d-flex justify-content-between align-items-center p-2 border rounded"
                   >
-                    <i className="bi bi-trash"></i>
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    {" "}
+                    {category?.name}
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDeleteCategory(category?.id)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
           <div className="col-md-6">
             <form onSubmit={handleSubmit}>
@@ -375,7 +379,7 @@ const OwnResto = () => {
               <button
                 type="submit"
                 disabled={isExecutingRequest}
-                className="btn btn-primary mt-2"
+                className="main-btn-primary mt-2"
               >
                 {productOperation === "add" ? "Add Product" : "Save Changes"}
               </button>

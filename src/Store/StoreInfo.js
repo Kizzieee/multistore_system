@@ -302,7 +302,7 @@ const StoreInfo = ({
               <button
                 disabled={isLoading}
                 type="submit"
-                className="btn btn-primary"
+                className="btn main-btn-primary"
               >
                 {isLoading ? "Saving Changes..." : "Save Changes"}
               </button>

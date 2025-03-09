@@ -268,7 +268,7 @@ function StoreCreation({ showModal, setShowModal }) {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn btn-primary"
+              className="main-btn-primary"
             >
               {isLoading ? "Creating..." : "Create"}
             </button>
