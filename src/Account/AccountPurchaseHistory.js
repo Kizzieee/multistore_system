@@ -6,13 +6,18 @@ import renderErrorMessages from "../errorHelper";
 import { createFeedback } from "../services/feedbackService";
 import "../style.css";
 
-const AccountPurchaseHistory = () => {
+const AccountPurchaseHistory = ({ order }) => {
   const { orders, setOrders } = useContext(GlobalContext);
   const [error, setError] = useState(null);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [openOrderId, setOpenOrderId] = useState(null);
+
+  const toggleOrder = (orderId) => {
+    setOpenOrderId(openOrderId === orderId ? null : orderId);
+  };
 
   const activeOrders = orders.filter(
     (order) => order?.status !== "Completed" && order?.status !== "Rejected"
@@ -72,50 +77,69 @@ const AccountPurchaseHistory = () => {
           >
             <div className="d-flex flex-row gap-3">
               <img src={milkshake} alt="Order" />
-              <div className="w-100 d-flex flex-row justify-content-between">
+              <div className="w-100 d-flex flex-row  justify-content-between">
                 <div className="d-flex flex-column justify-content-between">
                   <small>Order from</small>
                   <h5>{order?.store?.display_name}</h5>
-                  <small>Status: {order?.status}</small>
+                  <small
+                    className={`${
+                      order?.status === "Rejected" ? "text-danger" : ""
+                    } d-flex flex-column`}
+                  >
+                    Status: {order?.status}
+                  </small>
                   <small>Order# {order?.id}</small>
-                  <div>
-                    <h6>Order Summary</h6>
-                    {order?.items.map((item) => (
-                      <p key={item?.id}>
-                        <span>{item?.product?.name}</span>
-                        <span className="float-end">
-                          ₱{item?.product?.price} x {item?.quantity} = ₱
-                          {item?.product?.price * item?.quantity}
-                        </span>
-                      </p>
-                    ))}
-                    <p>
-                      Delivery Fee:{" "}
-                      <span className="float-end">
-                        ₱{order?.store?.delivery_fee}
-                      </span>
-                    </p>
-                    <p className="fw-bold">
-                      Total:{" "}
-                      <span className="float-end">₱{order?.total_price}</span>
-                    </p>
-                  </div>
                 </div>
                 <div className="col-4 text-end mt-4">
                   <h5>&#8369; {order?.total_price}</h5>
                 </div>
               </div>
             </div>
-            {/* <div className="d-flex flex-row justify-content-end gap-3">
+            <div>
               <button
-                className="main-btn-outline-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#viewOrder"
+                className="delivery-dropdown-order-list"
+                onClick={() => toggleOrder(order?.id)}
               >
-                View order
+                {openOrderId === order?.id
+                  ? "Hide Order Summary  ▲"
+                  : "Show Order Summary ▼"}
               </button>
-              <ViewOrder key={order?.id} order={order} />
-            </div> */}
+
+              {openOrderId === order?.id && (
+                <div className="mt-3 p-2 border rounded">
+                  {order?.items.map((item) => (
+                    <p key={item?.id}>
+                      <span>{item?.product?.name}</span>
+                      <span className="float-end">
+                        ₱{item?.product?.price} x {item?.quantity} = ₱
+                        {item?.product?.price * item?.quantity}
+                      </span>
+                    </p>
+                  ))}
+                  <p className="fw-bold">
+                    Subtotal:{" "}
+                    <span className="float-end">
+                      ₱
+                      {order?.items?.reduce(
+                        (acc, item) =>
+                          acc + item?.product?.price * item?.quantity,
+                        0
+                      )}
+                    </span>
+                  </p>
+                  <p className="border-bottom">
+                    Delivery Fee:
+                    <span className="float-end">
+                      ₱{order?.store?.delivery_fee}
+                    </span>
+                  </p>
+                  <p className="fw-bold">
+                    TOTAL:
+                    <span className="float-end">₱{order?.total_price}</span>
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -125,48 +149,127 @@ const AccountPurchaseHistory = () => {
         <h4>Past orders</h4>
         {pastOrders.map((order) => (
           <div
-            className="col-12 active-order d-flex flex-column"
+            className={`col-12 ${
+              order?.status === "Rejected"
+                ? "past-order-rejected"
+                : "past-order"
+            } d-flex flex-column`}
             key={order?.id}
           >
             <div className="d-flex flex-row gap-3">
-              <img src={milkshake} alt="Order" />
-              <div className="w-100 d-flex flex-row justify-content-between">
+              <img src={order?.store?.image} alt={order?.store?.name} />
+              <div className="w-100 d-flex flex-row  justify-content-between">
                 <div className="d-flex flex-column justify-content-between">
                   <small>Order from</small>
                   <h5>{order?.store?.display_name}</h5>
-                  <small>Status: {order?.status}</small>
+                  <small
+                    className={`${
+                      order?.status === "Rejected" ? "text-danger" : ""
+                    } d-flex flex-column`}
+                  >
+                    Status: {order?.status}
+                  </small>
                   <small>Order# {order?.id}</small>
-                  <div>
-                    <h6>Order Summary</h6>
-                    {order?.items.map((item) => (
-                      <p key={item?.id}>
-                        <span>{item?.product?.name}</span>
-                        <span className="float-end">
-                          ₱{item?.product?.price} x {item?.quantity} = ₱
-                          {item?.product?.price * item?.quantity}
-                        </span>
-                      </p>
-                    ))}
-                    <p>
-                      Delivery Fee:{" "}
-                      <span className="float-end">
-                        ₱{order?.store?.delivery_fee}
-                      </span>
-                    </p>
-                    <p className="fw-bold">
-                      Total:{" "}
-                      <span className="float-end">₱{order?.total_price}</span>
-                    </p>
-                  </div>
                 </div>
                 <div className="col-4 text-end mt-4">
                   <h5>&#8369; {order?.total_price}</h5>
                 </div>
               </div>
             </div>
+            {/* Past-order Summary */}
+            <div>
+              <button
+                className="delivery-dropdown-order-list"
+                onClick={() => toggleOrder(order?.id)}
+              >
+                {openOrderId === order?.id
+                  ? "Hide Order Summary  ▲"
+                  : "Show Order Summary ▼"}
+              </button>
+
+              {openOrderId === order?.id && (
+                <div className="mt-3 p-2 border rounded">
+                  {order?.items.map((item) => (
+                    <p key={item?.id}>
+                      <span>{item?.product?.name}</span>
+                      <span className="float-end">
+                        ₱{item?.product?.price} x {item?.quantity} = ₱
+                        {item?.product?.price * item?.quantity}
+                      </span>
+                    </p>
+                  ))}
+                  <p className="fw-bold">
+                    Subtotal:{" "}
+                    <span className="float-end">
+                      ₱
+                      {order?.items?.reduce(
+                        (acc, item) =>
+                          acc + item?.product?.price * item?.quantity,
+                        0
+                      )}
+                    </span>
+                  </p>
+                  <p className="border-bottom">
+                    Delivery Fee:
+                    <span className="float-end">
+                      ₱{order?.store?.delivery_fee}
+                    </span>
+                  </p>
+                  <p className="fw-bold">
+                    TOTAL:
+                    <span className="float-end">₱{order?.total_price}</span>
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {order.status === "Completed" && order.has_submitted_feedback && (
+              <small>
+                You rated this:{" "}
+                {(() => {
+                  if (order?.feedbacks[0]?.rating === 0) {
+                    return (
+                      <i
+                        className="bi bi-star"
+                        style={{
+                          color: "#ff8427",
+                          textShadow:
+                            "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                        }}
+                      ></i>
+                    );
+                  } else if (order?.feedbacks[0]?.rating < 5) {
+                    return (
+                      <i
+                        className="bi bi-star-half"
+                        style={{
+                          color: "#ff8427",
+                          textShadow:
+                            "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                        }}
+                      ></i>
+                    );
+                  } else if (order?.feedbacks[0]?.rating === 5) {
+                    return (
+                      <i
+                        className="bi bi-star-fill"
+                        style={{
+                          color: "#ff8427",
+                          textShadow:
+                            "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
+                        }}
+                      ></i>
+                    );
+                  }
+                })()}{" "}
+                {order?.feedbacks[0]?.rating}
+              </small>
+            )}
+
+            {/* Add Feedback - the button will only show when the order is complete */}
             {order.status === "Completed" && !order.has_submitted_feedback && (
               <button
-                className="btn btn-sm btn-warning mt-2"
+                className="main-btn-primary"
                 onClick={() => {
                   setSelectedOrder(order);
                   setShowFeedbackModal(true);
@@ -199,7 +302,7 @@ const AccountPurchaseHistory = () => {
                     star <= rating ? "bi-star-fill" : "bi-star"
                   }`}
                   style={{
-                    color: "yellow",
+                    color: "#ff8427",
                     textShadow:
                       "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black",
                     cursor: "pointer",
@@ -222,10 +325,14 @@ const AccountPurchaseHistory = () => {
           {error && renderErrorMessages(error)}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCancelCreateFeedback}>
+          <Button
+            className="p-2"
+            variant="secondary"
+            onClick={handleCancelCreateFeedback}
+          >
             Cancel
           </Button>
-          <Button variant="success" onClick={handleSubmitFeedback}>
+          <Button className="main-btn-primary" onClick={handleSubmitFeedback}>
             Submit Feedback
           </Button>
         </Modal.Footer>

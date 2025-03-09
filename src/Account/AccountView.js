@@ -94,14 +94,51 @@ function AccountView() {
                 <>
                   <div className="tab-pane fade show active">
                     <h3>Account Information</h3>
-                    <p>
-                      <strong>First Name:</strong> {user?.first_name} <br />
-                      <strong>Last Name:</strong> {user?.last_name} <br />
-                      <strong>Birth Date:</strong> {user?.birth_date} <br />
-                      <strong>Address:</strong> {user?.address} <br />
-                    </p>
+                    <div id="Account_Information">
+                      <div className="row">
+                        <div className="col-6">
+                          <label for="first_name">First Name:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder={user?.first_name}
+                            disabled
+                          />
+                        </div>
+                        <div className="col-6">
+                          <label for="first_name">Last Name:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder={user?.last_name}
+                            disabled
+                          />
+                        </div>
+                      </div>
+
+                      <div className="row mt-3">
+                        <div className="col-6">
+                          <label for="first_name">Birth Date:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder={user?.birth_date}
+                            disabled
+                          />
+                        </div>
+                        <div className="col-6">
+                          <label for="first_name">Address:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder={user?.address}
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button className="btn btn-danger" onClick={handleLogout}>
+                  <button className="btn btn-danger mt-3" onClick={handleLogout}>
                     Log Out
                   </button>
                 </>
