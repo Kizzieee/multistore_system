@@ -97,7 +97,7 @@ function AccountView() {
                     <div id="Account_Information">
                       <div className="row">
                         <div className="col-6">
-                          <label for="first_name">First Name:</label>
+                          <label htmlFor="first_name">First Name:</label>
                           <input
                             type="text"
                             className="form-control"
@@ -106,7 +106,7 @@ function AccountView() {
                           />
                         </div>
                         <div className="col-6">
-                          <label for="first_name">Last Name:</label>
+                          <label htmlFor="first_name">Last Name:</label>
                           <input
                             type="text"
                             className="form-control"
@@ -118,7 +118,7 @@ function AccountView() {
 
                       <div className="row mt-3">
                         <div className="col-6">
-                          <label for="first_name">Birth Date:</label>
+                          <label htmlFor="first_name">Birth Date:</label>
                           <input
                             type="text"
                             className="form-control"
@@ -127,7 +127,7 @@ function AccountView() {
                           />
                         </div>
                         <div className="col-6">
-                          <label for="first_name">Address:</label>
+                          <label htmlFor="first_name">Address:</label>
                           <input
                             type="text"
                             className="form-control"
