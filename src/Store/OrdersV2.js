@@ -184,7 +184,7 @@ function OrdersV2() {
         <Modal.Body>
           {selectedOrder ? (
             <div>
-              <table class="table table-borderless">
+              <table className="table table-borderless">
                 <tr>
                   <th>Product Name</th>
                   <th>Quantity</th>
@@ -277,7 +277,7 @@ function OrdersV2() {
             Cancel
           </Button>
           <Button
-          variant="success"
+            variant="success"
             onClick={handleUpdateStatus}
             disabled={!selectedStatus}
           >

@@ -100,7 +100,7 @@ function AccountView() {
                           <label for="first_name">First Name:</label>
                           <input
                             type="text"
-                            class="form-control"
+                            className="form-control"
                             placeholder={user?.first_name}
                             disabled
                           />
@@ -109,7 +109,7 @@ function AccountView() {
                           <label for="first_name">Last Name:</label>
                           <input
                             type="text"
-                            class="form-control"
+                            className="form-control"
                             placeholder={user?.last_name}
                             disabled
                           />
@@ -121,7 +121,7 @@ function AccountView() {
                           <label for="first_name">Birth Date:</label>
                           <input
                             type="text"
-                            class="form-control"
+                            className="form-control"
                             placeholder={user?.birth_date}
                             disabled
                           />
@@ -130,7 +130,7 @@ function AccountView() {
                           <label for="first_name">Address:</label>
                           <input
                             type="text"
-                            class="form-control"
+                            className="form-control"
                             placeholder={user?.address}
                             disabled
                           />
@@ -138,7 +138,10 @@ function AccountView() {
                       </div>
                     </div>
                   </div>
-                  <button className="btn btn-danger mt-3" onClick={handleLogout}>
+                  <button
+                    className="btn btn-danger mt-3"
+                    onClick={handleLogout}
+                  >
                     Log Out
                   </button>
                 </>
