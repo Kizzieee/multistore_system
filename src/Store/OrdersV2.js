@@ -19,6 +19,7 @@ function OrdersV2() {
     "Accepted",
     "Preparing Order",
     "Out For Delivery",
+    "Ready For Pick Up",
     "Completed",
     "Rejected",
   ];
@@ -132,6 +133,9 @@ function OrdersV2() {
                         <Card.Text>
                           <strong>Customer: {order?.user?.name}</strong>
                         </Card.Text>
+                        <Card.Text>
+                          <span>Type: {order?.type}</span>
+                        </Card.Text>
                         <ListGroup variant="flush">
                           <div className="p-2 border rounded">
                             TOTAL:
@@ -182,15 +186,38 @@ function OrdersV2() {
           <Modal.Title>Order Details #{selectedOrder?.id}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {selectedOrder?.type === "Pick Up" ? (
+            <strong className="d-flex flex-column">
+              Type: {selectedOrder?.type} (
+              {new Date(selectedOrder?.pick_up_datetime).toLocaleString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: true,
+                }
+              )}
+              )
+            </strong>
+          ) : (
+            <strong className="d-flex flex-column">
+              Type: {selectedOrder?.type}
+            </strong>
+          )}
           {selectedOrder ? (
             <div>
               <table className="table table-borderless">
-                <tr>
-                  <th>Product Name</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                  <th>Cost</th>
-                </tr>
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Cost</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {selectedOrder?.items.map((item) => (
                     <tr key={item?.id}>
@@ -253,9 +280,14 @@ function OrdersV2() {
                       return status === "Preparing Order";
                     }
                     if (selectedOrder?.status === "Preparing Order") {
+                      if (selectedOrder?.type === "Pick Up")
+                        return status === "Ready For Pick Up";
                       return status === "Out For Delivery";
                     }
-                    if (selectedOrder?.status === "Out For Delivery") {
+                    if (
+                      selectedOrder?.status === "Out For Delivery" ||
+                      selectedOrder?.status === "Ready For Pick Up"
+                    ) {
                       return status === "Completed";
                     }
                     if (selectedOrder?.status === "Rejected") {
@@ -285,6 +317,7 @@ function OrdersV2() {
           </Button>
         </Modal.Footer>
       </Modal>
+
       {/* Feedback Modal */}
       <Modal
         show={showFeedbackModal}

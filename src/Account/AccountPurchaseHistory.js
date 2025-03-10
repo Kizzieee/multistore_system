@@ -6,7 +6,7 @@ import renderErrorMessages from "../errorHelper";
 import { createFeedback } from "../services/feedbackService";
 import "../style.css";
 
-const AccountPurchaseHistory = ({ order }) => {
+const AccountPurchaseHistory = () => {
   const { orders, setOrders } = useContext(GlobalContext);
   const [error, setError] = useState(null);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
