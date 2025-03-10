@@ -10,9 +10,9 @@ export const fetchMyOrders = async () => {
   }
 };
 
-export const createOrder = async (storeId) => {
+export const createOrder = async (data) => {
   try {
-    const response = await api.post("store/orders/", { store: storeId });
+    const response = await api.post("store/orders/", data);
     return response.data;
   } catch (error) {
     console.error("Failed to create order: ", error);

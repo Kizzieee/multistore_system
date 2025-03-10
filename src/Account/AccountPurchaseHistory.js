@@ -88,6 +88,27 @@ const AccountPurchaseHistory = ({ order }) => {
                   >
                     Status: {order?.status}
                   </small>
+                  {order?.type === "Pick Up" ? (
+                    <small className="d-flex flex-column">
+                      <span>Type: {order?.type}</span>
+                      <span>
+                        Pick Up On:{" "}
+                        {new Date(order?.pick_up_datetime).toLocaleString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                            hour12: true,
+                          }
+                        )}
+                      </span>
+                    </small>
+                  ) : (
+                    <small className="d-flex">Type: {order?.type}</small>
+                  )}
                   <small>Order# {order?.id}</small>
                 </div>
                 <div className="col-4 text-end mt-4">
@@ -169,6 +190,27 @@ const AccountPurchaseHistory = ({ order }) => {
                   >
                     Status: {order?.status}
                   </small>
+                  {order?.type === "Pick Up" ? (
+                    <small className="d-flex flex-column">
+                      <span>Type: {order?.type}</span>
+                      <span>
+                        Pick Up On:{" "}
+                        {new Date(order?.pick_up_datetime).toLocaleString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                            hour12: true,
+                          }
+                        )}
+                      </span>
+                    </small>
+                  ) : (
+                    <small className="d-flex">Type: {order?.type}</small>
+                  )}
                   <small>Order# {order?.id}</small>
                 </div>
                 <div className="col-4 text-end mt-4">

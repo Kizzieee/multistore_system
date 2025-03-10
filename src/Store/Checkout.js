@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { GlobalContext } from "../GlobalContext";
@@ -13,10 +13,11 @@ const Checkout = () => {
   const restaurant = state?.restaurant;
   const cartItems = state?.cartItems;
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [deliveryOption, setDeliveryOption] = useState("Delivery");
   const [pickupDetails, setPickupDetails] = useState({
     date: new Date().toISOString().split("T")[0],
-    time: "7:00 AM - 8:00 AM",
+    time: "",
   });
   const totalSum =
     cartItems.reduce(
@@ -24,28 +25,100 @@ const Checkout = () => {
       0
     ) + restaurant?.delivery_fee;
 
-  const generateTimeSlots = () => {
+  const generateTimeSlots = useCallback(() => {
     const slots = [];
-    let startTime = 7 * 60; // 7:00 AM in minutes
-    const endTime = 21 * 60; // 9:00 PM in minutes
+
+    if (!restaurant?.opening_time || !restaurant?.closing_time) {
+      console.log("Restaurant hours are missing.");
+      return slots;
+    }
+
+    // Parse opening time
+    const [openHours, openMinutes] = restaurant.opening_time
+      .split(":")
+      .map(Number);
+    let startTime = openHours * 60 + openMinutes;
+
+    // Parse closing time
+    const [closeHours, closeMinutes] = restaurant.closing_time
+      .split(":")
+      .map(Number);
+    let endTime = closeHours * 60 + closeMinutes;
+
+    // Handle overnight operations (closing time is on the next day)
+    if (endTime <= startTime) {
+      endTime += 24 * 60; // Add 24 hours to closing time
+    }
+
+    // Format time helper
+    const formatTime = (minutes) => {
+      let hours = Math.floor(minutes / 60) % 24; // Ensure hours wrap around 24
+      const mins = minutes % 60;
+      const period = hours < 12 ? "AM" : "PM";
+      hours = hours % 12 || 12; // Convert 0 to 12 for 12 AM/PM
+      return `${hours}:${mins.toString().padStart(2, "0")} ${period}`;
+    };
+
+    // Generate slots
     while (startTime < endTime) {
-      const hours = Math.floor(startTime / 60);
-      const minutes = startTime % 60;
-      const nextHours = hours + 1;
-      const formattedTime = `${hours === 12 ? 12 : hours % 12}:${minutes
-        .toString()
-        .padStart(2, "0")} ${hours < 12 ? "AM" : "PM"} - ${
-        nextHours === 12 ? 12 : nextHours % 12
-      }:${minutes.toString().padStart(2, "0")} ${nextHours < 12 ? "AM" : "PM"}`;
-      slots.push(formattedTime);
+      const startFormatted = formatTime(startTime);
+      const endFormatted = formatTime(startTime + 60);
+      slots.push(`${startFormatted} - ${endFormatted}`);
       startTime += 60;
     }
+
     return slots;
-  };
+  }, [restaurant?.opening_time, restaurant?.closing_time]);
+
+  useEffect(() => {
+    if (restaurant) {
+      setIsLoading(false);
+      const [firstSlot] = generateTimeSlots();
+      if (firstSlot) {
+        setPickupDetails((prev) => ({ ...prev, time: firstSlot }));
+      }
+    }
+  }, [restaurant, generateTimeSlots]);
 
   const handleCheckOut = async () => {
+    setError(null);
     try {
-      const newOrder = await createOrder(restaurant?.id);
+      // Construct order data based on delivery option
+      const orderData = {
+        store: restaurant?.id,
+        type: deliveryOption,
+      };
+
+      // Add pickup details if delivery option is "Pick Up"
+      if (deliveryOption === "Pick Up") {
+        // Parse the pickup date and time into a Date object
+        const [startTimeRange, endTimeRange] = pickupDetails.time.split(" - ");
+        const [startHours, startMinutesAndPeriod] = startTimeRange.split(":");
+        const [startMinutes, startPeriod] = startMinutesAndPeriod.split(" ");
+
+        let hours = parseInt(startHours, 10);
+        const minutes = parseInt(startMinutes, 10);
+
+        // Convert to 24-hour format
+        if (startPeriod === "PM" && hours !== 12) {
+          hours += 12;
+        }
+        if (startPeriod === "AM" && hours === 12) {
+          hours = 0;
+        }
+
+        // Create a Date object for the pickup datetime
+        const pickupDateTime = new Date(pickupDetails.date);
+        pickupDateTime.setHours(hours, minutes, 0, 0);
+
+        // Format as ISO 8601 string (YYYY-MM-DDThh:mm:ss)
+        orderData.pick_up_datetime = pickupDateTime.toISOString();
+      }
+
+      // Create order with constructed data
+      const newOrder = await createOrder(orderData);
+
+      // Update global state and navigate
       setOrders((prev) => [newOrder, ...prev]);
       setCart({});
       navigate("/", { state: { showOffCanvas: true } });
@@ -53,6 +126,14 @@ const Checkout = () => {
       setError(error);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="container my-5">
@@ -62,6 +143,7 @@ const Checkout = () => {
             <p className="m-0 p-0">Your order from</p>
             <h3 className="m-0 p-0">{restaurant?.display_name}</h3>
           </div>
+
           {/* Customer Information */}
           <div className="mb-3 d-flex">
             <div className="col-6 pe-1">
@@ -115,19 +197,18 @@ const Checkout = () => {
                 type="radio"
                 id="pickup"
                 name="deliveryOption"
-                value="Pick up"
-                checked={deliveryOption === "Pick up"}
-                onChange={() => setDeliveryOption("Pick up")}
-                disabled
+                value="Pick Up"
+                checked={deliveryOption === "Pick Up"}
+                onChange={() => setDeliveryOption("Pick Up")}
               />
               <label htmlFor="pickup" className="ms-2">
-                Pick up (Currently not supported)
+                Pick Up
               </label>
             </div>
           </div>
 
           {/* Pickup Date and Time */}
-          {deliveryOption === "Pick up" && (
+          {deliveryOption === "Pick Up" && (
             <div className="mb-3">
               <label className="form-label">Pickup Date:</label>
               <input
@@ -144,12 +225,17 @@ const Checkout = () => {
                   setPickupDetails({ ...pickupDetails, time: e.target.value })
                 }
               >
-                {generateTimeSlots().map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
+                {generateTimeSlots().length > 0 ? (
+                  generateTimeSlots().map((time) => (
+                    <option key={time} value={time}>
+                      {time}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No available time slots</option>
+                )}
               </select>
+              {error && renderErrorMessages(error)}
             </div>
           )}
 
@@ -186,7 +272,6 @@ const Checkout = () => {
             Checkout
           </button>
         </form>
-        {error && renderErrorMessages(error)}
       </div>
     </div>
   );
