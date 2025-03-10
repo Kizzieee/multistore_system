@@ -138,6 +138,9 @@ function OrdersV2() {
                           <strong>Customer: {order?.user?.name}</strong>
                         </Card.Text>
                         <Card.Text>
+                          <strong>Address: {order?.user?.address}</strong>
+                        </Card.Text>
+                        <Card.Text>
                           <span>Type: {order?.type}</span>
                         </Card.Text>
                         <ListGroup variant="flush">
