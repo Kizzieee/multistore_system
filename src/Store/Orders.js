@@ -458,7 +458,7 @@ function renderStatusLabel(status) {
     case "accepted":
       return "Order Accepted (Status #1)";
     case "preparing":
-      return "Preparing Order (Status #2)";
+      return "Being Prepared (Status #2)";
     case "outForDelivery":
       return "Out for Delivery / Ready for Pickup (Status #3)";
     case "completed":

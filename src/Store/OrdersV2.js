@@ -17,7 +17,7 @@ function OrdersV2() {
   const orderStatuses = [
     "New",
     "Accepted",
-    "Preparing Order",
+    "Being Prepared",
     "Out For Delivery",
     "Ready For Pick Up",
     "Completed",
@@ -31,6 +31,7 @@ function OrdersV2() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [isUpdatingOrderStatus, setIsUpdatingOrderStatus] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [selectedFeedbackOrder, setSelectedFeedbackOrder] = useState(null);
   const [openOrderId, setOpenOrderId] = useState(null);
@@ -75,6 +76,7 @@ function OrdersV2() {
   };
 
   const handleUpdateStatus = async () => {
+    setIsUpdatingOrderStatus(true);
     if (!selectedOrder || !selectedStatus) return;
 
     try {
@@ -83,6 +85,8 @@ function OrdersV2() {
       handleCloseModal();
     } catch (error) {
       setError(error);
+    } finally {
+      setIsUpdatingOrderStatus(false);
     }
   };
 
@@ -277,9 +281,9 @@ function OrdersV2() {
                       return status === "Accepted" || status === "Rejected";
                     }
                     if (selectedOrder?.status === "Accepted") {
-                      return status === "Preparing Order";
+                      return status === "Being Prepared";
                     }
-                    if (selectedOrder?.status === "Preparing Order") {
+                    if (selectedOrder?.status === "Being Prepared") {
                       if (selectedOrder?.type === "Pick Up")
                         return status === "Ready For Pick Up";
                       return status === "Out For Delivery";
@@ -311,7 +315,7 @@ function OrdersV2() {
           <Button
             variant="success"
             onClick={handleUpdateStatus}
-            disabled={!selectedStatus}
+            disabled={!selectedStatus || isUpdatingOrderStatus}
           >
             Confirm Update
           </Button>
