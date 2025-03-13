@@ -23,7 +23,7 @@ const Checkout = () => {
     cartItems.reduce(
       (sum, cartItem) => sum + cartItem?.product?.price * cartItem?.quantity,
       0
-    ) + restaurant?.delivery_fee;
+    ) + (deliveryOption === "Delivery" ? restaurant?.delivery_fee : 0);
 
   const generateTimeSlots = useCallback(() => {
     const slots = [];
@@ -253,11 +253,15 @@ const Checkout = () => {
             </div>
           ))}
 
-          {/* Delivery Fee & Total */}
-          <div className="d-flex justify-content-between mt-3">
-            <strong>Delivery Fee:</strong>
-            <span>₱{restaurant?.delivery_fee}</span>
-          </div>
+          {/* Conditionally display the delivery fee */}
+          {deliveryOption === "Delivery" && (
+            <div className="d-flex justify-content-between mt-3">
+              <strong>Delivery Fee:</strong>
+              <span>₱{restaurant?.delivery_fee}</span>
+            </div>
+          )}
+
+          {/* Total */}
           <div className="d-flex justify-content-between mt-2">
             <strong>Total:</strong>
             <span>₱{totalSum}</span>

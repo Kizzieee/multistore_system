@@ -245,10 +245,12 @@ function OrdersV2() {
                       )}
                     </td>
                   </tr>
-                  <tr>
-                    <td colSpan={3}>Delivery Fee</td>
-                    <td>₱ {selectedOrder?.store?.delivery_fee}</td>
-                  </tr>
+                  {selectedOrder?.type === "Delivery" && (
+                    <tr>
+                      <td colSpan={3}>Delivery Fee</td>
+                      <td>₱ {selectedOrder?.store?.delivery_fee}</td>
+                    </tr>
+                  )}
                   <tr className="table-warning">
                     <td colSpan={3}>
                       <strong>TOTAL</strong>

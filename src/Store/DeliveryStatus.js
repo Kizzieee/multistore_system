@@ -58,7 +58,11 @@ function DeliveryStatus({ showOffCanvas, setShowOffCanvas }) {
               <h6>{order?.store?.name}</h6>
               <small>Status</small>
               <div className="d-flex justify-content-between">
-                <p className="m-0">{order?.status}</p>
+                <h6 className="m-0">{order?.status}</h6>
+              </div>
+              <small>Type</small>
+              <div className="d-flex justify-content-between">
+                <h6 className="m-0">{order?.type}</h6>
               </div>
 
               {/* Dropdown Orders Section */}
@@ -74,38 +78,40 @@ function DeliveryStatus({ showOffCanvas, setShowOffCanvas }) {
                   onClick={(e) => e.stopPropagation()} // Prevent offcanvas from closing
                 >
                   <ul className="delivery-orders">
-                  <div className="mt-3 p-2 border rounded">
-                  {order?.items.map((item) => (
-                    <p key={item?.id}>
-                      <span>{item?.product?.name}</span>
-                      <span className="float-end">
-                        ₱{item?.product?.price} x {item?.quantity} = ₱
-                        {item?.product?.price * item?.quantity}
-                      </span>
-                    </p>
-                  ))}
-                  <p className="fw-bold">
-                    Subtotal:{" "}
-                    <span className="float-end">
-                      ₱
-                      {order?.items?.reduce(
-                        (acc, item) =>
-                          acc + item?.product?.price * item?.quantity,
-                        0
+                    <div className="mt-3 p-2 border rounded">
+                      {order?.items.map((item) => (
+                        <p key={item?.id}>
+                          <span>{item?.product?.name}</span>
+                          <span className="float-end">
+                            ₱{item?.product?.price} x {item?.quantity} = ₱
+                            {item?.product?.price * item?.quantity}
+                          </span>
+                        </p>
+                      ))}
+                      <p className="fw-bold">
+                        Subtotal:{" "}
+                        <span className="float-end">
+                          ₱
+                          {order?.items?.reduce(
+                            (acc, item) =>
+                              acc + item?.product?.price * item?.quantity,
+                            0
+                          )}
+                        </span>
+                      </p>
+                      {order?.type === "Delivery" && (
+                        <p className="border-bottom">
+                          Delivery Fee:
+                          <span className="float-end">
+                            ₱{order?.store?.delivery_fee}
+                          </span>
+                        </p>
                       )}
-                    </span>
-                  </p>
-                  <p className="border-bottom">
-                    Delivery Fee:
-                    <span className="float-end">
-                      ₱{order?.store?.delivery_fee}
-                    </span>
-                  </p>
-                  <p className="fw-bold">
-                    TOTAL:
-                    <span className="float-end">₱{order?.total_price}</span>
-                  </p>
-                </div>
+                      <p className="fw-bold">
+                        TOTAL:
+                        <span className="float-end">₱{order?.total_price}</span>
+                      </p>
+                    </div>
                   </ul>
                 </div>
               )}

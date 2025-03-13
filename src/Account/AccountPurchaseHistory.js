@@ -148,12 +148,14 @@ const AccountPurchaseHistory = () => {
                       )}
                     </span>
                   </p>
-                  <p className="border-bottom">
-                    Delivery Fee:
-                    <span className="float-end">
-                      ₱{order?.store?.delivery_fee}
-                    </span>
-                  </p>
+                  {order?.type === "Delivery" && (
+                    <p className="border-bottom">
+                      Delivery Fee:
+                      <span className="float-end">
+                        ₱{order?.store?.delivery_fee}
+                      </span>
+                    </p>
+                  )}
                   <p className="fw-bold">
                     TOTAL:
                     <span className="float-end">₱{order?.total_price}</span>
@@ -251,12 +253,14 @@ const AccountPurchaseHistory = () => {
                       )}
                     </span>
                   </p>
-                  <p className="border-bottom">
-                    Delivery Fee:
-                    <span className="float-end">
-                      ₱{order?.store?.delivery_fee}
-                    </span>
-                  </p>
+                  {order?.type === "Delivery" && (
+                    <p className="border-bottom">
+                      Delivery Fee:
+                      <span className="float-end">
+                        ₱{order?.store?.delivery_fee}
+                      </span>
+                    </p>
+                  )}
                   <p className="fw-bold">
                     TOTAL:
                     <span className="float-end">₱{order?.total_price}</span>
